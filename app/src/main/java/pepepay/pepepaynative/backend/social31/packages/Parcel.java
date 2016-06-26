@@ -3,6 +3,7 @@ package pepepay.pepepaynative.backend.social31.packages;
 import java.util.HashMap;
 
 import pepepay.pepepaynative.PepePay;
+import pepepay.pepepaynative.backend.social31.connection.Connection;
 import pepepay.pepepaynative.utils.LongUtils;
 import pepepay.pepepaynative.utils.StringUtils;
 import pepepay.pepepaynative.utils.loader.Loader;
@@ -42,7 +43,7 @@ public class Parcel {
     }
 
     public boolean isAnswerOf(Parcel parcel) {
-        return this.header.get(HeaderOption.UID).equals(parcel.header.get(HeaderOption.UID)) && !this.header.get(HeaderOption.TYPE).equals(parcel.header.get(HeaderOption.TYPE));
+        return this.header.get(HeaderOption.UID).equals(parcel.header.get(HeaderOption.UID)) && this.header.get(HeaderOption.TYPE).equals(Connection.ANS) && parcel.header.get(HeaderOption.TYPE).equals(Connection.REQ);
     }
 
     public String getData() {
@@ -54,7 +55,7 @@ public class Parcel {
     }
 
     public Parcel getAnswer(String data) {
-        return new Parcel(data, "ans", this.getUid());
+        return new Parcel(data, Connection.ANS, this.getUid());
     }
 
     enum HeaderOption {

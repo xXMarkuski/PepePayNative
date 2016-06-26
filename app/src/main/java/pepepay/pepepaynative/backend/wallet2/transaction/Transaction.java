@@ -1,11 +1,13 @@
 package pepepay.pepepaynative.backend.wallet2.transaction;
 
 
+import java.io.Serializable;
+
 import pepepay.pepepaynative.backend.wallet2.Wallets;
 import pepepay.pepepaynative.utils.StringUtils;
 import pepepay.pepepaynative.utils.loader.Loader;
 
-public class Transaction {
+public class Transaction implements Serializable {
     private final String sender;
     private final String receiver;
     private final float amount;

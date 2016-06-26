@@ -27,10 +27,12 @@ public class StringUtils {
 
     public static String[] demultiplex(String multiplexed) {
         if (multiplexed.equals("()")) return new String[0];
-        String rawLengths = multiplexed.substring(0, multiplexed.indexOf("("));
+        int beginStringindex = multiplexed.indexOf("(");
+        if (beginStringindex == -1) return new String[]{multiplexed};
+        String rawLengths = multiplexed.substring(0, beginStringindex);
         String[] lengths = rawLengths.split(",");
 
-        String data = multiplexed.substring(multiplexed.indexOf("("), multiplexed.lastIndexOf(")") + 1);
+        String data = multiplexed.substring(beginStringindex, multiplexed.lastIndexOf(")") + 1);
 
         ArrayList<String> result = new ArrayList<String>(lengths.length);
 

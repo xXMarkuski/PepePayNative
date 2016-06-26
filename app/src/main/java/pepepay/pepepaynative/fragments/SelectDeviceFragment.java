@@ -2,8 +2,6 @@ package pepepay.pepepaynative.fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -25,16 +23,12 @@ import pepepay.pepepaynative.utils.Function2;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link SelectDeviceFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
  * Use the {@link SelectDeviceFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class SelectDeviceFragment extends DialogFragment {
     private final static String WALLETID = "walletid";
-    private OnFragmentInteractionListener mListener;
     private Function<Void, IDevice> callback;
-    private ArrayList<CharSequence> items = new ArrayList<>();
 
     public SelectDeviceFragment() {
     }
@@ -54,19 +48,14 @@ public class SelectDeviceFragment extends DialogFragment {
         return fragment;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         View view = inflater.inflate(R.layout.fragment_select_device, null);
-        final LinearLayout layout = (LinearLayout) view.findViewById(R.id.selectGroup);
-        builder.setTitle(R.string.select_device).setView(view);
+        final LinearLayout layout = (LinearLayout) view.findViewById(R.id.selectDevice);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(R.string.selectDevice).setView(view);
 
         PepePay.CONNECTION_MANAGER.addDeviceChangeListener(new Function2<Void, ArrayList<? extends IDevice>, ArrayList<? extends IDevice>>() {
             HashMap<IDevice, Button> iDeviceButtonHashMap = new HashMap<IDevice, Button>();
@@ -96,44 +85,13 @@ public class SelectDeviceFragment extends DialogFragment {
         return builder.create();
     }
 
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
     public void setCallback(Function<Void, IDevice> callback) {
         this.callback = callback;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
-    }
 }

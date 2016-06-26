@@ -1,6 +1,5 @@
 package pepepay.pepepaynative;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -19,11 +18,10 @@ import pepepay.pepepaynative.backend.social31.handler.IDeviceConnectionHandler;
 import pepepay.pepepaynative.backend.social31.wifiDirect.WifiDirectConnectionHandler;
 import pepepay.pepepaynative.backend.wallet2.Wallet;
 import pepepay.pepepaynative.backend.wallet2.Wallets;
-import pepepay.pepepaynative.fragments.SelectDeviceFragment;
 import pepepay.pepepaynative.fragments.WalletCreateFragment;
 import pepepay.pepepaynative.fragments.WalletInfoFragment;
 
-public class WalletOverview2 extends AppCompatActivity implements WalletCreateFragment.OnFragmentInteractionListener, WalletInfoFragment.OnFragmentInteractionListener, SelectDeviceFragment.OnFragmentInteractionListener, Wallets.WalletsListener {
+public class WalletOverview2 extends AppCompatActivity implements Wallets.WalletsListener {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -100,11 +98,6 @@ public class WalletOverview2 extends AppCompatActivity implements WalletCreateFr
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
     }
 
     @Override

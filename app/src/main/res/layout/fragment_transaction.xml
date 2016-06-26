@@ -2,24 +2,50 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="pepepay.pepepaynative.fragments.WalletCreateFragment">
+    tools:context="pepepay.pepepaynative.fragments.TransactionFragment">
+
+    <!-- TODO: Update blank fragment layout -->
 
     <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:baselineAligned="false"
+        android:contextClickable="false">
 
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/amountText"
                 android:layout_column="0"
-                android:text="@string/wallet_creation_name"
+                android:text="@string/amount"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <EditText
-                android:id="@+id/nameSelector"
+                android:id="@+id/amountSelector"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="1"
+                android:ems="10"
+                android:inputType="numberDecimal" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="0"
+                android:text="@string/purpose"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <EditText
+                android:id="@+id/purposeSelector"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="1" />
@@ -30,7 +56,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/pinText"
                 android:layout_column="0"
                 android:text="@string/pin"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -42,26 +68,6 @@
                 android:layout_column="1"
                 android:ems="10"
                 android:inputType="textPassword" />
-
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/textView4"
-                android:layout_column="0"
-                android:text="@string/wallet_creation_keysize"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
-
-            <EditText
-                android:id="@+id/keySizeSelector"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_column="1"
-                android:ems="10"
-                android:inputType="numberSigned" />
         </TableRow>
 
         <TableRow
@@ -69,13 +75,9 @@
             android:layout_height="match_parent">
 
             <Button
-                android:id="@+id/button4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/confirmButton"
                 android:layout_column="1"
-                android:layout_gravity="center_horizontal|bottom"
                 android:text="@string/confirm" />
         </TableRow>
     </TableLayout>
-
 </FrameLayout>

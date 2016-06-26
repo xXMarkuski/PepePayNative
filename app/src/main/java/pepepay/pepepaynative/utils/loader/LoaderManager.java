@@ -47,6 +47,10 @@ public class LoaderManager implements Loader<Object> {
         if (loader != null) return loader.load("");
 
         String[] strings = StringUtils.demultiplex(data);
+        if (strings.length < 2) {
+            System.out.println(strings[0]);
+            return null;
+        }
         return loaderMap.get(strings[0]).load(strings[1]);
     }
 

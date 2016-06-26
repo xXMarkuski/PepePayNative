@@ -51,7 +51,7 @@ public class Wallet {
     }
 
     public Transaction getSendTransaction(Wallet receiver, PrivateKey key, float amount, String purpose) {
-        return new Transaction(this.getIdentifier(), receiver.getIdentifier(), amount, System.currentTimeMillis(), purpose, numberTransaction.get(receiver.getIdentifier()));
+        return new Transaction(this.getIdentifier(), receiver.getIdentifier(), amount, System.currentTimeMillis(), purpose, 1);
     }
 
     public void addTransaction(Transaction transaction) {

@@ -16,6 +16,12 @@ import pepepay.pepepaynative.backend.wallet2.transaction.Transaction;
 import pepepay.pepepaynative.utils.StringUtils;
 
 public class Connection implements ReceiveHandler {
+    public static final String requestWalletIDs = "getWalletIds";
+    public static final String getWallet = "getWallet";
+
+    public static final String REQ = "req";
+    public static final String ANS = "ans";
+
 
     private IDevice target;
     private ArrayList<Parcel> toSend;
@@ -59,7 +65,6 @@ public class Connection implements ReceiveHandler {
 
     @Override
     public Void eval(Parcel parcel, Connection connection) {
-        System.out.println(parcel.getData());
         String data = parcel.getData();
         try {
             Object obj = PepePay.LOADER_MANAGER.load(data);
@@ -72,7 +77,7 @@ public class Connection implements ReceiveHandler {
 
         try {
             String[] str = StringUtils.demultiplex(data);
-            if (str[0].equals("getWallet")) {
+            if (str[0].equals(Connection.getWallet)) {
                 Wallet wallet = Wallets.getWallet(str[1]);
                 String saveKey = PepePay.LOADER_MANAGER.save(wallet.getPublicKey());
                 String saveReceived = PepePay.LOADER_MANAGER.save(wallet.getReceivedTransactions());
@@ -85,8 +90,10 @@ public class Connection implements ReceiveHandler {
 
         }
 
-        if (data.equals("getWalletIds")) {
-            connection.send(parcel.getAnswer(PepePay.LOADER_MANAGER.save(Wallets.getOwnWalletIds())));
+        if (data.equals(Connection.requestWalletIDs)) {
+            Parcel answer = parcel.getAnswer(PepePay.LOADER_MANAGER.save(Wallets.getOwnWalletIds()));
+            System.out.println("asdasdasdasdasdasd" + answer.getData());
+            connection.send(answer);
         }
         return null;
     }
