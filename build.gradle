@@ -13,8 +13,14 @@ buildscript {
 }
 
 allprojects {
+    ext {
+        spongycastleVersion = '1.54.0.0'
+    }
     repositories {
         jcenter()
+        mavenCentral()
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url "https://oss.sonatype.org/content/repositories/releases/" }
     }
 }
 

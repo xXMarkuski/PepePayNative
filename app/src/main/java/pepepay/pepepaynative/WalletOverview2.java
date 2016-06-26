@@ -3,6 +3,7 @@ package pepepay.pepepaynative;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -16,7 +17,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class WalletOverview extends AppCompatActivity {
+import java.io.File;
+import java.util.Arrays;
+
+import pepepay.pepepaynative.backend.social31.handler.IDeviceConnectionHandler;
+import pepepay.pepepaynative.backend.social31.wifiDirect.WifiDirectConnectionHandler;
+import pepepay.pepepaynative.backend.wallet2.Wallets;
+
+public class WalletOverview2 extends AppCompatActivity {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -36,7 +44,10 @@ public class WalletOverview extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_wallet_overview);
+
+        new PepePay(Arrays.<IDeviceConnectionHandler>asList(new WifiDirectConnectionHandler(this))).create(new File(this.getFilesDir(), "godWallets"), new File(this.getFilesDir(), "wallets"), new File(this.getFilesDir(), "private"), new File(this.getFilesDir(), "names"), new File(this.getFilesDir(), "options"));
+
+        setContentView(R.layout.activity_wallet_overview2);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -48,6 +59,8 @@ public class WalletOverview extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(mViewPager);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -64,7 +77,7 @@ public class WalletOverview extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_wallet_overview, menu);
+        getMenuInflater().inflate(R.menu.menu_wallet_overview2, menu);
         return true;
     }
 
@@ -91,7 +104,7 @@ public class WalletOverview extends AppCompatActivity {
          * The fragment argument representing the section number for this
          * fragment.
          */
-        private static final String ARG_SECTION_NUMBER = "section_number";
+        private static final String WALLETID = "walletid";
 
         public PlaceholderFragment() {
         }
@@ -103,7 +116,13 @@ public class WalletOverview extends AppCompatActivity {
         public static PlaceholderFragment newInstance(int sectionNumber) {
             PlaceholderFragment fragment = new PlaceholderFragment();
             Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+
+            String walletid = "";
+
+            if (sectionNumber != 0) {
+                walletid = Wallets.getOwnWallets().get(sectionNumber - 1).getIdentifier();
+            }
+            args.putString(WALLETID, walletid);
             fragment.setArguments(args);
             return fragment;
         }
@@ -111,9 +130,14 @@ public class WalletOverview extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_wallet_overview, container, false);
+            View rootView = inflater.inflate(R.layout.fragment_wallet_overview2, container, false);
             TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+            String walletid = getArguments().getString(WALLETID);
+            if (walletid.isEmpty()) {
+
+            } else {
+                textView.setText(walletid);
+            }
             return rootView;
         }
     }
@@ -132,26 +156,21 @@ public class WalletOverview extends AppCompatActivity {
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
+            return PlaceholderFragment.newInstance(position);
         }
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
-            return 3;
+            return Wallets.getOwnWallets().size() + 1;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "SECTION 1";
-                case 1:
-                    return "SECTION 2";
-                case 2:
-                    return "SECTION 3";
+            if (position == 0) {
+                return "Create Wallet";
+            } else {
+                return Wallets.getName(Wallets.getOwnWallets().get(position - 1));
             }
-            return null;
         }
     }
 }
