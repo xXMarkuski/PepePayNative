@@ -10,7 +10,11 @@ public class FileUtils {
 
     public static void write(File file, String text) {
         try {
-            Files.write("text-to-write", file, Charsets.UTF_8);
+            if (!file.exists()) {
+                Files.createParentDirs(file);
+                Files.touch(file);
+            }
+            Files.write(text, file, Charsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
         }

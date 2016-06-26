@@ -2,6 +2,7 @@ package pepepay.pepepaynative;
 
 
 import java.io.File;
+import java.security.Security;
 import java.util.List;
 
 import pepepay.pepepaynative.backend.social31.ConnectionManager;
@@ -47,6 +48,8 @@ public class PepePay {
     }
 
     public void create(File godWalletsFile, File walletFile, File privateFile, File nameFile, File optionsFile) {
+        Security.insertProviderAt(new org.spongycastle.jce.provider.BouncyCastleProvider(), 1);
+
         DEVICE_CONNECTION_HANDLER = new LocalConnectionHandler();
 
         CONNECTION_MANAGER = new ConnectionManager();

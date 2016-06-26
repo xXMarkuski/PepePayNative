@@ -40,7 +40,7 @@ public class StringUtils {
             result.add(data.substring(pos, pos + intLength));
             pos += intLength;
         }
-        return (String[]) result.toArray();
+        return result.toArray(new String[0]);
     }
 
     public static boolean isMultiplexed(String s) {

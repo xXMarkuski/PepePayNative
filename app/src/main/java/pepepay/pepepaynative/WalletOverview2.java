@@ -1,5 +1,6 @@
 package pepepay.pepepaynative;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -10,21 +11,21 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 import java.io.File;
 import java.util.Arrays;
 
 import pepepay.pepepaynative.backend.social31.handler.IDeviceConnectionHandler;
 import pepepay.pepepaynative.backend.social31.wifiDirect.WifiDirectConnectionHandler;
+import pepepay.pepepaynative.backend.wallet2.Wallet;
 import pepepay.pepepaynative.backend.wallet2.Wallets;
+import pepepay.pepepaynative.fragments.WalletCreateFragment;
+import pepepay.pepepaynative.fragments.WalletInfoFragment;
 
-public class WalletOverview2 extends AppCompatActivity {
+public class WalletOverview2 extends AppCompatActivity implements WalletCreateFragment.OnFragmentInteractionListener, WalletInfoFragment.OnFragmentInteractionListener, Wallets.WalletsListener {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -71,6 +72,8 @@ public class WalletOverview2 extends AppCompatActivity {
             }
         });
 
+        Wallets.addWalletAddListener(this);
+
     }
 
 
@@ -96,50 +99,34 @@ public class WalletOverview2 extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String WALLETID = "walletid";
+    @Override
+    public void onFragmentInteraction(Uri uri) {
 
-        public PlaceholderFragment() {
-        }
+    }
 
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-
-            String walletid = "";
-
-            if (sectionNumber != 0) {
-                walletid = Wallets.getOwnWallets().get(sectionNumber - 1).getIdentifier();
+    @Override
+    public void privateWalletAdded(Wallet wallet) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mSectionsPagerAdapter.notifyDataSetChanged();
             }
-            args.putString(WALLETID, walletid);
-            fragment.setArguments(args);
-            return fragment;
-        }
+        });
+    }
 
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_wallet_overview2, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            String walletid = getArguments().getString(WALLETID);
-            if (walletid.isEmpty()) {
+    @Override
+    public void privateWalletGeneratingBegin() {
 
-            } else {
-                textView.setText(walletid);
-            }
-            return rootView;
-        }
+    }
+
+    @Override
+    public void nameChange(String walletID, String newName) {
+
+    }
+
+    @Override
+    public void balanceChange(String walletID, float newBalance) {
+
     }
 
     /**
@@ -156,7 +143,11 @@ public class WalletOverview2 extends AppCompatActivity {
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position);
+            if (position == 0) {
+                return WalletCreateFragment.newInstance();
+            } else {
+                return WalletInfoFragment.newInstance(position - 1);
+            }
         }
 
         @Override

@@ -215,7 +215,9 @@ public class Wallets {
         for (File child : file.listFiles()) {
             String content = null;
             try {
-                content = Files.toString(file, Charset.forName("UTF-8"));
+                System.out.println(child);
+                content = Files.toString(child, Charset.forName("UTF-8"));
+                System.out.println(content);
             } catch (IOException e) {
                 e.printStackTrace();
             }
