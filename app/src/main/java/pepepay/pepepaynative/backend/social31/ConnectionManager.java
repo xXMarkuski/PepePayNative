@@ -2,6 +2,7 @@ package pepepay.pepepaynative.backend.social31;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import pepepay.pepepaynative.backend.social31.connection.Connection;
@@ -138,10 +139,14 @@ public class ConnectionManager {
             connection.update();
         }
 
-        for (IDeviceConnectionHandler handler : handlersToInit) {
+        Iterator<IDeviceConnectionHandler> iter = handlersToInit.iterator();
+
+        while (iter.hasNext()) {
+            IDeviceConnectionHandler handler = iter.next();
+
             if (handler.canInit()) {
                 handler.init(this);
-                handlersToInit.remove(handler);
+                iter.remove();
                 handlers.add(handler);
             }
         }

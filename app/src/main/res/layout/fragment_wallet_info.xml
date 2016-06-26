@@ -14,14 +14,14 @@
         android:weightSum="1">
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/nameButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="Wallet Name" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/sendMoney"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

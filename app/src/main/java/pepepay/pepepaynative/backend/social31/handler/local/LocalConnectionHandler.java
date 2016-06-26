@@ -39,7 +39,7 @@ public class LocalConnectionHandler implements IDeviceConnectionHandler<LocalCon
 
     @Override
     public void requestAvailableDevices(Function<Void, ArrayList<LocalDevice>> callback) {
-        callback.eval((ArrayList<LocalDevice>) Arrays.asList(device));
+        callback.eval(new ArrayList<>(Arrays.asList(device)));
     }
 
     @Override

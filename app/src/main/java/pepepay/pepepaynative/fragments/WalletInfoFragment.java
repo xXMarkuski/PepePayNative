@@ -4,12 +4,17 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import pepepay.pepepaynative.R;
+import pepepay.pepepaynative.backend.social31.handler.IDevice;
 import pepepay.pepepaynative.backend.wallet2.Wallets;
+import pepepay.pepepaynative.utils.Function;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -54,8 +59,27 @@ public class WalletInfoFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_wallet_info, container, false);
+        View v = inflater.inflate(R.layout.fragment_wallet_info, container, false);
+        final String walletid = getArguments().getString(WalletID);
+        Button walletChangeButton = (Button) v.findViewById(R.id.nameButton);
+        walletChangeButton.setText(Wallets.getName(walletid));
+        final Button sendMoneyButton = (Button) v.findViewById(R.id.sendMoney);
+        sendMoneyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fm = WalletInfoFragment.this.getFragmentManager();
+                SelectDeviceFragment newFragment = SelectDeviceFragment.newInstance(walletid, new Function<Void, IDevice>() {
+                    @Override
+                    public Void eval(IDevice iDevice) {
+                        Log.d("asdsd", iDevice.getName());
+                        return null;
+                    }
+                });
+                newFragment.show(fm, "asdasd");
+            }
+        });
+
+        return v;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -93,7 +117,6 @@ public class WalletInfoFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 }

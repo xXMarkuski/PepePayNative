@@ -2,8 +2,6 @@ package pepepay.pepepaynative;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import java.io.File;
 import java.util.Arrays;
@@ -22,10 +19,11 @@ import pepepay.pepepaynative.backend.social31.handler.IDeviceConnectionHandler;
 import pepepay.pepepaynative.backend.social31.wifiDirect.WifiDirectConnectionHandler;
 import pepepay.pepepaynative.backend.wallet2.Wallet;
 import pepepay.pepepaynative.backend.wallet2.Wallets;
+import pepepay.pepepaynative.fragments.SelectDeviceFragment;
 import pepepay.pepepaynative.fragments.WalletCreateFragment;
 import pepepay.pepepaynative.fragments.WalletInfoFragment;
 
-public class WalletOverview2 extends AppCompatActivity implements WalletCreateFragment.OnFragmentInteractionListener, WalletInfoFragment.OnFragmentInteractionListener, Wallets.WalletsListener {
+public class WalletOverview2 extends AppCompatActivity implements WalletCreateFragment.OnFragmentInteractionListener, WalletInfoFragment.OnFragmentInteractionListener, SelectDeviceFragment.OnFragmentInteractionListener, Wallets.WalletsListener {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -63,16 +61,21 @@ public class WalletOverview2 extends AppCompatActivity implements WalletCreateFr
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
         Wallets.addWalletAddListener(this);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (!Thread.interrupted()) {
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    PepePay.CONNECTION_MANAGER.update();
+                }
+            }
+        }).start();
 
     }
 

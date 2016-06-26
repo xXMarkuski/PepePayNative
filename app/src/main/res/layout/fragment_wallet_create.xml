@@ -15,7 +15,7 @@
             <TextView
                 android:id="@+id/textView2"
                 android:layout_column="0"
-                android:text="Name:"
+                android:text="@string/wallet_creation_name"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <EditText
@@ -32,7 +32,7 @@
             <TextView
                 android:id="@+id/textView3"
                 android:layout_column="0"
-                android:text="PIN:"
+                android:text="@string/wallet_creation_pin"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <EditText
@@ -52,7 +52,7 @@
             <TextView
                 android:id="@+id/textView4"
                 android:layout_column="0"
-                android:text="Keysize:"
+                android:text="@string/wallet_creation_keysize"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <EditText
@@ -66,93 +66,15 @@
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent"></TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"></TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"></TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"></TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"></TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"></TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"></TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"></TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"></TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"></TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"></TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"></TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"></TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"></TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"></TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"></TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"></TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"></TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"></TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"></TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <Button
                 android:id="@+id/button4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_column="1"
                 android:layout_gravity="center_horizontal|bottom"
-                android:text="New Button" />
+                android:text="@string/confirm" />
         </TableRow>
     </TableLayout>
 
