@@ -1,6 +1,8 @@
 package pepepay.pepepaynative;
 
 
+import android.app.Activity;
+
 import java.io.File;
 import java.security.Security;
 import java.util.List;
@@ -12,7 +14,6 @@ import pepepay.pepepaynative.backend.social31.handler.local.LocalDevice;
 import pepepay.pepepaynative.backend.social31.packages.Parcel;
 import pepepay.pepepaynative.backend.wallet2.Wallet;
 import pepepay.pepepaynative.backend.wallet2.Wallets;
-import pepepay.pepepaynative.backend.wallet2.transaction.Transaction;
 import pepepay.pepepaynative.utils.Options;
 import pepepay.pepepaynative.utils.loader.LoaderManager;
 import pepepay.pepepaynative.utils.loader.loaders.SerializableLoader;
@@ -20,7 +21,7 @@ import pepepay.pepepaynative.utils.loader.loaders.SerializableLoader;
 public class PepePay {
 
     public static final int PROTOCOL_VERSION_MAJOR = 0;
-    public static final int PROTOCOL_VERSION_MINOR = 8;
+    public static final int PROTOCOL_VERSION_MINOR = 10;
     public static final int PROTOCOL_VERSION_PATCHLEVEL = 0;
     public static final String PROTOCOL_VERSION = PROTOCOL_VERSION_MAJOR + "." + PROTOCOL_VERSION_MINOR + "." + PROTOCOL_VERSION_PATCHLEVEL;
 
@@ -42,13 +43,21 @@ public class PepePay {
 
     private static List<IDeviceConnectionHandler> handlers;
 
+    private static Activity ACTIVITY;
+
 
     public PepePay(List<IDeviceConnectionHandler> handlers) {
         PepePay.handlers = handlers;
     }
 
-    public void create(File godWalletsFile, File walletFile, File privateFile, File nameFile, File optionsFile) {
+    public static void runOnUIThread(Runnable runnable) {
+        ACTIVITY.runOnUiThread(runnable);
+    }
+
+    public void create(File godWalletsFile, File walletFile, File privateFile, File nameFile, File optionsFile, Activity activity) {
         Security.insertProviderAt(new org.spongycastle.jce.provider.BouncyCastleProvider(), 1);
+
+        PepePay.ACTIVITY = activity;
 
         DEVICE_CONNECTION_HANDLER = new LocalConnectionHandler();
 
@@ -60,7 +69,7 @@ public class PepePay {
 
         LOADER_MANAGER.registerLoader(new SerializableLoader());
 
-        LOADER_MANAGER.registerLoader(new Transaction.TransactionLoader());
+        //LOADER_MANAGER.registerLoader(new Transaction.TransactionLoader());
         LOADER_MANAGER.registerLoader(new Wallet.WalletLoader());
         LOADER_MANAGER.registerLoader(new Parcel.HeaderOptionLoader());
         LOADER_MANAGER.registerLoader(new Parcel.ParcelLoader());
@@ -86,4 +95,5 @@ public class PepePay {
 
         OPTIONS = Options.load(optionsFile);
     }
+
 }

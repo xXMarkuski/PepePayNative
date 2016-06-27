@@ -62,6 +62,7 @@ public class SelectWalletFragment extends DialogFragment {
         View view = inflater.inflate(R.layout.fragment_select_wallet, null);
         final LinearLayout layout = (LinearLayout) view.findViewById(R.id.selectWallet);
         builder.setTitle(R.string.selectWallet).setView(view);
+        builder.setIcon(android.R.drawable.ic_menu_info_details);
 
         final Parcel parcel = new Parcel(Connection.requestWalletIDs, Connection.REQ, LongUtils.nextLong(Long.MAX_VALUE));
         connection.send(parcel);

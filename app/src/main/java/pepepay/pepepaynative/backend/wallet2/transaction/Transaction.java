@@ -4,8 +4,6 @@ package pepepay.pepepaynative.backend.wallet2.transaction;
 import java.io.Serializable;
 
 import pepepay.pepepaynative.backend.wallet2.Wallets;
-import pepepay.pepepaynative.utils.StringUtils;
-import pepepay.pepepaynative.utils.loader.Loader;
 
 public class Transaction implements Serializable {
     private final String sender;
@@ -56,40 +54,5 @@ public class Transaction implements Serializable {
 
     public int getID() {
         return id;
-    }
-
-    public static class TransactionLoader implements Loader<Transaction> {
-
-        @Override
-        public String save(Transaction transaction) {
-            return StringUtils.multiplex(transaction.sender, transaction.receiver, transaction.amount + "", transaction.time + "", transaction.purpose, transaction.id + "");
-        }
-
-        @Override
-        public Transaction load(String data) {
-            String[] parts = StringUtils.demultiplex(data);
-            String sender = parts[0];
-            String receiver = parts[1];
-            float amount = Float.parseFloat(parts[2]);
-            long time = Long.parseLong(parts[3]);
-            String purpose = parts[4];
-            int id = Integer.parseInt(parts[5]);
-            return new Transaction(sender, receiver, amount, time, purpose, id);
-        }
-
-        @Override
-        public Transaction unsaveLoad(String data) throws Exception {
-            return load(data);
-        }
-
-        @Override
-        public Class<Transaction> getHandledType() {
-            return Transaction.class;
-        }
-
-        @Override
-        public String id() {
-            return "t";
-        }
     }
 }

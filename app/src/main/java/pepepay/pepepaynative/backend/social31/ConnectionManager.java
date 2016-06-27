@@ -43,8 +43,6 @@ public class ConnectionManager {
     }
 
     public void devicesChanged(ArrayList<? extends IDevice> newDevices, ArrayList<? extends IDevice> goneDevices) {
-        System.out.println(newDevices);
-        System.out.println(goneDevices);
         for (Function2<Void, ArrayList<? extends IDevice>, ArrayList<? extends IDevice>> func : deviceChangeListener) {
             func.eval(newDevices, goneDevices);
         }

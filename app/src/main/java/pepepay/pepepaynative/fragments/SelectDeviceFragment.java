@@ -56,6 +56,7 @@ public class SelectDeviceFragment extends DialogFragment {
         final LinearLayout layout = (LinearLayout) view.findViewById(R.id.selectDevice);
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.selectDevice).setView(view);
+        builder.setIcon(android.R.drawable.ic_menu_info_details);
 
         PepePay.CONNECTION_MANAGER.addDeviceChangeListener(new Function2<Void, ArrayList<? extends IDevice>, ArrayList<? extends IDevice>>() {
             HashMap<IDevice, Button> iDeviceButtonHashMap = new HashMap<IDevice, Button>();

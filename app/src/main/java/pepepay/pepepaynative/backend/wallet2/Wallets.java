@@ -116,6 +116,7 @@ public class Wallets {
     }
 
     public static String getName(Wallet wallet) {
+        if (wallet == null) return "null";
         return getName(wallet.getIdentifier());
     }
 
@@ -141,6 +142,7 @@ public class Wallets {
 
     public static Wallet getWallet(String walletID) {
         for (Wallet wallet : wallets) {
+            if (wallet == null) continue;
             if (wallet.getIdentifier().equals(walletID)) return wallet;
         }
         return null;
@@ -156,6 +158,7 @@ public class Wallets {
     }
 
     public static void addWallet(Wallet wallet) {
+        if (wallet == null || wallets.contains(wallet)) return;
         wallets.add(wallet);
     }
 
@@ -196,14 +199,36 @@ public class Wallets {
         return result;
     }
 
+    public static void deleteWallet(Wallet wallet) {
+        wallets.remove(wallet);
+        walletNames.remove(wallet.getIdentifier());
+        privateKeys.remove(wallet.getIdentifier());
+        godWallets.remove(wallet);
+
+        FileUtils.child(PepePay.walletFile, StringUtils.getSimple(wallet.getIdentifier()) + "").delete();
+
+        for (WalletsListener listener : walletsListeners) {
+            listener.walletDeleted(wallet);
+        }
+    }
+
+    public static void deleteWallet(String walletID) {
+        deleteWallet(getWallet(walletID));
+    }
+
     /**
      * Point to file which points to wallets
      *
      * @param file the File
      */
-    public static void saveWallets(File file) {
-        for (Wallet wallet : wallets) {
-            FileUtils.write(FileUtils.child(file, (StringUtils.getSimple(wallet.getIdentifier()) + "")), PepePay.LOADER_MANAGER.save(wallet));
+    public static void saveWallets(final File file) {
+        for (final Wallet wallet : wallets) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    FileUtils.write(FileUtils.child(file, (StringUtils.getSimple(wallet.getIdentifier()) + "")), PepePay.LOADER_MANAGER.save(wallet));
+                }
+            }).start();
         }
     }
 
@@ -212,16 +237,16 @@ public class Wallets {
     }
 
     public static void loadWallets(File file) {
-        for (File child : file.listFiles()) {
-            String content = null;
-            try {
-                System.out.println(child);
-                content = Files.toString(child, Charset.forName("UTF-8"));
-                System.out.println(content);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            wallets.add((Wallet) PepePay.LOADER_MANAGER.load(content));
+        for (final File child : file.listFiles()) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    String content = null;
+                    content = FileUtils.read(child);
+                    Wallet load = (Wallet) PepePay.LOADER_MANAGER.load(content);
+                    addWallet(load);
+                }
+            }).start();
         }
     }
 
@@ -283,5 +308,7 @@ public class Wallets {
         void nameChange(String walletID, String newName);
 
         void balanceChange(String walletID, float newBalance);
+
+        void walletDeleted(Wallet wallet);
     }
 }

@@ -147,7 +147,6 @@ public class WifiDirectConnectionHandler implements IDeviceConnectionHandler<Wif
                             }
                         }
                     }
-                    System.out.println(deviceList[0]);
                     availableServices.addAll(newDevices);
                     connManager.devicesChanged(newDevices, gone);
                 } else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {

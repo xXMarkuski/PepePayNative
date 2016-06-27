@@ -4,7 +4,8 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -23,40 +24,27 @@ import pepepay.pepepaynative.fragments.WalletInfoFragment;
 
 public class WalletOverview2 extends AppCompatActivity implements Wallets.WalletsListener {
 
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
     private SectionsPagerAdapter mSectionsPagerAdapter;
-
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
     private ViewPager mViewPager;
+    private TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        new PepePay(Arrays.<IDeviceConnectionHandler>asList(new WifiDirectConnectionHandler(this))).create(new File(this.getFilesDir(), "godWallets"), new File(this.getFilesDir(), "wallets"), new File(this.getFilesDir(), "private"), new File(this.getFilesDir(), "names"), new File(this.getFilesDir(), "options"));
+        new PepePay(Arrays.<IDeviceConnectionHandler>asList(new WifiDirectConnectionHandler(this))).create(new File(this.getFilesDir(), "godWallets"), new File(this.getFilesDir(), "wallets"), new File(this.getFilesDir(), "private"), new File(this.getFilesDir(), "names"), new File(this.getFilesDir(), "options"), this);
 
         setContentView(R.layout.activity_wallet_overview2);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
+
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
         Wallets.addWalletAddListener(this);
@@ -117,7 +105,12 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
 
     @Override
     public void nameChange(String walletID, String newName) {
-
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                refreshTabTitles();
+            }
+        });
     }
 
     @Override
@@ -125,11 +118,33 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
 
     }
 
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    @Override
+    public void walletDeleted(Wallet wallet) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mSectionsPagerAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Wallets.saveAll();
+        PepePay.OPTIONS.save(PepePay.optionsFile);
+    }
+
+    private void refreshTabTitles() {
+        for (int i = 0; i < tabLayout.getTabCount(); i++) {
+            TabLayout.Tab tab = tabLayout.getTabAt(i);
+            if (tab != null) {
+                tab.setText(mSectionsPagerAdapter.getPageTitle(i));
+            }
+        }
+    }
+
+    public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -158,6 +173,11 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
             } else {
                 return Wallets.getName(Wallets.getOwnWallets().get(position - 1));
             }
+        }
+
+        @Override
+        public int getItemPosition(Object object) {
+            return PagerAdapter.POSITION_NONE;
         }
     }
 }

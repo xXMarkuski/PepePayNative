@@ -32,19 +32,28 @@ public class Wallet {
         this.publicKey = publicKey;
         this.receivedTransactions = new ArrayList<Transaction>();
         this.sendTransactions = new ArrayList<Transaction>();
-        this.balance = this.calculateBalance();
-        this.numberTransaction = this.calcNumberTransaction();
-        this.addTransactions(transactions);
         this.transactionListeners = new ArrayList<Function2<Void, Wallet, Transaction>>();
+        this.numberTransaction = new HashMap<>();
+        this.addTransactions(transactions);
+        this.numberTransaction = this.calcNumberTransaction();
+        this.balance = this.calculateBalance();
     }
 
     private HashMap<String, Integer> calcNumberTransaction() {
         HashMap<String, Integer> result = new HashMap<String, Integer>();
         for (Transaction transaction : sendTransactions) {
-            result.put(transaction.getReceiver(), result.get(transaction.getReceiver()) + 1);
+            Integer integer = result.get(transaction.getReceiver());
+            if (integer == null) {
+                integer = 0;
+            }
+            result.put(transaction.getReceiver(), integer + 1);
         }
         for (Transaction transaction : receivedTransactions) {
-            result.put(transaction.getSender(), result.get(transaction.getSender()) + 1);
+            Integer integer = result.get(transaction.getSender());
+            if (integer == null) {
+                integer = 0;
+            }
+            result.put(transaction.getSender(), result.get(integer + 1));
         }
 
         return result;
@@ -54,8 +63,7 @@ public class Wallet {
         return new Transaction(this.getIdentifier(), receiver.getIdentifier(), amount, System.currentTimeMillis(), purpose, 1);
     }
 
-    public void addTransaction(Transaction transaction) {
-        System.out.println(numberTransaction);
+    public void addTransaction(final Transaction transaction) {
         //if (!transaction.isValid()) return;
         if (transaction.getReceiver().equals(this.getIdentifier())) {
             String sender = transaction.getSender();
@@ -66,7 +74,6 @@ public class Wallet {
                 number = 0;
             }
             numberTransaction.put(sender, number + 1);
-            Wallets.notifyBalanceChange(this.getIdentifier(), balance);
         }
         if (transaction.getSender().equals(this.getIdentifier())) {
             String receiver = transaction.getReceiver();
@@ -78,13 +85,33 @@ public class Wallet {
             }
             numberTransaction.put(receiver, number + 1);
         }
+        if (!transactionListeners.isEmpty()) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    for (Function2<Void, Wallet, Transaction> listener : transactionListeners) {
+                        listener.eval(Wallet.this, transaction);
+                    }
+                }
+            }).start();
+        }
         Wallets.saveWallet(this);
     }
 
-    public void addTransactions(ArrayList<Transaction> transactions) {
-        for (Transaction transaction : transactions) {
-            this.addTransaction(transaction);
-        }
+    public void addTransactions(final ArrayList<Transaction> transactions) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (final Transaction transaction : transactions) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Wallet.this.addTransaction(transaction);
+                        }
+                    }).start();
+                }
+            }
+        }).start();
     }
 
     public float calculateBalance() {
@@ -165,8 +192,13 @@ public class Wallet {
         return balance;
     }
 
-    public void addTransactionListener(Function2<Void, Wallet, Transaction> listener) {
+    public void addTransactionListener(Function2<Void, Wallet, Transaction> listener, boolean shoudNotifyOld) {
         transactionListeners.add(listener);
+        if (shoudNotifyOld) {
+            for (Transaction transaction : getTransactionsChronologically()) {
+                listener.eval(this, transaction);
+            }
+        }
     }
 
     public void removeTransactionsListener(Function2<Void, Wallet, Transaction> listener) {

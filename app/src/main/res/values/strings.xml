@@ -13,4 +13,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete_wallet">Delete Wallet</string>
+    <string name="delete_wallet_Text">Are you sure you want to delete the Wallet %s</string>
 </resources>

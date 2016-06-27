@@ -92,7 +92,6 @@ public class Connection implements ReceiveHandler {
 
         if (data.equals(Connection.requestWalletIDs)) {
             Parcel answer = parcel.getAnswer(PepePay.LOADER_MANAGER.save(Wallets.getOwnWalletIds()));
-            System.out.println("asdasdasdasdasdasd" + answer.getData());
             connection.send(answer);
         }
         return null;

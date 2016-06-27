@@ -15,7 +15,7 @@
 
         <Button
             android:id="@+id/nameButton"
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="Wallet Name" />
@@ -23,14 +23,21 @@
         <Button
             android:id="@+id/sendMoney"
             style="?android:attr/buttonStyleSmall"
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="Send Money" />
 
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"></TableLayout>
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <TableLayout
+                android:id="@+id/transOverview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"></TableLayout>
+        </ScrollView>
 
     </LinearLayout>
 </FrameLayout>
