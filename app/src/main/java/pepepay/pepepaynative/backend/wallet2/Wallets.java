@@ -1,10 +1,6 @@
 package pepepay.pepepaynative.backend.wallet2;
 
-import com.google.common.io.Files;
-
 import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
 import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.util.ArrayList;
@@ -257,6 +253,11 @@ public class Wallets {
         Wallets.saveWallets(PepePay.walletFile);
         Wallets.savePrivateKeys(PepePay.privateFile);
         Wallets.saveNames(PepePay.nameFile);
+        Wallets.saveGodWallets(PepePay.godWalletsFile);
+    }
+
+    public static void saveGodWallets(File file) {
+        save(godWallets, file);
     }
 
     public static void savePrivateKeys(File file) {
@@ -280,11 +281,7 @@ public class Wallets {
     }
 
     private static void save(Object obj, File file) {
-        try {
-            Files.write(PepePay.LOADER_MANAGER.save(obj), file, Charset.forName("UTF-8"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        FileUtils.write(file, PepePay.LOADER_MANAGER.save(obj));
     }
 
     private static <T, U> void load(HashMap<T, U> map, File file) {

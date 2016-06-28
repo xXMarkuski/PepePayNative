@@ -1,13 +1,17 @@
 package pepepay.pepepaynative.fragments;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import pepepay.pepepaynative.PepePay;
 import pepepay.pepepaynative.R;
@@ -21,7 +25,8 @@ import pepepay.pepepaynative.utils.Function;
 public class WalletInfoFragment extends Fragment implements Wallets.WalletsListener {
     private Button walletChangeButton;
     private Wallet wallet;
-    private LinearLayout layout;
+    private ListView listView;
+    private ArrayAdapter<Transaction> adapter;
 
     public WalletInfoFragment() {
     }
@@ -88,8 +93,40 @@ public class WalletInfoFragment extends Fragment implements Wallets.WalletsListe
             }
         });
 
-        layout = (LinearLayout) v.findViewById(R.id.transOverview);
-        new TransactionVisualizer(wallet, layout, getFragmentManager());
+        listView = (ListView) v.findViewById(R.id.transOverview);
+        adapter = new ArrayAdapter<Transaction>(this.getContext(), android.R.layout.simple_list_item_1, wallet.getTransactionsChronologically()) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                final Transaction transaction = wallet.getTransactionsChronologically().get(position);
+
+                TextView view = new TextView(this.getContext());
+
+                int color = Color.BLACK;
+                String text = "";
+                if (transaction.getReceiver().equals(wallet.getIdentifier())) {
+                    color = this.getContext().getResources().getColor(android.R.color.holo_green_dark);
+                    text = Wallets.getName(transaction.getSender()) + " +" + transaction.getAmount();
+                } else if (transaction.getSender().equals(wallet.getIdentifier())) {
+                    color = this.getContext().getResources().getColor(android.R.color.holo_red_dark);
+                    text = Wallets.getName(transaction.getReceiver()) + " -" + transaction.getAmount();
+                }
+                view.setTextColor(color);
+                view.setText(text);
+                return view;
+            }
+
+            @Override
+            public int getCount() {
+                return wallet.getTransactionCount();
+            }
+        };
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                TransactionInfoFragment.newInstance(wallet.getTransactionsChronologically().get(position)).show(fm, "dialog");
+            }
+        });
 
         Wallets.addWalletAddListener(this);
 
@@ -122,8 +159,9 @@ public class WalletInfoFragment extends Fragment implements Wallets.WalletsListe
     @Override
     public void balanceChange(String walletID, Transaction newTransaction) {
         if (walletID.equals(wallet.getIdentifier())) {
+            System.out.println(Wallets.getName(walletID));
             walletChangeButton.setText(Wallets.getName(wallet) + "(" + wallet.getBalance() + ")");
-            TransactionVisualizer.update(layout, getFragmentManager(), newTransaction, wallet);
+            adapter.notifyDataSetChanged();
         }
     }
 
