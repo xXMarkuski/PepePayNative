@@ -16,4 +16,9 @@
     <string name="cancel">Cancel</string>
     <string name="delete_wallet">Delete Wallet</string>
     <string name="delete_wallet_Text">Are you sure you want to delete the Wallet %s</string>
+    <string name="wrongPassword">Wrorng PIN</string>
+    <string name="sender">Sender:</string>
+    <string name="receiver">Receiver:</string>
+    <string name="time">Time:</string>
+    <string name="transactionInfo">Transaction Info</string>
 </resources>

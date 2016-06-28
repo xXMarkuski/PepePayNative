@@ -11,7 +11,6 @@ import pepepay.pepepaynative.backend.social31.ConnectionManager;
 import pepepay.pepepaynative.backend.social31.handler.IDeviceConnectionHandler;
 import pepepay.pepepaynative.backend.social31.handler.local.LocalConnectionHandler;
 import pepepay.pepepaynative.backend.social31.handler.local.LocalDevice;
-import pepepay.pepepaynative.backend.social31.packages.Parcel;
 import pepepay.pepepaynative.backend.wallet2.Wallet;
 import pepepay.pepepaynative.backend.wallet2.Wallets;
 import pepepay.pepepaynative.utils.Options;
@@ -38,7 +37,6 @@ public class PepePay {
     public static Options OPTIONS;
 
     public static ConnectionManager CONNECTION_MANAGER;
-    public static LocalConnectionHandler DEVICE_CONNECTION_HANDLER;
     public static LocalDevice LOCAL_DEVICE;
 
     private static List<IDeviceConnectionHandler> handlers;
@@ -59,20 +57,12 @@ public class PepePay {
 
         PepePay.ACTIVITY = activity;
 
-        DEVICE_CONNECTION_HANDLER = new LocalConnectionHandler();
-
         CONNECTION_MANAGER = new ConnectionManager();
         CONNECTION_MANAGER.addConnectionHandlers(handlers);
-        CONNECTION_MANAGER.addConnectionHandler(DEVICE_CONNECTION_HANDLER);
-
-        LOCAL_DEVICE = DEVICE_CONNECTION_HANDLER.device;
+        CONNECTION_MANAGER.addConnectionHandler(new LocalConnectionHandler());
 
         LOADER_MANAGER.registerLoader(new SerializableLoader());
-
-        //LOADER_MANAGER.registerLoader(new Transaction.TransactionLoader());
         LOADER_MANAGER.registerLoader(new Wallet.WalletLoader());
-        LOADER_MANAGER.registerLoader(new Parcel.HeaderOptionLoader());
-        LOADER_MANAGER.registerLoader(new Parcel.ParcelLoader());
 
         PepePay.godWalletsFile = godWalletsFile;
         PepePay.walletFile = walletFile;

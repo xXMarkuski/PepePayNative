@@ -5,7 +5,7 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -26,12 +26,6 @@ import pepepay.pepepaynative.utils.Function;
 import pepepay.pepepaynative.utils.LongUtils;
 import pepepay.pepepaynative.utils.StringUtils;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * Use the {@link SelectWalletFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class SelectWalletFragment extends DialogFragment {
     private Function<Void, Wallet> callback;
     private Connection connection;
@@ -39,12 +33,6 @@ public class SelectWalletFragment extends DialogFragment {
     public SelectWalletFragment() {
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment SelectWalletFragment.
-     */
     public static SelectWalletFragment newInstance(Connection connection, Function<Void, Wallet> callback) {
         SelectWalletFragment fragment = new SelectWalletFragment();
         Bundle args = new Bundle();
@@ -61,8 +49,7 @@ public class SelectWalletFragment extends DialogFragment {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         View view = inflater.inflate(R.layout.fragment_select_wallet, null);
         final LinearLayout layout = (LinearLayout) view.findViewById(R.id.selectWallet);
-        builder.setTitle(R.string.selectWallet).setView(view);
-        builder.setIcon(android.R.drawable.ic_menu_info_details);
+        builder.setTitle(R.string.selectWallet).setView(view).setIcon(android.R.drawable.ic_menu_info_details);
 
         final Parcel parcel = new Parcel(Connection.requestWalletIDs, Connection.REQ, LongUtils.nextLong(Long.MAX_VALUE));
         connection.send(parcel);
@@ -104,19 +91,23 @@ public class SelectWalletFragment extends DialogFragment {
                 while (iter.hasNext()) {
                     Parcel walletParcel = iter.next();
                     if (ans.isAnswerOf(walletParcel)) {
-                        Wallet wallet = (Wallet) PepePay.LOADER_MANAGER.load(walletParcel.getData());
-                        Wallets.addWallet(wallet);
-                        final Button button = new Button(SelectWalletFragment.this.getContext());
-                        button.setText(Wallets.getName(wallet));
-                        button.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                callback.eval(buttonWalletHashMap.get(button));
-                            }
-                        });
-                        buttonWalletHashMap.put(button, wallet);
-                        layout.addView(button);
-                        iter.remove();
+                        try {
+                            Wallet wallet = (Wallet) PepePay.LOADER_MANAGER.load(walletParcel.getData());
+                            Wallets.addWallet(wallet);
+                            final Button button = new Button(SelectWalletFragment.this.getContext());
+                            button.setText(Wallets.getName(wallet));
+                            button.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    callback.eval(buttonWalletHashMap.get(button));
+                                }
+                            });
+                            buttonWalletHashMap.put(button, wallet);
+                            layout.addView(button);
+                            iter.remove();
+                        } catch (Throwable t) {
+                            Log.e("SelWalFrag", "error", t);
+                        }
                     }
                 }
                 return null;

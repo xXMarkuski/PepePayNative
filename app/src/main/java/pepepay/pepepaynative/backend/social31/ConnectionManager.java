@@ -2,7 +2,6 @@ package pepepay.pepepaynative.backend.social31;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import pepepay.pepepaynative.backend.social31.connection.Connection;
@@ -92,7 +91,9 @@ public class ConnectionManager {
     }
 
     public boolean canSend(Connection connection) {
-        return connectionToHandler.get(connection).canSend();
+        IDeviceConnectionHandler handler = connectionToHandler.get(connection);
+        if (handler == null) return false;
+        return handler.canSend();
     }
 
     public void addConnectionHandler(IDeviceConnectionHandler handler) {
@@ -101,29 +102,24 @@ public class ConnectionManager {
     }
 
     public void getDevices(final Function<Void, ArrayList<IDevice>> callback) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                final ArrayList<IDevice> result = new ArrayList<IDevice>();
-                int size = handlers.size();
-                final int[] cursize = {0};
-                for (IDeviceConnectionHandler handler : handlers) {
-                    handler.requestAvailableDevices(new Function<Void, ArrayList<IDevice>>() {
-                        @Override
-                        public Void eval(ArrayList<IDevice> array) {
-                            result.addAll(array);
-                            cursize[0]++;
-                            return null;
-                        }
-                    });
+        final ArrayList<IDevice> result = new ArrayList<IDevice>();
+        int size = handlers.size();
+        final int[] cursize = {0};
+        for (IDeviceConnectionHandler handler : handlers) {
+            handler.requestAvailableDevices(new Function<Void, ArrayList<IDevice>>() {
+                @Override
+                public Void eval(ArrayList<IDevice> array) {
+                    result.addAll(array);
+                    cursize[0]++;
+                    return null;
                 }
-                while (cursize[0] != size) {
+            });
+        }
+        while (cursize[0] != size) {
 
-                }
-                callback.eval(result);
+        }
+        callback.eval(result);
 
-            }
-        }).start();
     }
 
     public void addConnectionHandlers(List<IDeviceConnectionHandler> handlers) {
@@ -137,14 +133,11 @@ public class ConnectionManager {
             connection.update();
         }
 
-        Iterator<IDeviceConnectionHandler> iter = handlersToInit.iterator();
-
-        while (iter.hasNext()) {
-            IDeviceConnectionHandler handler = iter.next();
-
+        ArrayList<IDeviceConnectionHandler> copy = new ArrayList<>(handlersToInit);
+        for (IDeviceConnectionHandler handler : copy) {
             if (handler.canInit()) {
                 handler.init(this);
-                iter.remove();
+                handlersToInit.remove(handler);
                 handlers.add(handler);
             }
         }

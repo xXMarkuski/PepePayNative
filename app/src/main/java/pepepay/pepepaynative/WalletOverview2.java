@@ -9,6 +9,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -19,6 +20,7 @@ import pepepay.pepepaynative.backend.social31.handler.IDeviceConnectionHandler;
 import pepepay.pepepaynative.backend.social31.wifiDirect.WifiDirectConnectionHandler;
 import pepepay.pepepaynative.backend.wallet2.Wallet;
 import pepepay.pepepaynative.backend.wallet2.Wallets;
+import pepepay.pepepaynative.backend.wallet2.transaction.Transaction;
 import pepepay.pepepaynative.fragments.WalletCreateFragment;
 import pepepay.pepepaynative.fragments.WalletInfoFragment;
 
@@ -27,13 +29,29 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     private TabLayout tabLayout;
+    private Thread updateThread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        new PepePay(Arrays.<IDeviceConnectionHandler>asList(new WifiDirectConnectionHandler(this))).create(new File(this.getFilesDir(), "godWallets"), new File(this.getFilesDir(), "wallets"), new File(this.getFilesDir(), "private"), new File(this.getFilesDir(), "names"), new File(this.getFilesDir(), "options"), this);
+        Log.e("walletoverview", "asdasdasd");
 
+        if (updateThread == null) {
+            new PepePay(Arrays.<IDeviceConnectionHandler>asList(new WifiDirectConnectionHandler(this))).create(new File(this.getFilesDir(), "godWallets"), new File(this.getFilesDir(), "wallets"), new File(this.getFilesDir(), "private"), new File(this.getFilesDir(), "names"), new File(this.getFilesDir(), "options"), this);
+
+            updateThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (!Thread.interrupted()) {
+                        PepePay.CONNECTION_MANAGER.update();
+                    }
+                }
+            });
+            updateThread.start();
+
+            Wallets.addWalletAddListener(this);
+        }
         setContentView(R.layout.activity_wallet_overview2);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -46,22 +64,6 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
-
-        Wallets.addWalletAddListener(this);
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (!Thread.interrupted()) {
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    PepePay.CONNECTION_MANAGER.update();
-                }
-            }
-        }).start();
 
     }
 
@@ -114,7 +116,7 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
     }
 
     @Override
-    public void balanceChange(String walletID, float newBalance) {
+    public void balanceChange(String walletID, Transaction newTransaction) {
 
     }
 
@@ -133,6 +135,21 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
         super.onPause();
         Wallets.saveAll();
         PepePay.OPTIONS.save(PepePay.optionsFile);
+        PepePay.CONNECTION_MANAGER.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        PepePay.CONNECTION_MANAGER.onResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (updateThread != null) {
+            updateThread.interrupt();
+        }
     }
 
     private void refreshTabTitles() {
@@ -163,7 +180,8 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
 
         @Override
         public int getCount() {
-            return Wallets.getOwnWallets().size() + 1;
+            int size = Wallets.getOwnWallets().size();
+            return size + 1;
         }
 
         @Override

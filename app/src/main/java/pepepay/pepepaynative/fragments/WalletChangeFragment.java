@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -17,11 +16,6 @@ import pepepay.pepepaynative.R;
 import pepepay.pepepaynative.backend.wallet2.Wallet;
 import pepepay.pepepaynative.backend.wallet2.Wallets;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link WalletChangeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class WalletChangeFragment extends DialogFragment {
 
     private Wallet wallet;
@@ -46,8 +40,6 @@ public class WalletChangeFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        super.onCreateDialog(savedInstanceState);
-
         LayoutInflater inflater = getActivity().getLayoutInflater();
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final View view = inflater.inflate(R.layout.fragment_wallet_change, null);

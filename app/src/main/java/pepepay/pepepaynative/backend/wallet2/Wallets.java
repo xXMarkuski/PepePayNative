@@ -165,7 +165,8 @@ public class Wallets {
     public static ArrayList<Wallet> getOwnWallets() {
         ArrayList<Wallet> result = new ArrayList<Wallet>(privateKeys.size());
         for (String id : privateKeys.keySet()) {
-            result.add(getWallet(id));
+            Wallet wallet = getWallet(id);
+            if (wallet != null) result.add(wallet);
         }
 
         return result;
@@ -200,12 +201,8 @@ public class Wallets {
     }
 
     public static void deleteWallet(Wallet wallet) {
-        wallets.remove(wallet);
-        walletNames.remove(wallet.getIdentifier());
         privateKeys.remove(wallet.getIdentifier());
         godWallets.remove(wallet);
-
-        FileUtils.child(PepePay.walletFile, StringUtils.getSimple(wallet.getIdentifier()) + "").delete();
 
         for (WalletsListener listener : walletsListeners) {
             listener.walletDeleted(wallet);
@@ -214,6 +211,14 @@ public class Wallets {
 
     public static void deleteWallet(String walletID) {
         deleteWallet(getWallet(walletID));
+    }
+
+    public static void addGodWallet(Wallet wallet) {
+        addGodWallet(wallet.getIdentifier());
+    }
+
+    public static void addGodWallet(String walletID) {
+        godWallets.add(walletID);
     }
 
     /**
@@ -238,15 +243,13 @@ public class Wallets {
 
     public static void loadWallets(File file) {
         for (final File child : file.listFiles()) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    String content = null;
-                    content = FileUtils.read(child);
-                    Wallet load = (Wallet) PepePay.LOADER_MANAGER.load(content);
-                    addWallet(load);
-                }
-            }).start();
+            String content = null;
+            content = FileUtils.read(child);
+            Wallet load = (Wallet) PepePay.LOADER_MANAGER.load(content);
+            addWallet(load);
+        }
+        for (Wallet wallet : wallets) {
+            wallet.addScheduledTransactions();
         }
     }
 
@@ -294,9 +297,9 @@ public class Wallets {
         ArrayList.addAll(temp);
     }
 
-    public static void notifyBalanceChange(String walletID, float newBalance) {
+    public static void notifyBalanceChange(String walletID, Transaction newTransaction) {
         for (WalletsListener walletsListener : walletsListeners) {
-            walletsListener.balanceChange(walletID, newBalance);
+            walletsListener.balanceChange(walletID, newTransaction);
         }
     }
 
@@ -307,7 +310,7 @@ public class Wallets {
 
         void nameChange(String walletID, String newName);
 
-        void balanceChange(String walletID, float newBalance);
+        void balanceChange(String walletID, Transaction newTransaction);
 
         void walletDeleted(Wallet wallet);
     }

@@ -2,15 +2,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="pepepay.pepepaynative.fragments.TransactionFragment">
+    tools:context="pepepay.pepepaynative.fragments.TransactionInfoFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:baselineAligned="false"
-        android:contextClickable="false"
+        android:layout_gravity="center"
         android:shrinkColumns="0"
         android:stretchColumns="1">
 
@@ -19,20 +18,17 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/amountText"
                 android:layout_column="0"
+                android:paddingRight="8dp"
                 android:text="@string/amount"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
-            <EditText
-                android:id="@+id/amountSelector"
+            <TextView
+                android:id="@+id/amount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="1"
-                android:ems="10"
-                android:gravity="fill_horizontal|clip_horizontal|center|end|right|fill"
-                android:inputType="numberDecimal" />
-
+                android:textAppearance="?android:attr/textAppearanceLarge" />
         </TableRow>
 
         <TableRow
@@ -40,37 +36,17 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_column="0"
-                android:text="@string/purpose"
+                android:paddingRight="8dp"
+                android:text="@string/sender"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
-
-            <EditText
-                android:id="@+id/purposeSelector"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_column="1" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/pinText"
-                android:layout_column="0"
-                android:text="@string/pin"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
-
-            <EditText
-                android:id="@+id/pinSelector"
+                android:id="@+id/sender"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="1"
-                android:ems="10"
-                android:inputType="textPassword" />
+                android:textAppearance="?android:attr/textAppearanceLarge" />
         </TableRow>
 
         <TableRow
@@ -78,11 +54,53 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/errorText"
+                android:layout_column="0"
+                android:paddingRight="8dp"
+                android:text="@string/receiver"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <TextView
+                android:id="@+id/receiver"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="1"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_column="0"
+                android:paddingRight="8dp"
+                android:text="@string/time"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="1"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/purpose"
                 android:layout_column="0"
                 android:layout_span="2"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="@android:color/holo_red_dark" />
+                android:textStyle="italic" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
         </TableRow>
 
     </TableLayout>

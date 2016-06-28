@@ -12,6 +12,7 @@ import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
+import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceInfo;
@@ -91,6 +92,8 @@ public class WifiDirectConnectionHandler implements IDeviceConnectionHandler<Wif
 
         wifiP2pManager = (WifiP2pManager) activity.getSystemService(Context.WIFI_P2P_SERVICE);
         channel = wifiP2pManager.initialize(activity, activity.getMainLooper(), null);
+
+        disconnect();
 
         receiver = new BroadcastReceiver() {
             @Override
@@ -316,6 +319,8 @@ public class WifiDirectConnectionHandler implements IDeviceConnectionHandler<Wif
          * GroupOwnerSocketHandler}
          */
 
+        if (p2pInfo.groupOwnerAddress == null) return;
+
         if (p2pInfo.isGroupOwner) {
             Log.d(TAG, "Connected as group owner");
             try {
@@ -420,6 +425,31 @@ public class WifiDirectConnectionHandler implements IDeviceConnectionHandler<Wif
             case 'w':
                 Log.w(TAG, String.valueOf(o));
                 break;
+        }
+    }
+
+    public void disconnect() {
+        if (wifiP2pManager != null && channel != null) {
+            wifiP2pManager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {
+                @Override
+                public void onGroupInfoAvailable(WifiP2pGroup group) {
+                    if (group != null && wifiP2pManager != null && channel != null
+                            && group.isGroupOwner()) {
+                        wifiP2pManager.removeGroup(channel, new WifiP2pManager.ActionListener() {
+
+                            @Override
+                            public void onSuccess() {
+                                Log.d(TAG, "removeGroup onSuccess -");
+                            }
+
+                            @Override
+                            public void onFailure(int reason) {
+                                Log.d(TAG, "removeGroup onFailure -" + reason);
+                            }
+                        });
+                    }
+                }
+            });
         }
     }
 }

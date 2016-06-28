@@ -21,12 +21,14 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".WalletOverview2"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_activity_wallet_overview2"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
     </application>
 

@@ -6,6 +6,9 @@ import java.io.Serializable;
 import pepepay.pepepaynative.backend.wallet2.Wallets;
 
 public class Transaction implements Serializable {
+
+    public static final long serialVersionUID = 1L;
+
     private final String sender;
     private final String receiver;
     private final float amount;
@@ -46,8 +49,8 @@ public class Transaction implements Serializable {
     }
 
     public boolean isValid() {
+        if (sender.equals(receiver)) return false;
         if (Wallets.isGodWallet(sender)) return true;
-        if (Wallets.isGodWallet(receiver)) return false;
         return Wallets.getWallet(sender).calculateBalanceAt(time) >= amount;
 
     }

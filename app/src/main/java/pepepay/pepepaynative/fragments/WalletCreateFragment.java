@@ -6,22 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import pepepay.pepepaynative.R;
 import pepepay.pepepaynative.backend.wallet2.Wallets;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * Use the {@link WalletCreateFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class WalletCreateFragment extends Fragment {
     private TextView nameSelector;
     private TextView pinSelector;
-    private EditText keySizeSelector;
     private Button okButton;
 
     public WalletCreateFragment() {
@@ -41,11 +33,6 @@ public class WalletCreateFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -53,12 +40,11 @@ public class WalletCreateFragment extends Fragment {
 
         nameSelector = (TextView) view.findViewById(R.id.nameSelector);
         pinSelector = (TextView) view.findViewById(R.id.pinSelector);
-        keySizeSelector = (EditText) view.findViewById(R.id.keySizeSelector);
         okButton = (Button) view.findViewById(R.id.button4);
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Wallets.generateAndAddWallet(Integer.parseInt(keySizeSelector.getText().toString()), nameSelector.getText() + "", pinSelector.getText() + "");
+                Wallets.generateAndAddWallet(11, nameSelector.getText() + "", pinSelector.getText() + "");
             }
         });
 

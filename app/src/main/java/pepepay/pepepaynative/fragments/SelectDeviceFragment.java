@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -17,18 +16,13 @@ import java.util.HashMap;
 import pepepay.pepepaynative.PepePay;
 import pepepay.pepepaynative.R;
 import pepepay.pepepaynative.backend.social31.handler.IDevice;
+import pepepay.pepepaynative.backend.wallet2.Wallet;
 import pepepay.pepepaynative.utils.Function;
 import pepepay.pepepaynative.utils.Function2;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * Use the {@link SelectDeviceFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class SelectDeviceFragment extends DialogFragment {
-    private final static String WALLETID = "walletid";
     private Function<Void, IDevice> callback;
+    private Wallet wallet;
 
     public SelectDeviceFragment() {
     }
@@ -39,12 +33,12 @@ public class SelectDeviceFragment extends DialogFragment {
      *
      * @return A new instance of fragment SelectDeviceFragment.
      */
-    public static SelectDeviceFragment newInstance(String walletID, Function<Void, IDevice> callback) {
+    public static SelectDeviceFragment newInstance(Wallet wallet, Function<Void, IDevice> callback) {
         SelectDeviceFragment fragment = new SelectDeviceFragment();
         Bundle args = new Bundle();
-        args.putString(WALLETID, walletID);
         fragment.setArguments(args);
         fragment.setCallback(callback);
+        fragment.setWallet(wallet);
         return fragment;
     }
 
@@ -55,8 +49,7 @@ public class SelectDeviceFragment extends DialogFragment {
         View view = inflater.inflate(R.layout.fragment_select_device, null);
         final LinearLayout layout = (LinearLayout) view.findViewById(R.id.selectDevice);
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.selectDevice).setView(view);
-        builder.setIcon(android.R.drawable.ic_menu_info_details);
+        builder.setTitle(R.string.selectDevice).setView(view).setIcon(android.R.drawable.ic_menu_info_details);
 
         PepePay.CONNECTION_MANAGER.addDeviceChangeListener(new Function2<Void, ArrayList<? extends IDevice>, ArrayList<? extends IDevice>>() {
             HashMap<IDevice, Button> iDeviceButtonHashMap = new HashMap<IDevice, Button>();
@@ -95,4 +88,7 @@ public class SelectDeviceFragment extends DialogFragment {
         this.callback = callback;
     }
 
+    public void setWallet(Wallet wallet) {
+        this.wallet = wallet;
+    }
 }

@@ -44,7 +44,8 @@ public class Connection implements ReceiveHandler {
 
     public void update() {
         if (manager.canSend(this)) {
-            for (Parcel parcel : toSend) {
+            ArrayList<Parcel> copy = new ArrayList(toSend);
+            for (Parcel parcel : copy) {
                 manager.send(target, processor.send(PepePay.LOADER_MANAGER.save(parcel)), this);
                 toSend.remove(parcel);
             }
@@ -80,9 +81,8 @@ public class Connection implements ReceiveHandler {
             if (str[0].equals(Connection.getWallet)) {
                 Wallet wallet = Wallets.getWallet(str[1]);
                 String saveKey = PepePay.LOADER_MANAGER.save(wallet.getPublicKey());
-                String saveReceived = PepePay.LOADER_MANAGER.save(wallet.getReceivedTransactions());
-                String saveSend = PepePay.LOADER_MANAGER.save(wallet.getSendTransactions());
-                connection.send(parcel.getAnswer(StringUtils.multiplex(saveKey, saveReceived, saveSend)));
+                String transactions = PepePay.LOADER_MANAGER.save(wallet.getTransactionsChronologically());
+                connection.send(parcel.getAnswer(StringUtils.multiplex(saveKey, transactions)));
             } else if (str[0].equals("pros")) {
 
             }

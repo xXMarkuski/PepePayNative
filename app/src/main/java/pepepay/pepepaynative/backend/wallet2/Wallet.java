@@ -28,15 +28,16 @@ public class Wallet {
     private HashMap<String, Integer> numberTransaction;
     private float balance;
 
+    private ArrayList<Transaction> scheduledTransactions;
+
     public Wallet(PublicKey publicKey, ArrayList<Transaction> transactions) {
         this.publicKey = publicKey;
         this.receivedTransactions = new ArrayList<Transaction>();
         this.sendTransactions = new ArrayList<Transaction>();
         this.transactionListeners = new ArrayList<Function2<Void, Wallet, Transaction>>();
-        this.numberTransaction = new HashMap<>();
-        this.addTransactions(transactions);
+        this.scheduledTransactions = transactions;
         this.numberTransaction = this.calcNumberTransaction();
-        this.balance = this.calculateBalance();
+        this.balance = 0;
     }
 
     private HashMap<String, Integer> calcNumberTransaction() {
@@ -64,7 +65,7 @@ public class Wallet {
     }
 
     public void addTransaction(final Transaction transaction) {
-        //if (!transaction.isValid()) return;
+        if (!transaction.isValid()) return;
         if (transaction.getReceiver().equals(this.getIdentifier())) {
             String sender = transaction.getSender();
             receivedTransactions.add(transaction);
@@ -85,33 +86,19 @@ public class Wallet {
             }
             numberTransaction.put(receiver, number + 1);
         }
+        Wallets.notifyBalanceChange(getIdentifier(), transaction);
         if (!transactionListeners.isEmpty()) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    for (Function2<Void, Wallet, Transaction> listener : transactionListeners) {
-                        listener.eval(Wallet.this, transaction);
-                    }
-                }
-            }).start();
+            for (Function2<Void, Wallet, Transaction> listener : transactionListeners) {
+                listener.eval(Wallet.this, transaction);
+            }
         }
         Wallets.saveWallet(this);
     }
 
     public void addTransactions(final ArrayList<Transaction> transactions) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for (final Transaction transaction : transactions) {
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Wallet.this.addTransaction(transaction);
-                        }
-                    }).start();
-                }
-            }
-        }).start();
+        for (final Transaction transaction : transactions) {
+            Wallet.this.addTransaction(transaction);
+        }
     }
 
     public float calculateBalance() {
@@ -203,6 +190,10 @@ public class Wallet {
 
     public void removeTransactionsListener(Function2<Void, Wallet, Transaction> listener) {
         transactionListeners.remove(listener);
+    }
+
+    public void addScheduledTransactions() {
+        addTransactions(scheduledTransactions);
     }
 
     @Override
