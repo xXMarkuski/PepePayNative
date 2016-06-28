@@ -46,12 +46,14 @@ public class LoaderManager implements Loader<Object> {
         Loader loader = loaderMap.get(data);
         if (loader != null) return loader.load("");
 
+
         String[] strings = StringUtils.demultiplex(data);
         if (strings.length < 2) {
             return null;
         }
-        System.out.println(strings[0] + "   " + strings[1]);
-        return loaderMap.get(strings[0]).load(strings[1]);
+        loader = loaderMap.get(strings[0]);
+        if (loader == null) return null;
+        return loader.load(strings[1]);
     }
 
     @Override

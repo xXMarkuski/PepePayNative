@@ -44,6 +44,11 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
                 @Override
                 public void run() {
                     while (!Thread.interrupted()) {
+                        try {
+                            Thread.sleep(20);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                         PepePay.CONNECTION_MANAGER.update();
                     }
                 }

@@ -2,24 +2,22 @@ package pepepay.pepepaynative.fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.CheckedTextView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 
 import pepepay.pepepaynative.PepePay;
 import pepepay.pepepaynative.R;
 import pepepay.pepepaynative.backend.social31.connection.Connection;
 import pepepay.pepepaynative.backend.social31.packages.Parcel;
-import pepepay.pepepaynative.backend.social31.receive.ReceiveHandler;
 import pepepay.pepepaynative.backend.wallet2.Wallet;
 import pepepay.pepepaynative.backend.wallet2.Wallets;
 import pepepay.pepepaynative.utils.Function;
@@ -47,70 +45,87 @@ public class SelectWalletFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        View view = inflater.inflate(R.layout.fragment_select_wallet, null);
-        final LinearLayout layout = (LinearLayout) view.findViewById(R.id.selectWallet);
-        builder.setTitle(R.string.selectWallet).setView(view).setIcon(android.R.drawable.ic_menu_info_details);
-
-        final Parcel parcel = new Parcel(Connection.requestWalletIDs, Connection.REQ, LongUtils.nextLong(Long.MAX_VALUE));
-        connection.send(parcel);
-        connection.addReceiveHandler(new ReceiveHandler() {
-            private ArrayList<Parcel> walletsParcels = new ArrayList<Parcel>();
-            private HashMap<Button, Wallet> buttonWalletHashMap = new HashMap<Button, Wallet>();
+        final ArrayList<Wallet> wallets = new ArrayList<>();
+        final ArrayAdapter<Wallet> adapter = new ArrayAdapter<Wallet>(this.getContext(), android.R.layout.select_dialog_singlechoice, wallets) {
+            @Override
+            public int getCount() {
+                return wallets.size();
+            }
 
             @Override
-            public Void eval(Parcel ans, Connection connection) {
-                if (ans.isAnswerOf(parcel)) {
-                    ArrayList<String> array = (ArrayList) PepePay.LOADER_MANAGER.load(ans.getData());
+            public View getView(int position, View convertView, ViewGroup parent) {
+                CheckedTextView view = new CheckedTextView(this.getContext());
+                view.setText(Wallets.getName(wallets.get(position)));
+                view.setCheckMarkDrawable(android.R.drawable.btn_radio);
+                view.setTextAppearance(getContext(), android.R.style.TextAppearance_DeviceDefault_Large);
+                return view;
+            }
+        };
+
+        final int[] selectedItem = {0};
+
+        builder.setTitle(R.string.selectWallet).setIcon(android.R.drawable.ic_menu_info_details).setSingleChoiceItems(adapter, 0, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                selectedItem[0] = which;
+            }
+        });
+
+        final Parcel parcel = new Parcel(Connection.requestWalletIDs, Connection.REQ, LongUtils.nextLong(Long.MAX_VALUE));
+        connection.send(parcel, new Function<Void, String>() {
+            @Override
+            public Void eval(String s) {
+                Object loaded = PepePay.LOADER_MANAGER.load(s);
+                if (loaded instanceof ArrayList) {
+                    ArrayList<String> array = (ArrayList<String>) loaded;
                     for (String walletID : array) {
-                        Wallet wallet = Wallets.getWallet(walletID);
+                        final Wallet wallet = Wallets.getWallet(walletID);
                         if (wallet == null) {
                             Parcel walletParcel = new Parcel(StringUtils.multiplex(Connection.getWallet, walletID), Connection.REQ, LongUtils.nextLong(Long.MAX_VALUE));
-                            connection.send(walletParcel);
-                            walletsParcels.add(walletParcel);
-                        } else {
-                            final Button button = new Button(SelectWalletFragment.this.getContext());
-                            button.setText(Wallets.getName(wallet));
-                            button.setOnClickListener(new View.OnClickListener() {
+                            connection.send(walletParcel, new Function<Void, String>() {
                                 @Override
-                                public void onClick(View v) {
-                                    callback.eval(buttonWalletHashMap.get(button));
+                                public Void eval(String s) {
+                                    Object o = PepePay.LOADER_MANAGER.load(s);
+                                    if (o instanceof Wallet) {
+                                        final Wallet wallet = (Wallet) o;
+                                        Wallets.addWallet(wallet);
+                                        PepePay.runOnUIThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+
+                                                wallets.add(wallet);
+                                                adapter.notifyDataSetChanged();
+                                            }
+                                        });
+                                    }
+                                    return null;
                                 }
                             });
-                            buttonWalletHashMap.put(button, wallet);
-                            getActivity().runOnUiThread(new Runnable() {
+                        } else {
+                            PepePay.runOnUIThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    layout.addView(button);
+                                    wallets.add(wallet);
+                                    adapter.notifyDataSetChanged();
                                 }
                             });
-                        }
-                    }
-                }
-
-                Iterator<Parcel> iter = walletsParcels.iterator();
-                while (iter.hasNext()) {
-                    Parcel walletParcel = iter.next();
-                    if (ans.isAnswerOf(walletParcel)) {
-                        try {
-                            Wallet wallet = (Wallet) PepePay.LOADER_MANAGER.load(ans.getData());
-                            Wallets.addWallet(wallet);
-                            final Button button = new Button(SelectWalletFragment.this.getContext());
-                            button.setText(Wallets.getName(wallet));
-                            button.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    callback.eval(buttonWalletHashMap.get(button));
-                                }
-                            });
-                            buttonWalletHashMap.put(button, wallet);
-                            layout.addView(button);
-                            iter.remove();
-                        } catch (Throwable t) {
-                            Log.e("SelWalFrag", "error", t);
                         }
                     }
                 }
                 return null;
+            }
+        });
+
+        builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                callback.eval(adapter.getItem(selectedItem[0]));
+
+            }
+        }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
             }
         });
 

@@ -49,7 +49,7 @@ public class TransactionFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_transaction, null);
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.selectDevice).setView(view).setIcon(android.R.drawable.ic_menu_info_details);
+        builder.setTitle(R.string.createTransaction).setView(view).setIcon(android.R.drawable.ic_menu_info_details);
 
         final TextView amountSelector = (TextView) view.findViewById(R.id.amountSelector);
         final TextView pinSelector = (TextView) view.findViewById(R.id.pinSelector);

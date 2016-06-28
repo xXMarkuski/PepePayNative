@@ -21,4 +21,5 @@
     <string name="receiver">Receiver:</string>
     <string name="time">Time:</string>
     <string name="transactionInfo">Transaction Info</string>
+    <string name="createTransaction">Create Transaction</string>
 </resources>

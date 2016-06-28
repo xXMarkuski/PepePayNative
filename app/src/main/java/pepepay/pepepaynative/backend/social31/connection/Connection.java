@@ -2,6 +2,7 @@ package pepepay.pepepaynative.backend.social31.connection;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import pepepay.pepepaynative.PepePay;
 import pepepay.pepepaynative.backend.social3.connection.processor.ConnectionProcessor;
@@ -13,6 +14,7 @@ import pepepay.pepepaynative.backend.social31.receive.ReceiveHandler;
 import pepepay.pepepaynative.backend.wallet2.Wallet;
 import pepepay.pepepaynative.backend.wallet2.Wallets;
 import pepepay.pepepaynative.backend.wallet2.transaction.Transaction;
+import pepepay.pepepaynative.utils.Function;
 import pepepay.pepepaynative.utils.StringUtils;
 
 public class Connection implements ReceiveHandler {
@@ -29,6 +31,7 @@ public class Connection implements ReceiveHandler {
     private ArrayList<ReceiveHandler> receiveHandlers;
     private ConnectionProcessor processor;
     private ConnectionManager manager;
+    private HashMap<Parcel, Function<Void, String>> parcelCallback;
 
     public Connection(IDevice device, ConnectionManager manager) {
         target = device;
@@ -37,10 +40,18 @@ public class Connection implements ReceiveHandler {
         this.addReceiveHandler(this);
         this.processor = new DefaultConnectionProcessor();
         this.manager = manager;
+        this.parcelCallback = new HashMap<>();
+    }
+
+    public void send(Parcel parcel, Function<Void, String> callback) {
+        toSend.add(parcel);
+        if (callback != null) {
+            parcelCallback.put(parcel, callback);
+        }
     }
 
     public void send(Parcel parcel) {
-        toSend.add(parcel);
+        this.send(parcel, null);
     }
 
     public void update() {
@@ -54,9 +65,16 @@ public class Connection implements ReceiveHandler {
     }
 
     public void receive(String data) {
-        Parcel parcel = (Parcel) PepePay.LOADER_MANAGER.load(processor.receive(data));
+        Parcel ans = (Parcel) PepePay.LOADER_MANAGER.load(processor.receive(data));
         for (ReceiveHandler handler : receiveHandlers) {
-            handler.eval(parcel, this);
+            handler.eval(ans, this);
+        }
+
+        for (Parcel parcel : parcelCallback.keySet()) {
+            if (ans.isAnswerOf(parcel)) {
+                parcelCallback.get(parcel).eval(ans.getData());
+                parcelCallback.remove(parcel);
+            }
         }
     }
 

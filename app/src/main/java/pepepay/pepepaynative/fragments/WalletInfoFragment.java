@@ -98,9 +98,7 @@ public class WalletInfoFragment extends Fragment implements Wallets.WalletsListe
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 final Transaction transaction = wallet.getTransactionsChronologically().get(position);
-
                 TextView view = new TextView(this.getContext());
-
                 int color = Color.BLACK;
                 String text = "";
                 if (transaction.getReceiver().equals(wallet.getIdentifier())) {
