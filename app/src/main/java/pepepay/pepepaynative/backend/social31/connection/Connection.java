@@ -18,6 +18,7 @@ import pepepay.pepepaynative.utils.StringUtils;
 public class Connection implements ReceiveHandler {
     public static final String requestWalletIDs = "getWalletIds";
     public static final String getWallet = "getWallet";
+    public static final String getName = "getName";
 
     public static final String REQ = "req";
     public static final String ANS = "ans";
@@ -80,12 +81,13 @@ public class Connection implements ReceiveHandler {
             String[] str = StringUtils.demultiplex(data);
             if (str[0].equals(Connection.getWallet)) {
                 Wallet wallet = Wallets.getWallet(str[1]);
-                String saveKey = PepePay.LOADER_MANAGER.save(wallet.getPublicKey());
-                String transactions = PepePay.LOADER_MANAGER.save(wallet.getTransactionsChronologically());
-                connection.send(parcel.getAnswer(StringUtils.multiplex(saveKey, transactions)));
+                connection.send(parcel.getAnswer(PepePay.LOADER_MANAGER.save(wallet)));
             } else if (str[0].equals("pros")) {
 
+            } else if (str[0].equals(Connection.getName)) {
+                connection.send(parcel.getAnswer(Wallets.getName(str[1])));
             }
+
         } catch (Throwable throwable) {
 
         }

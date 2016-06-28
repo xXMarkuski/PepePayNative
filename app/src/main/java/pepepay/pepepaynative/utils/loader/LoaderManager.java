@@ -50,7 +50,7 @@ public class LoaderManager implements Loader<Object> {
         if (strings.length < 2) {
             return null;
         }
-        if (strings[0].equals("getWallet")) throw new RuntimeException();
+        System.out.println(strings[0] + "   " + strings[1]);
         return loaderMap.get(strings[0]).load(strings[1]);
     }
 

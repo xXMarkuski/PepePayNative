@@ -42,7 +42,6 @@ public class CommunicationManager implements Runnable {
             while (true) {
                 try {
                     String data = dataInputStream.readUTF();
-                    Log.d(TAG, "Rec:" + data);
                     handler.obtainMessage(WifiDirectConnectionHandler.MESSAGE_READ, 0, 0, data).sendToTarget();
                 } catch (Throwable e) {
                     //Log.e(TAG, "disconnected", e);

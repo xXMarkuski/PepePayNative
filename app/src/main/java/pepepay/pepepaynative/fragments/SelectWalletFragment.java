@@ -92,7 +92,7 @@ public class SelectWalletFragment extends DialogFragment {
                     Parcel walletParcel = iter.next();
                     if (ans.isAnswerOf(walletParcel)) {
                         try {
-                            Wallet wallet = (Wallet) PepePay.LOADER_MANAGER.load(walletParcel.getData());
+                            Wallet wallet = (Wallet) PepePay.LOADER_MANAGER.load(ans.getData());
                             Wallets.addWallet(wallet);
                             final Button button = new Button(SelectWalletFragment.this.getContext());
                             button.setText(Wallets.getName(wallet));
