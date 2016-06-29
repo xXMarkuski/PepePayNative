@@ -3,6 +3,7 @@ package pepepay.pepepaynative;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -15,7 +16,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.common.base.Charsets;
+import com.google.common.io.CharStreams;
+
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 
 import pepepay.pepepaynative.backend.social31.handler.IDeviceConnectionHandler;
@@ -32,10 +39,13 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
     private ViewPager mViewPager;
     private TabLayout tabLayout;
     private Thread updateThread;
+    private AssetManager assetManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        assetManager = getResources().getAssets();
 
         if (updateThread == null) {
             new PepePay(Arrays.<IDeviceConnectionHandler>asList(new WifiDirectConnectionHandler(this))).create(new File(this.getFilesDir(), "godWallets"), new File(this.getFilesDir(), "wallets"), new File(this.getFilesDir(), "private"), new File(this.getFilesDir(), "names"), new File(this.getFilesDir(), "options"), this);
@@ -82,12 +92,18 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     final AlertDialog.Builder builder = new AlertDialog.Builder(WalletOverview2.this);
-                    builder.setMessage(R.string.tos).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            greeting[0].show();
-                        }
-                    }).create().show();
+                    try {
+                        InputStream stream = assetManager.open("agbs");
+                        builder.setMessage(CharStreams.toString(new InputStreamReader(stream, Charsets.UTF_8))).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                greeting[0].show();
+                            }
+                        }).create().show();
+                        stream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }).create();
             greeting[0].show();

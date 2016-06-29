@@ -43,7 +43,6 @@ public class PepePay {
 
     private static Activity ACTIVITY;
 
-
     public PepePay(List<IDeviceConnectionHandler> handlers) {
         PepePay.handlers = handlers;
     }
