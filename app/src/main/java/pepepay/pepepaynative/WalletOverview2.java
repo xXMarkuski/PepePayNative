@@ -99,13 +99,13 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
                             public void onClick(DialogInterface dialog, int which) {
                                 greeting[0].show();
                             }
-                        }).create().show();
+                        }).setCancelable(false).create().show();
                         stream.close();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
-            }).create();
+            }).setCancelable(false).create();
             greeting[0].show();
         }
 
