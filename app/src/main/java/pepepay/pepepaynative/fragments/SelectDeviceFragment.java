@@ -2,16 +2,16 @@ package pepepay.pepepaynative.fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.CheckedTextView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import pepepay.pepepaynative.PepePay;
 import pepepay.pepepaynative.R;
@@ -45,34 +45,53 @@ public class SelectDeviceFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.fragment_select_device, null);
-        final LinearLayout layout = (LinearLayout) view.findViewById(R.id.selectDevice);
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.selectDevice).setView(view).setIcon(android.R.drawable.ic_menu_info_details);
 
-        PepePay.CONNECTION_MANAGER.addDeviceChangeListener(new Function2<Void, ArrayList<? extends IDevice>, ArrayList<? extends IDevice>>() {
-            HashMap<IDevice, Button> iDeviceButtonHashMap = new HashMap<IDevice, Button>();
+        final ArrayList<IDevice> devices = new ArrayList<>();
+
+        final ArrayAdapter<IDevice> adapter = new ArrayAdapter<IDevice>(this.getContext(), android.R.layout.select_dialog_singlechoice, devices) {
+            @Override
+            public int getCount() {
+                return devices.size();
+            }
 
             @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                CheckedTextView view = new CheckedTextView(this.getContext());
+                view.setText(devices.get(position).getName());
+                view.setCheckMarkDrawable(android.R.drawable.btn_radio);
+                view.setTextAppearance(getContext(), android.R.style.TextAppearance_DeviceDefault_Large);
+                return view;
+            }
+        };
+
+        final int[] selectedItem = {0};
+
+        builder.setTitle(R.string.selectDevice).setIcon(android.R.drawable.ic_menu_info_details).setSingleChoiceItems(adapter, 0, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                selectedItem[0] = which;
+            }
+        });
+
+        PepePay.CONNECTION_MANAGER.addDeviceChangeListener(new Function2<Void, ArrayList<? extends IDevice>, ArrayList<? extends IDevice>>() {
+            @Override
             public Void eval(ArrayList<? extends IDevice> iDevices, ArrayList<? extends IDevice> iDevices2) {
-                for (final IDevice device : iDevices) {
-                    Button button = new Button(SelectDeviceFragment.this.getContext());
-                    button.setText(device.getName());
-                    button.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            callback.eval(device);
-                        }
-                    });
-                    iDeviceButtonHashMap.put(device, button);
-                    layout.addView(button);
-                }
-                for (IDevice device : iDevices2) {
-                    layout.removeView(iDeviceButtonHashMap.get(device));
-                    iDeviceButtonHashMap.remove(device);
-                }
+                devices.addAll(iDevices);
+                devices.removeAll(iDevices2);
                 return null;
+            }
+        });
+
+        builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                callback.eval(devices.get(selectedItem[0]));
+            }
+        }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
             }
         });
 

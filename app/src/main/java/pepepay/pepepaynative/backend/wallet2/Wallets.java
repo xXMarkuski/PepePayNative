@@ -103,7 +103,7 @@ public class Wallets {
     public static String getName(String walletID) {
         String result = walletNames.get(walletID);
         if (result == null) {
-            return walletID;
+            result = walletID;
         }
         if (result.equals(walletID)) {
             result = "Wallet " + StringUtils.getSimple(walletID);
@@ -215,6 +215,15 @@ public class Wallets {
 
     public static void addGodWallet(String walletID) {
         godWallets.add(walletID);
+    }
+
+    public static boolean hasName(String walletID) {
+        String result = walletNames.get(walletID);
+        return result != null;
+    }
+
+    public static boolean hasName(Wallet wallet) {
+        return hasName(wallet.getIdentifier());
     }
 
     /**

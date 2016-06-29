@@ -92,9 +92,7 @@ public class SelectWalletFragment extends DialogFragment {
                                         PepePay.runOnUIThread(new Runnable() {
                                             @Override
                                             public void run() {
-
-                                                wallets.add(wallet);
-                                                adapter.notifyDataSetChanged();
+                                                handleWallet(wallet);
                                             }
                                         });
                                     }
@@ -105,8 +103,7 @@ public class SelectWalletFragment extends DialogFragment {
                             PepePay.runOnUIThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    wallets.add(wallet);
-                                    adapter.notifyDataSetChanged();
+                                    handleWallet(wallet);
                                 }
                             });
                         }
@@ -114,6 +111,21 @@ public class SelectWalletFragment extends DialogFragment {
                 }
                 return null;
             }
+
+            private void handleWallet(final Wallet wallet) {
+                wallets.add(wallet);
+                adapter.notifyDataSetChanged();
+                if (!Wallets.hasName(wallet)) {
+                    connection.send(Parcel.toParcel(StringUtils.multiplex(Connection.getName, wallet.getIdentifier()), Connection.REQ), new Function<Void, String>() {
+                        @Override
+                        public Void eval(String s) {
+                            Wallets.addName(wallet, s);
+                            return null;
+                        }
+                    });
+                }
+            }
+
         });
 
         builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
