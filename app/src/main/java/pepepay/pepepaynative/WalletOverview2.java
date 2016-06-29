@@ -1,5 +1,8 @@
 package pepepay.pepepaynative;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -9,7 +12,6 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -34,8 +36,6 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Log.e("walletoverview", "asdasdasd");
 
         if (updateThread == null) {
             new PepePay(Arrays.<IDeviceConnectionHandler>asList(new WifiDirectConnectionHandler(this))).create(new File(this.getFilesDir(), "godWallets"), new File(this.getFilesDir(), "wallets"), new File(this.getFilesDir(), "private"), new File(this.getFilesDir(), "names"), new File(this.getFilesDir(), "options"), this);
@@ -69,6 +69,29 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+
+        if (!PepePay.OPTIONS.get("agbs", false)) {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            final Dialog[] greeting = new Dialog[]{null};
+            greeting[0] = builder.setMessage(R.string.tosGreeting).setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    PepePay.OPTIONS.set("agbs", true);
+                }
+            }).setNeutralButton(R.string.showTos, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(WalletOverview2.this);
+                    builder.setMessage(R.string.tos).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            greeting[0].show();
+                        }
+                    }).create().show();
+                }
+            }).create();
+            greeting[0].show();
+        }
 
     }
 
@@ -192,7 +215,7 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
         @Override
         public CharSequence getPageTitle(int position) {
             if (position == 0) {
-                return "Create Wallet";
+                return getString(R.string.createWallet);
             } else {
                 return Wallets.getName(Wallets.getOwnWallets().get(position - 1));
             }

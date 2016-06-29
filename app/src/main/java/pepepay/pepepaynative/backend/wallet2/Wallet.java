@@ -11,6 +11,7 @@ import pepepay.pepepaynative.PepePay;
 import pepepay.pepepaynative.backend.wallet2.transaction.Transaction;
 import pepepay.pepepaynative.utils.Function2;
 import pepepay.pepepaynative.utils.StringUtils;
+import pepepay.pepepaynative.utils.encryption.EncryptionUtils;
 import pepepay.pepepaynative.utils.loader.Loader;
 import pepepay.pepepaynative.utils.loader.LoaderManager;
 
@@ -61,7 +62,8 @@ public class Wallet {
     }
 
     public Transaction getSendTransaction(Wallet receiver, PrivateKey key, float amount, String purpose) {
-        return new Transaction(this.getIdentifier(), receiver.getIdentifier(), amount, System.currentTimeMillis(), purpose, 1);
+        long time = System.currentTimeMillis();
+        return new Transaction(this.getIdentifier(), receiver.getIdentifier(), amount, time, StringUtils.multiplex(purpose, EncryptionUtils.complexBase64RsaEncrypt(key, time + "")));
     }
 
     public void addTransaction(final Transaction transaction) {
@@ -159,6 +161,14 @@ public class Wallet {
         return result;
     }
 
+    public ArrayList<Transaction> getTransactionsBefore(long time) {
+        return getTransactionsBefore(getTransactionsChronologically(), time);
+    }
+
+    public ArrayList<Transaction> getTransactionsBeforeOrAt(long time) {
+        return getTransactionsBeforeOrAt(getTransactionsChronologically(), time);
+    }
+
     public ArrayList<Transaction> getTransactionsChronologically() {
         ArrayList<Transaction> result = new ArrayList<Transaction>(sendTransactions.size() + receivedTransactions.size());
         result.addAll(sendTransactions);
@@ -186,6 +196,10 @@ public class Wallet {
                 listener.eval(this, transaction);
             }
         }
+    }
+
+    public ArrayList<Transaction> getScheduledTransactions() {
+        return scheduledTransactions;
     }
 
     public void removeTransactionsListener(Function2<Void, Wallet, Transaction> listener) {

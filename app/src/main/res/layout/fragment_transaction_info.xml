@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="8dp"
     tools:context="pepepay.pepepaynative.fragments.TransactionInfoFragment">
 
     <!-- TODO: Update blank fragment layout -->
@@ -95,12 +96,6 @@
                 android:layout_span="2"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textStyle="italic" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
         </TableRow>
 
     </TableLayout>

@@ -200,7 +200,9 @@ public class Wallets {
         privateKeys.remove(wallet.getIdentifier());
         godWallets.remove(wallet);
 
-        for (WalletsListener listener : walletsListeners) {
+        ArrayList<WalletsListener> copy = new ArrayList<>(walletsListeners);
+
+        for (WalletsListener listener : copy) {
             listener.walletDeleted(wallet);
         }
     }
@@ -215,6 +217,7 @@ public class Wallets {
 
     public static void addGodWallet(String walletID) {
         godWallets.add(walletID);
+        saveGodWallets(PepePay.godWalletsFile);
     }
 
     public static boolean hasName(String walletID) {
@@ -253,6 +256,7 @@ public class Wallets {
             Wallet load = (Wallet) PepePay.LOADER_MANAGER.load(content);
             addWallet(load);
         }
+
         for (Wallet wallet : wallets) {
             wallet.addScheduledTransactions();
         }

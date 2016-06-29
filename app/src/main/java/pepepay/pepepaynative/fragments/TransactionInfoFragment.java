@@ -13,14 +13,16 @@ import android.widget.TextView;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import pepepay.pepepaynative.R;
 import pepepay.pepepaynative.backend.wallet2.Wallets;
 import pepepay.pepepaynative.backend.wallet2.transaction.Transaction;
+import pepepay.pepepaynative.utils.StringUtils;
 
 public class TransactionInfoFragment extends DialogFragment {
 
-    public static final DateFormat format = SimpleDateFormat.getDateInstance();
+    public static final DateFormat format = new SimpleDateFormat("dd MMM, HH:mm:ss", Locale.getDefault());
 
     private Transaction transaction;
 
@@ -62,7 +64,11 @@ public class TransactionInfoFragment extends DialogFragment {
         Date date = new Date(transaction.getTime());
         time.setText(format.format(date));
 
-        purpose.setText(transaction.getPurpose());
+        try {
+            purpose.setText(StringUtils.demultiplex(transaction.getPurpose())[0]);
+        } catch (Throwable throwable) {
+            purpose.setText(transaction.getPurpose());
+        }
 
         return builder.create();
     }

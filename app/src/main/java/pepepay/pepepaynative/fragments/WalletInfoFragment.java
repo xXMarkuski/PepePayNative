@@ -157,7 +157,6 @@ public class WalletInfoFragment extends Fragment implements Wallets.WalletsListe
     @Override
     public void balanceChange(String walletID, Transaction newTransaction) {
         if (walletID.equals(wallet.getIdentifier())) {
-            System.out.println(Wallets.getName(walletID));
             walletChangeButton.setText(Wallets.getName(wallet) + "(" + wallet.getBalance() + ")");
             adapter.notifyDataSetChanged();
         }

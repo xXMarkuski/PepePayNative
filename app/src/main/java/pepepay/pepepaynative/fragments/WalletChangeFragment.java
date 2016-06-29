@@ -11,10 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import pepepay.pepepaynative.R;
 import pepepay.pepepaynative.backend.wallet2.Wallet;
 import pepepay.pepepaynative.backend.wallet2.Wallets;
+import pepepay.pepepaynative.utils.StringUtils;
 
 public class WalletChangeFragment extends DialogFragment {
 
@@ -46,6 +48,9 @@ public class WalletChangeFragment extends DialogFragment {
         final EditText nameSelector = (EditText) view.findViewById(R.id.nameSelector);
         nameSelector.setText(Wallets.getName(wallet));
 
+        final TextView id = (TextView) view.findViewById(R.id.walletID);
+        id.setText(StringUtils.getSimple(wallet.getIdentifier()) + "");
+
         Button deleteWallet = (Button) view.findViewById(R.id.deleteWalletButton);
         deleteWallet.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,6 +63,7 @@ public class WalletChangeFragment extends DialogFragment {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Wallets.deleteWallet(wallet);
+                                WalletChangeFragment.this.dismiss();
                             }
 
                         })

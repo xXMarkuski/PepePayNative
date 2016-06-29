@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="8dp"
     tools:context="pepepay.pepepaynative.fragments.WalletChangeFragment">
 
     <!-- TODO: Update blank fragment layout -->
@@ -35,6 +36,24 @@
                 android:width="0dp"
                 android:inputType="text" />
 
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_column="0">
+
+            <TextView
+                android:layout_column="0"
+                android:text="@string/walletID"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <TextView
+                android:id="@+id/walletID"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="1"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
         </TableRow>
 
         <TableRow

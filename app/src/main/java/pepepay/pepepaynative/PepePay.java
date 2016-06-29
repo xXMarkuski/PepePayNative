@@ -20,7 +20,7 @@ import pepepay.pepepaynative.utils.loader.loaders.SerializableLoader;
 public class PepePay {
 
     public static final int PROTOCOL_VERSION_MAJOR = 0;
-    public static final int PROTOCOL_VERSION_MINOR = 10;
+    public static final int PROTOCOL_VERSION_MINOR = 11;
     public static final int PROTOCOL_VERSION_PATCHLEVEL = 0;
     public static final String PROTOCOL_VERSION = PROTOCOL_VERSION_MAJOR + "." + PROTOCOL_VERSION_MINOR + "." + PROTOCOL_VERSION_PATCHLEVEL;
 
@@ -70,9 +70,6 @@ public class PepePay {
         PepePay.nameFile = nameFile;
         PepePay.optionsFile = optionsFile;
 
-        if (walletFile.exists()) {
-            Wallets.loadWallets(walletFile);
-        }
         if (godWalletsFile.exists()) {
             Wallets.loadGodWallets(godWalletsFile);
         }
@@ -81,6 +78,9 @@ public class PepePay {
         }
         if (nameFile.exists()) {
             Wallets.loadNames(nameFile);
+        }
+        if (walletFile.exists()) {
+            Wallets.loadWallets(walletFile);
         }
 
         OPTIONS = Options.load(optionsFile);
