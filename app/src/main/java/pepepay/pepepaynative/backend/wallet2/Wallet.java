@@ -67,6 +67,7 @@ public class Wallet {
     }
 
     public void addTransaction(final Transaction transaction) {
+        System.out.println(transaction.getAmount());
         if (!transaction.isValid()) return;
         if (transaction.getReceiver().equals(this.getIdentifier())) {
             String sender = transaction.getSender();
