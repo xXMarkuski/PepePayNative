@@ -16,13 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.CharStreams;
-
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.Arrays;
 
 import pepepay.pepepaynative.backend.social31.handler.IDeviceConnectionHandler;
@@ -32,6 +26,7 @@ import pepepay.pepepaynative.backend.wallet2.Wallets;
 import pepepay.pepepaynative.backend.wallet2.transaction.Transaction;
 import pepepay.pepepaynative.fragments.WalletCreateFragment;
 import pepepay.pepepaynative.fragments.WalletInfoFragment;
+import pepepay.pepepaynative.utils.FileUtils;
 
 public class WalletOverview2 extends AppCompatActivity implements Wallets.WalletsListener {
 
@@ -92,22 +87,18 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     final AlertDialog.Builder builder = new AlertDialog.Builder(WalletOverview2.this);
-                    try {
-                        InputStream stream = assetManager.open("agbs");
-                        builder.setMessage(CharStreams.toString(new InputStreamReader(stream, Charsets.UTF_8))).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                greeting[0].show();
-                            }
-                        }).setCancelable(false).create().show();
-                        stream.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    builder.setMessage(FileUtils.readAsset("agbs")).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            greeting[0].show();
+                        }
+                    }).setCancelable(false).create().show();
                 }
             }).setCancelable(false).create();
             greeting[0].show();
         }
+
+        Wallets.loadGodWallets(FileUtils.readAsset("godWallets"));
 
     }
 

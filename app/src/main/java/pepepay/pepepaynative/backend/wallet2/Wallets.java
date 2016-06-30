@@ -196,6 +196,10 @@ public class Wallets {
         return result;
     }
 
+    public static ArrayList<String> getGodWalletsIDs() {
+        return new ArrayList<>(godWallets);
+    }
+
     public static void deleteWallet(Wallet wallet) {
         privateKeys.remove(wallet.getIdentifier());
         godWallets.remove(wallet);
@@ -293,6 +297,12 @@ public class Wallets {
         load(godWallets, file);
     }
 
+    public static void loadGodWallets(String string) {
+        if (string.isEmpty()) return;
+        ArrayList temp = (ArrayList) PepePay.LOADER_MANAGER.load(string);
+        godWallets.addAll(temp);
+    }
+
     private static void save(Object obj, File file) {
         FileUtils.write(file, PepePay.LOADER_MANAGER.save(obj));
     }
@@ -302,9 +312,9 @@ public class Wallets {
         map.putAll(temp);
     }
 
-    private static <T> void load(ArrayList<T> ArrayList, File file) {
+    private static <T> void load(ArrayList<T> arrayList, File file) {
         ArrayList<T> temp = (ArrayList<T>) PepePay.LOADER_MANAGER.load(FileUtils.read(file));
-        ArrayList.addAll(temp);
+        arrayList.addAll(temp);
     }
 
     public static void notifyBalanceChange(String walletID, Transaction newTransaction) {

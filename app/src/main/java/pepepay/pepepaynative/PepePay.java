@@ -20,7 +20,7 @@ import pepepay.pepepaynative.utils.loader.loaders.SerializableLoader;
 public class PepePay {
 
     public static final int PROTOCOL_VERSION_MAJOR = 0;
-    public static final int PROTOCOL_VERSION_MINOR = 11;
+    public static final int PROTOCOL_VERSION_MINOR = 12;
     public static final int PROTOCOL_VERSION_PATCHLEVEL = 0;
     public static final String PROTOCOL_VERSION = PROTOCOL_VERSION_MAJOR + "." + PROTOCOL_VERSION_MINOR + "." + PROTOCOL_VERSION_PATCHLEVEL;
 
@@ -38,10 +38,8 @@ public class PepePay {
 
     public static ConnectionManager CONNECTION_MANAGER;
     public static LocalDevice LOCAL_DEVICE;
-
+    public static Activity ACTIVITY;
     private static List<IDeviceConnectionHandler> handlers;
-
-    private static Activity ACTIVITY;
 
     public PepePay(List<IDeviceConnectionHandler> handlers) {
         PepePay.handlers = handlers;

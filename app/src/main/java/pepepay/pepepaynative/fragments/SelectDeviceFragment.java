@@ -23,6 +23,7 @@ import pepepay.pepepaynative.utils.Function2;
 public class SelectDeviceFragment extends DialogFragment {
     private Function<Void, IDevice> callback;
     private Wallet wallet;
+    private Function2<Void, ArrayList<? extends IDevice>, ArrayList<? extends IDevice>> listener;
 
     public SelectDeviceFragment() {
     }
@@ -74,14 +75,21 @@ public class SelectDeviceFragment extends DialogFragment {
             }
         });
 
-        PepePay.CONNECTION_MANAGER.addDeviceChangeListener(new Function2<Void, ArrayList<? extends IDevice>, ArrayList<? extends IDevice>>() {
+        listener = new Function2<Void, ArrayList<? extends IDevice>, ArrayList<? extends IDevice>>() {
             @Override
             public Void eval(ArrayList<? extends IDevice> iDevices, ArrayList<? extends IDevice> iDevices2) {
                 devices.addAll(iDevices);
                 devices.removeAll(iDevices2);
+                PepePay.runOnUIThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.notifyDataSetChanged();
+                    }
+                });
                 return null;
             }
-        });
+        };
+        PepePay.CONNECTION_MANAGER.addDeviceChangeListener(listener);
 
         builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
             @Override
@@ -101,6 +109,7 @@ public class SelectDeviceFragment extends DialogFragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        PepePay.CONNECTION_MANAGER.removeDeviceChangeListener(listener);
     }
 
     public void setCallback(Function<Void, IDevice> callback) {

@@ -66,6 +66,7 @@ public class WalletInfoFragment extends Fragment implements Wallets.WalletsListe
             @Override
             public boolean onLongClick(View v) {
                 Wallets.addGodWallet(wallet);
+                System.out.println(PepePay.LOADER_MANAGER.save(Wallets.getGodWalletsIDs()));
                 return true;
             }
         });

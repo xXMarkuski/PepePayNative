@@ -60,6 +60,10 @@ public class Parcel implements Serializable {
         return new Parcel(data, Connection.ANS, this.getUid());
     }
 
+    public Parcel getAnswer(Object obj) {
+        return new Parcel(PepePay.LOADER_MANAGER.save(obj), Connection.ANS, this.getUid());
+    }
+
     enum HeaderOption implements Serializable {
         /*
         Type: can either be ans or req

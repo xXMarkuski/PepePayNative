@@ -71,6 +71,7 @@ public class SelectWalletFragment extends DialogFragment {
             }
         });
 
+
         final Parcel parcel = new Parcel(Connection.requestWalletIDs, Connection.REQ, LongUtils.nextLong(Long.MAX_VALUE));
         connection.send(parcel, new Function<Void, String>() {
             @Override
@@ -81,7 +82,7 @@ public class SelectWalletFragment extends DialogFragment {
                     for (String walletID : array) {
                         final Wallet wallet = Wallets.getWallet(walletID);
                         if (wallet == null) {
-                            Parcel walletParcel = new Parcel(StringUtils.multiplex(Connection.getWallet, walletID), Connection.REQ, LongUtils.nextLong(Long.MAX_VALUE));
+                            Parcel walletParcel = new Parcel(StringUtils.multiplex(Connection.getWalletNoTransaction, walletID), Connection.REQ, LongUtils.nextLong(Long.MAX_VALUE));
                             connection.send(walletParcel, new Function<Void, String>() {
                                 @Override
                                 public Void eval(String s) {
@@ -92,6 +93,7 @@ public class SelectWalletFragment extends DialogFragment {
                                         PepePay.runOnUIThread(new Runnable() {
                                             @Override
                                             public void run() {
+                                                Wallets.addWallet(wallet);
                                                 handleWallet(wallet);
                                             }
                                         });
@@ -119,6 +121,12 @@ public class SelectWalletFragment extends DialogFragment {
                     connection.send(Parcel.toParcel(StringUtils.multiplex(Connection.getName, wallet.getIdentifier()), Connection.REQ), new Function<Void, String>() {
                         @Override
                         public Void eval(String s) {
+                            PepePay.runOnUIThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    adapter.notifyDataSetChanged();
+                                }
+                            });
                             Wallets.addName(wallet, s);
                             return null;
                         }
