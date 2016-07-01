@@ -118,7 +118,22 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_about) {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            final Dialog[] greeting = new Dialog[]{null};
+            greeting[0] = builder.setMessage(R.string.aboutText).setPositiveButton(R.string.confirm, null).setNeutralButton(R.string.showTos, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(WalletOverview2.this);
+                    builder.setMessage(FileUtils.readAsset("agbs")).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            greeting[0].show();
+                        }
+                    }).create().show();
+                }
+            }).create();
+            greeting[0].show();
             return true;
         }
 

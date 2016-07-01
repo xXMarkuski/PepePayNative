@@ -261,8 +261,13 @@ public class Wallets {
             addWallet(load);
         }
 
-        for (Wallet wallet : wallets) {
-            wallet.addScheduledTransactions();
+        for (final Wallet wallet : wallets) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    wallet.addScheduledTransactions();
+                }
+            }).start();
         }
     }
 

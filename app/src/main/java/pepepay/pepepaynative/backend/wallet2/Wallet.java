@@ -5,7 +5,6 @@ import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 
 import pepepay.pepepaynative.PepePay;
 import pepepay.pepepaynative.backend.wallet2.transaction.Transaction;
@@ -26,7 +25,6 @@ public class Wallet {
     private final ArrayList<Transaction> receivedTransactions;
     private final ArrayList<Transaction> sendTransactions;
     private final ArrayList<Function2<Void, Wallet, Transaction>> transactionListeners;
-    private HashMap<String, Integer> numberTransaction;
     private float balance;
 
     private ArrayList<Transaction> scheduledTransactions;
@@ -37,28 +35,7 @@ public class Wallet {
         this.sendTransactions = new ArrayList<Transaction>();
         this.transactionListeners = new ArrayList<Function2<Void, Wallet, Transaction>>();
         this.scheduledTransactions = transactions;
-        this.numberTransaction = this.calcNumberTransaction();
         this.balance = 0;
-    }
-
-    private HashMap<String, Integer> calcNumberTransaction() {
-        HashMap<String, Integer> result = new HashMap<String, Integer>();
-        for (Transaction transaction : sendTransactions) {
-            Integer integer = result.get(transaction.getReceiver());
-            if (integer == null) {
-                integer = 0;
-            }
-            result.put(transaction.getReceiver(), integer + 1);
-        }
-        for (Transaction transaction : receivedTransactions) {
-            Integer integer = result.get(transaction.getSender());
-            if (integer == null) {
-                integer = 0;
-            }
-            result.put(transaction.getSender(), result.get(integer + 1));
-        }
-
-        return result;
     }
 
     public Transaction getSendTransaction(Wallet receiver, PrivateKey key, float amount, String purpose) {
@@ -67,27 +44,16 @@ public class Wallet {
     }
 
     public void addTransaction(final Transaction transaction) {
-        System.out.println(transaction.getAmount());
         if (!transaction.isValid()) return;
         if (transaction.getReceiver().equals(this.getIdentifier())) {
             String sender = transaction.getSender();
             receivedTransactions.add(transaction);
             balance += transaction.getAmount();
-            Integer number = numberTransaction.get(sender);
-            if (number == null) {
-                number = 0;
-            }
-            numberTransaction.put(sender, number + 1);
         }
         if (transaction.getSender().equals(this.getIdentifier())) {
             String receiver = transaction.getReceiver();
             sendTransactions.add(transaction);
             balance -= transaction.getAmount();
-            Integer number = numberTransaction.get(receiver);
-            if (number == null) {
-                number = 0;
-            }
-            numberTransaction.put(receiver, number + 1);
         }
         Wallets.notifyBalanceChange(getIdentifier(), transaction);
         if (!transactionListeners.isEmpty()) {
@@ -214,6 +180,25 @@ public class Wallet {
     @Override
     public boolean equals(Object obj) {
         return obj instanceof Wallet && ((Wallet) obj).getPublicKey().equals(this.getPublicKey());
+    }
+
+    public ArrayList<Transaction> getTransactionsAfter(ArrayList<Transaction> array, long time) {
+        ArrayList<Transaction> result = new ArrayList<Transaction>();
+        for (Transaction transaction : array) {
+            if (transaction.getTime() > time) result.add(transaction);
+        }
+        return result;
+    }
+
+    public ArrayList<Transaction> getTransactionsAfter(long time) {
+        return getTransactionsAfter(this.getTranactions(), time);
+    }
+
+    public ArrayList<Transaction> getTranactions() {
+        ArrayList<Transaction> result = new ArrayList<>(receivedTransactions.size() + sendTransactions.size());
+        result.addAll(receivedTransactions);
+        result.addAll(sendTransactions);
+        return result;
     }
 
     public static class WalletLoader implements Loader<Wallet> {
