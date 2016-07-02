@@ -107,7 +107,7 @@ public class TransactionFragment extends DialogFragment {
         amountSelectorBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                amountSelector.setText(Integer.toString(progress));
+                amountSelector.setText(progress + "");
             }
 
             @Override
@@ -121,6 +121,9 @@ public class TransactionFragment extends DialogFragment {
             }
 
         });
+        if (!Wallets.isGodWallet(from)) {
+            amountSelectorBar.setMax((int) from.getBalance());
+        }
 
         return dialog;
     }

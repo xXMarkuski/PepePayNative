@@ -1,8 +1,10 @@
 package pepepay.pepepaynative.backend.social31.handler.qrCode;
 
 
-import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -12,22 +14,29 @@ import com.google.zxing.integration.android.IntentResult;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import pepepay.pepepaynative.WalletOverview2;
 import pepepay.pepepaynative.backend.social31.ConnectionManager;
 import pepepay.pepepaynative.backend.social31.handler.IDeviceConnectionHandler;
 import pepepay.pepepaynative.utils.Function;
 
-public class QRConnectionHandler extends Activity implements IDeviceConnectionHandler<QRConnectionHandler, QRDevice> {
+public class QRConnectionHandler extends AppCompatActivity implements IDeviceConnectionHandler<QRConnectionHandler, QRDevice> {
 
     public static final QRDevice QR_DEVICE = new QRDevice();
-    private final Activity activity;
     private ConnectionManager manager;
+    private WalletOverview2 activity;
 
-    public QRConnectionHandler(Activity activity) {
-        this.activity = activity;
+    public QRConnectionHandler() {
+    }
+
+    public static QRConnectionHandler newInstance(WalletOverview2 activity) {
+
+        QRConnectionHandler fragment = new QRConnectionHandler();
+        fragment.setActivity(activity);
+        return fragment;
     }
 
     public void scanQR() {
-        IntentIntegrator integrator = new IntentIntegrator(activity);
+        IntentIntegrator integrator = new IntentIntegrator(this);
         integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES)
                 .setOrientationLocked(false)
                 .setBeepEnabled(true)
@@ -35,7 +44,7 @@ public class QRConnectionHandler extends Activity implements IDeviceConnectionHa
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (result != null) {
             if (result.getContents() == null) {
@@ -48,6 +57,12 @@ public class QRConnectionHandler extends Activity implements IDeviceConnectionHa
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        scanQR();
     }
 
     @Override
@@ -82,7 +97,7 @@ public class QRConnectionHandler extends Activity implements IDeviceConnectionHa
 
     @Override
     public void connect(QRDevice target) {
-        scanQR();
+        activity.startActivity(QRConnectionHandler.class);
     }
 
     @Override
@@ -103,5 +118,9 @@ public class QRConnectionHandler extends Activity implements IDeviceConnectionHa
     @Override
     public Class<QRDevice> getIDeviceType() {
         return QRDevice.class;
+    }
+
+    public void setActivity(WalletOverview2 activity) {
+        this.activity = activity;
     }
 }

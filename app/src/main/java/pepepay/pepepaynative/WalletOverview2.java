@@ -1,8 +1,10 @@
 package pepepay.pepepaynative;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -40,7 +42,7 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
         super.onCreate(savedInstanceState);
 
         if (updateThread == null) {
-            new PepePay(Arrays.<IDeviceConnectionHandler>asList(new WifiDirectConnectionHandler(this), new QRConnectionHandler(this))).create(new File(this.getFilesDir(), "godWallets"), new File(this.getFilesDir(), "wallets"), new File(this.getFilesDir(), "private"), new File(this.getFilesDir(), "names"), new File(this.getFilesDir(), "options"), this);
+            new PepePay(Arrays.<IDeviceConnectionHandler>asList(new WifiDirectConnectionHandler(this), QRConnectionHandler.newInstance(this))).create(new File(this.getFilesDir(), "godWallets"), new File(this.getFilesDir(), "wallets"), new File(this.getFilesDir(), "private"), new File(this.getFilesDir(), "names"), new File(this.getFilesDir(), "options"), this);
 
             updateThread = new Thread(new Runnable() {
                 @Override
@@ -206,6 +208,11 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
                 tab.setText(mSectionsPagerAdapter.getPageTitle(i));
             }
         }
+    }
+
+    public void startActivity(Class<? extends Activity> clazz) {
+        Intent myIntent = new Intent(this, clazz);
+        this.startActivity(myIntent);
     }
 
     public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
