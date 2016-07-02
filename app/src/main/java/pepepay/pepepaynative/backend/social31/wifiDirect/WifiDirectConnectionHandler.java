@@ -106,12 +106,12 @@ public class WifiDirectConnectionHandler implements IDeviceConnectionHandler<Wif
                     int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);
                     if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
                         wifiEnabled = true;
-                        appendStatus("WifiP2P enabled");
+                        Log.i(TAG, "WifiP2P enabled");
                     } else {
                         wifiEnabled = false;
-                        appendStatus("WifiP2P disabled");
+                        Log.i(TAG, "WifiP2P disabled");
                     }
-                    appendStatus(state);
+                    Log.i(TAG, String.valueOf(state));
                 } else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
                     //Updating peers with our Service
                     final Collection<WifiP2pDevice>[] deviceList = new Collection[1];
@@ -175,10 +175,10 @@ public class WifiDirectConnectionHandler implements IDeviceConnectionHandler<Wif
                     // Respond to wifi state changing
                     if (intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, 1) == 2) {
                         wifiEnabled = true;
-                        appendStatus("WifiP2P enabled");
+                        Log.i(TAG, "WifiP2P enabled");
                     } else {
                         wifiEnabled = false;
-                        appendStatus("WifiP2P disabled");
+                        Log.i(TAG, "WifiP2P disabled");
                     }
                 }
             }
@@ -214,12 +214,12 @@ public class WifiDirectConnectionHandler implements IDeviceConnectionHandler<Wif
 
             @Override
             public void onSuccess() {
-                appendStatus("Added Local Service");
+                Log.i(TAG, "Added Local Service");
             }
 
             @Override
             public void onFailure(int error) {
-                appendStatus("Failed to add a service");
+                Log.i(TAG, "Failed to add a service");
             }
         });
 
@@ -236,24 +236,24 @@ public class WifiDirectConnectionHandler implements IDeviceConnectionHandler<Wif
 
                     @Override
                     public void onSuccess() {
-                        appendStatus("Added service discovery request");
+                        Log.i(TAG, "Added service discovery request");
                     }
 
                     @Override
                     public void onFailure(int arg0) {
-                        appendStatus("Failed adding service discovery request");
+                        Log.i(TAG, "Failed adding service discovery request");
                     }
                 });
         wifiP2pManager.discoverServices(channel, new WifiP2pManager.ActionListener() {
 
             @Override
             public void onSuccess() {
-                appendStatus("Service discovery initiated");
+                Log.i(TAG, "Service discovery initiated");
             }
 
             @Override
             public void onFailure(int arg0) {
-                appendStatus("Service discovery failed");
+                Log.i(TAG, "Service discovery failed");
 
             }
         });
@@ -282,12 +282,12 @@ public class WifiDirectConnectionHandler implements IDeviceConnectionHandler<Wif
 
             @Override
             public void onSuccess() {
-                appendStatus("Connecting to service");
+                Log.i(TAG, "Connecting to service");
             }
 
             @Override
             public void onFailure(int errorCode) {
-                appendStatus("Failed connecting to service");
+                Log.i(TAG, "Failed connecting to service");
             }
         });
     }
@@ -365,7 +365,7 @@ public class WifiDirectConnectionHandler implements IDeviceConnectionHandler<Wif
         if (comManager != null) {
             comManager.write(data);
         } else {
-            appendStatus("comManager is null");
+            Log.i(TAG, "comManager is null");
         }
     }
 
@@ -377,55 +377,6 @@ public class WifiDirectConnectionHandler implements IDeviceConnectionHandler<Wif
     @Override
     public Class<WifiDirectDevice> getIDeviceType() {
         return WifiDirectDevice.class;
-    }
-
-    public void appendStatus(String status) {
-        appendStatus(status, 'i');
-    }
-
-    public void appendStatus(Object o) {
-        appendStatus(o, 'i');
-    }
-
-    public void appendStatus(String status, char level) {
-        switch (level) {
-            case 'i':
-                Log.i(TAG, status);
-                break;
-            case 'd':
-                Log.d(TAG, status);
-                break;
-            case 'e':
-                Log.e(TAG, status);
-                break;
-            case 'v':
-                Log.v(TAG, status);
-                break;
-            case 'w':
-                Log.w(TAG, status);
-                break;
-        }
-
-    }
-
-    public void appendStatus(Object o, char level) {
-        switch (level) {
-            case 'i':
-                Log.i(TAG, String.valueOf(o));
-                break;
-            case 'd':
-                Log.d(TAG, String.valueOf(o));
-                break;
-            case 'e':
-                Log.e(TAG, String.valueOf(o));
-                break;
-            case 'v':
-                Log.v(TAG, String.valueOf(o));
-                break;
-            case 'w':
-                Log.w(TAG, String.valueOf(o));
-                break;
-        }
     }
 
     public void disconnect() {
