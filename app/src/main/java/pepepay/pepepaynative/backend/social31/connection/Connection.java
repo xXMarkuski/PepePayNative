@@ -297,4 +297,8 @@ public class Connection implements ReceiveHandler {
             });
         }*/
     }
+
+    public void disconnect() {
+        manager.disconnect(target);
+    }
 }

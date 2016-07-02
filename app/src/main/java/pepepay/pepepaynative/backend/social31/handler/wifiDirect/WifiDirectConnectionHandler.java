@@ -1,4 +1,4 @@
-package pepepay.pepepaynative.backend.social31.wifiDirect;
+package pepepay.pepepaynative.backend.social31.handler.wifiDirect;
 
 
 import android.app.Activity;
@@ -358,6 +358,11 @@ public class WifiDirectConnectionHandler implements IDeviceConnectionHandler<Wif
     public void connect(WifiDirectDevice target) {
         connectedDevice = target;
         connectP2p(target.getWifiP2pDevice());
+    }
+
+    @Override
+    public void disconnect(WifiDirectDevice target) {
+        this.disconnect();
     }
 
     @Override

@@ -23,5 +23,6 @@
     <string name="tosGreeting">By using this app you agree with our terms of service</string>
     <string name="showTos">Show terms of service</string>
     <string name="action_about">About</string>
-    <string name="aboutText">PlaceHolder: Made by Markus "Markuski" Toran. </string>
+    <string name="aboutText">Placeholder: Made by Markus "Markuski" Toran. </string>
+    <string name="optional"> (Optional) </string>
 </resources>

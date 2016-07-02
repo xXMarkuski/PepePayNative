@@ -1,4 +1,4 @@
-package pepepay.pepepaynative.backend.social31.wifiDirect;
+package pepepay.pepepaynative.backend.social31.handler.wifiDirect;
 
 import android.os.Handler;
 import android.util.Log;
