@@ -52,7 +52,6 @@ public class LocalConnectionHandler implements IDeviceConnectionHandler<LocalCon
 
     }
 
-
     @Override
     public void send(LocalDevice target, String data) {
         target.receive(device, data);

@@ -20,6 +20,7 @@ public class QRConnectionHandler extends Activity implements IDeviceConnectionHa
 
     public static final QRDevice QR_DEVICE = new QRDevice();
     private final Activity activity;
+    private ConnectionManager manager;
 
     public QRConnectionHandler(Activity activity) {
         this.activity = activity;
@@ -56,7 +57,7 @@ public class QRConnectionHandler extends Activity implements IDeviceConnectionHa
 
     @Override
     public void preInit(ConnectionManager manager) {
-
+        this.manager = manager;
     }
 
     @Override
@@ -76,12 +77,12 @@ public class QRConnectionHandler extends Activity implements IDeviceConnectionHa
 
     @Override
     public void requestAvailableDevices(Function<Void, ArrayList<QRDevice>> callback) {
-        callback.eval((ArrayList<QRDevice>) Arrays.asList(QR_DEVICE));
+        callback.eval(new ArrayList<QRDevice>(Arrays.asList(QR_DEVICE)));
     }
 
     @Override
     public void connect(QRDevice target) {
-
+        scanQR();
     }
 
     @Override
@@ -91,7 +92,7 @@ public class QRConnectionHandler extends Activity implements IDeviceConnectionHa
 
     @Override
     public void send(QRDevice target, String data) {
-
+        manager.disconnect(target);
     }
 
     @Override

@@ -3,7 +3,6 @@ package pepepay.pepepaynative;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -20,6 +19,7 @@ import java.io.File;
 import java.util.Arrays;
 
 import pepepay.pepepaynative.backend.social31.handler.IDeviceConnectionHandler;
+import pepepay.pepepaynative.backend.social31.handler.qrCode.QRConnectionHandler;
 import pepepay.pepepaynative.backend.social31.handler.wifiDirect.WifiDirectConnectionHandler;
 import pepepay.pepepaynative.backend.wallet2.Wallet;
 import pepepay.pepepaynative.backend.wallet2.Wallets;
@@ -34,15 +34,13 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
     private ViewPager mViewPager;
     private TabLayout tabLayout;
     private Thread updateThread;
-    private AssetManager assetManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        assetManager = getResources().getAssets();
 
         if (updateThread == null) {
-            new PepePay(Arrays.<IDeviceConnectionHandler>asList(new WifiDirectConnectionHandler(this))).create(new File(this.getFilesDir(), "godWallets"), new File(this.getFilesDir(), "wallets"), new File(this.getFilesDir(), "private"), new File(this.getFilesDir(), "names"), new File(this.getFilesDir(), "options"), this);
+            new PepePay(Arrays.<IDeviceConnectionHandler>asList(new WifiDirectConnectionHandler(this), new QRConnectionHandler(this))).create(new File(this.getFilesDir(), "godWallets"), new File(this.getFilesDir(), "wallets"), new File(this.getFilesDir(), "private"), new File(this.getFilesDir(), "names"), new File(this.getFilesDir(), "options"), this);
 
             updateThread = new Thread(new Runnable() {
                 @Override
