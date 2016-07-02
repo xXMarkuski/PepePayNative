@@ -10,6 +10,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import pepepay.pepepaynative.PepePay;
@@ -52,6 +53,7 @@ public class TransactionFragment extends DialogFragment {
         builder.setTitle(R.string.createTransaction).setView(view).setIcon(android.R.drawable.ic_menu_info_details);
 
         final TextView amountSelector = (TextView) view.findViewById(R.id.amountSelector);
+        final SeekBar amountSelectorBar = (SeekBar) view.findViewById(R.id.amountSelectorBar);
         final TextView pinSelector = (TextView) view.findViewById(R.id.pinSelector);
         final TextView purposeSelector = (TextView) view.findViewById(R.id.purposeSelector);
         final TextView error = (TextView) view.findViewById(R.id.errorText);
@@ -100,6 +102,24 @@ public class TransactionFragment extends DialogFragment {
                     }
                 });
             }
+        });
+
+        amountSelectorBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                amountSelector.setText(progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+
         });
 
         return dialog;
