@@ -174,6 +174,26 @@ public class EncryptionUtils {
         }
     }
 
+    private static byte[] basicAesKeyRsaWrap(Key key, Key data) {
+        try {
+            rsaCipher.init(Cipher.WRAP_MODE, key);
+            return rsaCipher.wrap(data);
+        } catch (Throwable t) {
+            t.printStackTrace();
+            return new byte[]{Byte.MIN_VALUE};
+        }
+    }
+
+    private static SecretKey basicAesKeyRsaUnwrap(Key key, byte[] encrypted) {
+        try {
+            rsaCipher.init(Cipher.UNWRAP_MODE, key);
+            return (SecretKey) rsaCipher.unwrap(encrypted, "AES", Cipher.SECRET_KEY);
+        } catch (Throwable t) {
+            t.printStackTrace();
+            return null;
+        }
+    }
+
     private static String basicBase64RsaEncrypt(Key key, String data) {
         return StringUtils.encode(basicByteArrayRsaEncrypt(key, data.getBytes()));
     }
@@ -193,7 +213,7 @@ public class EncryptionUtils {
         aesKeyGen.init(256);
         SecretKey aesKey = aesKeyGen.generateKey();
 
-        return StringUtils.multiplex(basicBase64RsaEncrypt(key, StringUtils.encode(aesKey.getEncoded())), complexBase64AesEncrypt(aesKey, data));
+        return StringUtils.multiplex(StringUtils.encode(basicAesKeyRsaWrap(key, aesKey)), complexBase64AesEncrypt(aesKey, data));
     }
 
     /**
@@ -206,8 +226,7 @@ public class EncryptionUtils {
     public static String complexBase64RsaDecrypt(Key key, String encrypted) {
         String[] parts = StringUtils.demultiplex(encrypted);
 
-        String base64AesKey = basicBase64RsaDecrypt(key, parts[0]);
-        SecretKey aesKey = new SecretKeySpec(StringUtils.decode(base64AesKey), "AES");
+        SecretKey aesKey = basicAesKeyRsaUnwrap(key, StringUtils.decode(parts[0]));
 
         return complexBase64AesDecrypt(aesKey, parts[1]).getT();
     }
