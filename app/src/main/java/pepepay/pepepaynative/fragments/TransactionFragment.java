@@ -107,7 +107,7 @@ public class TransactionFragment extends DialogFragment {
         amountSelectorBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                amountSelector.setText(progress);
+                amountSelector.setText(Integer.toString(progress));
             }
 
             @Override
