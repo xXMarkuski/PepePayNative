@@ -21,6 +21,8 @@ public interface IDeviceConnectionHandler<T extends IDeviceConnectionHandler, U 
 
     void connect(U target);
 
+    void disconnect();
+
     void send(U target, String data);
 
     boolean canSend();
