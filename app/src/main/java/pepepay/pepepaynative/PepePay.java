@@ -70,14 +70,14 @@ public class PepePay {
         if (godWalletsFile.exists()) {
             Wallets.loadGodWallets(godWalletsFile);
         }
+        if (walletFile.exists()) {
+            Wallets.loadWallets(walletFile);
+        }
         if (privateFile.exists()) {
             Wallets.loadPrivateKeys(privateFile);
         }
         if (nameFile.exists()) {
             Wallets.loadNames(nameFile);
-        }
-        if (walletFile.exists()) {
-            Wallets.loadWallets(walletFile);
         }
 
         OPTIONS = Options.load(optionsFile);

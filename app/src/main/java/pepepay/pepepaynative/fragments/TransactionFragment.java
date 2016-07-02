@@ -90,7 +90,9 @@ public class TransactionFragment extends DialogFragment {
                         if (Wallets.isValidPassword(from, pinSelector.getText() + "")) {
                             Transaction transaction = from.getSendTransaction(to, Wallets.getPrivateKey(from, pinSelector.getText() + ""), Float.parseFloat(amountSelector.getText() + ""), purposeSelector.getText() + "");
                             connection.send(Parcel.toParcel(PepePay.LOADER_MANAGER.save(transaction), Connection.REQ));
+                            System.out.println("brgin asdasdasasdasdasdasdasda");
                             from.addTransaction(transaction);
+                            System.out.println("end asdasdasasdasdasdasdasda");
                             dialog.dismiss();
                         } else {
                             error.setText(R.string.wrongPassword);

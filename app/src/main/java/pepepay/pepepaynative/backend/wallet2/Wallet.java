@@ -4,7 +4,6 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 
 import pepepay.pepepaynative.PepePay;
 import pepepay.pepepaynative.backend.wallet2.transaction.Transaction;
@@ -15,19 +14,16 @@ import pepepay.pepepaynative.utils.loader.Loader;
 import pepepay.pepepaynative.utils.loader.LoaderManager;
 
 public class Wallet {
-    private final static Comparator<Transaction> comparator = new Comparator<Transaction>() {
-        @Override
-        public int compare(Transaction o1, Transaction o2) {
-            return (int) (o1.getTime() - o2.getTime());
-        }
-    };
     private final PublicKey publicKey;
     private final ArrayList<Transaction> receivedTransactions;
     private final ArrayList<Transaction> sendTransactions;
     private final ArrayList<Function2<Void, Wallet, Transaction>> transactionListeners;
+    private final String identifier;
     private float balance;
+    private boolean transactionChanged = true;
 
     private ArrayList<Transaction> scheduledTransactions;
+    private ArrayList<Transaction> transactionsChron;
 
     public Wallet(PublicKey publicKey, ArrayList<Transaction> transactions) {
         this.publicKey = publicKey;
@@ -36,22 +32,26 @@ public class Wallet {
         this.transactionListeners = new ArrayList<Function2<Void, Wallet, Transaction>>();
         this.scheduledTransactions = transactions;
         this.balance = 0;
+        this.identifier = StringUtils.encode(publicKey.getEncoded());
     }
 
     public Transaction getSendTransaction(Wallet receiver, PrivateKey key, float amount, String purpose) {
         long time = System.currentTimeMillis();
-        return new Transaction(this.getIdentifier(), receiver.getIdentifier(), amount, time, StringUtils.multiplex(purpose, EncryptionUtils.complexBase64RsaEncrypt(key, time + "")));
+        return new Transaction(this.getIdentifier(), receiver.getIdentifier(), amount, time, StringUtils.multiplex(purpose, EncryptionUtils.complexBase64RsaEncrypt(key, time + receiver.getIdentifier())));
     }
 
     public void addTransaction(final Transaction transaction) {
         if (!transaction.isValid()) return;
+        if (this.getTransactionAt(transaction.getTime()) != null) {
+            return;
+        }
+        System.out.println("has not sended a transaction at the same time");
+
         if (transaction.getReceiver().equals(this.getIdentifier())) {
-            String sender = transaction.getSender();
             receivedTransactions.add(transaction);
             balance += transaction.getAmount();
         }
         if (transaction.getSender().equals(this.getIdentifier())) {
-            String receiver = transaction.getReceiver();
             sendTransactions.add(transaction);
             balance -= transaction.getAmount();
         }
@@ -61,6 +61,7 @@ public class Wallet {
                 listener.eval(Wallet.this, transaction);
             }
         }
+        transactionChanged = true;
         Wallets.saveWallet(this);
     }
 
@@ -92,6 +93,26 @@ public class Wallet {
         return balance;
     }
 
+    public float calculateBalanceBefor(long time) {
+        float balance = 0;
+        for (Transaction transaction : getTransactionsBefore(receivedTransactions, time)) {
+            System.out.println(balance);
+            balance += transaction.getAmount();
+        }
+        for (Transaction transaction : getTransactionsBefore(sendTransactions, time)) {
+            System.out.println(balance);
+            balance -= transaction.getAmount();
+        }
+        return balance;
+    }
+
+    public Transaction getTransactionAt(long time) {
+        for (Transaction transaction : getTranactions()) {
+            if (transaction.getTime() == time) return transaction;
+        }
+        return null;
+    }
+
     public int getReceivedTransactionCount() {
         return receivedTransactions.size();
     }
@@ -109,7 +130,7 @@ public class Wallet {
     }
 
     public String getIdentifier() {
-        return StringUtils.encode(publicKey.getEncoded());
+        return identifier;
     }
 
     public ArrayList<Transaction> getReceivedTransactions() {
@@ -137,11 +158,15 @@ public class Wallet {
     }
 
     public ArrayList<Transaction> getTransactionsChronologically() {
-        ArrayList<Transaction> result = new ArrayList<Transaction>(sendTransactions.size() + receivedTransactions.size());
-        result.addAll(sendTransactions);
-        result.addAll(receivedTransactions);
-        Collections.sort(result, comparator);
-        return result;
+        if (transactionChanged) {
+            transactionsChron = new ArrayList<Transaction>(sendTransactions.size() + receivedTransactions.size());
+            transactionsChron.addAll(sendTransactions);
+            transactionsChron.addAll(receivedTransactions);
+
+            Collections.sort(transactionsChron, Transaction.comparator);
+            return transactionsChron;
+        }
+        return transactionsChron;
     }
 
     public ArrayList<Transaction> getTransactionsBefore(ArrayList<Transaction> array, long time) {

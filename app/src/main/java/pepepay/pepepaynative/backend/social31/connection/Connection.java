@@ -106,7 +106,7 @@ public class Connection implements ReceiveHandler {
                 });
             }
         } catch (Throwable throwable) {
-
+            throwable.printStackTrace();
         }
 
         try {
@@ -132,7 +132,7 @@ public class Connection implements ReceiveHandler {
                     connection.send(parcel.getAnswer(new ArrayList<Transaction>()));
                 } else*/
                 {
-                    if (str.length < 2) {
+                    if (str.length < 3) {
                         connection.send(parcel.getAnswer(wallet.getTransactionsChronologically()));
                     } else {
                         connection.send(parcel.getAnswer(wallet.getTransactionsBefore(Long.parseLong(str[2]))));
@@ -145,7 +145,7 @@ public class Connection implements ReceiveHandler {
             }
 
         } catch (Throwable throwable) {
-
+            throwable.printStackTrace();
         }
 
         if (data.equals(Connection.requestWalletIDs)) {
@@ -165,6 +165,7 @@ public class Connection implements ReceiveHandler {
             @Override
             public Void eval(String s) {
                 try {
+                    System.out.println("handeling");
                     final ArrayList<Transaction> transactions = (ArrayList<Transaction>) PepePay.LOADER_MANAGER.load(s);
                     final Iterator<Transaction> iter = transactions.iterator();
 
@@ -172,6 +173,7 @@ public class Connection implements ReceiveHandler {
                     function[0] = new Function<Void, Void>() {
                         @Override
                         public Void eval(Void aVoid) {
+                            System.out.println("evaling function[0]");
                             boolean hasNext = iter.hasNext();
                             System.out.println(hasNext + "  " + transactions.size());
                             if (hasNext) {
@@ -180,6 +182,7 @@ public class Connection implements ReceiveHandler {
                                     handleTransaction(connection, next, function[0]);
                                 } else {
                                     Wallets.getWallet(transaction.getSender()).addTransaction(transaction);
+                                    function[0].eval(null);
                                 }
                             } else {
                                 Wallets.getWallet(transaction.getReceiver()).addTransaction(transaction);
@@ -213,7 +216,7 @@ public class Connection implements ReceiveHandler {
                 public Void eval(String s) {
                     try {
                         Wallets.addWallet((Wallet) PepePay.LOADER_MANAGER.load(s));
-                        connection.send(Parcel.toParcel(StringUtils.multiplex(Connection.getTransactions, transaction.getSender()), Connection.REQ), handler);
+                        connection.send(Parcel.toParcel(StringUtils.multiplex(Connection.getTransactions, transaction.getSender(), transaction.getTime() + ""), Connection.REQ), handler);
                     } catch (Throwable throwable) {
                         throwable.printStackTrace();
                     }

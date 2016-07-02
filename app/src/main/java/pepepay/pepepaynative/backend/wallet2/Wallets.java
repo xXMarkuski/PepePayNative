@@ -4,6 +4,7 @@ import java.io.File;
 import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 import pepepay.pepepaynative.PepePay;
@@ -138,7 +139,6 @@ public class Wallets {
 
     public static Wallet getWallet(String walletID) {
         for (Wallet wallet : wallets) {
-            if (wallet == null) continue;
             if (wallet.getIdentifier().equals(walletID)) return wallet;
         }
         return null;
@@ -155,6 +155,7 @@ public class Wallets {
 
     public static void addWallet(Wallet wallet) {
         if (wallet == null || wallets.contains(wallet)) return;
+        System.out.println("added Wallet: " + wallet.getIdentifier());
         wallets.add(wallet);
     }
 
@@ -233,6 +234,26 @@ public class Wallets {
         return hasName(wallet.getIdentifier());
     }
 
+    public static int getOwnWalletsCount() {
+        return privateKeys.size();
+    }
+
+    public static Wallet getOwnWallet(int i) {
+        return getWallet(getOwnWalletID(i));
+    }
+
+    public static String getOwnWalletID(int i) {
+        return new ArrayList<>(privateKeys.keySet()).get(i);
+    }
+
+    public static void removeGodWallet(String walletID) {
+        godWallets.remove(walletID);
+    }
+
+    public static void removeGodWallet(Wallet wallet) {
+        removeGodWallet(wallet.getIdentifier());
+    }
+
     /**
      * Point to file which points to wallets
      *
@@ -254,21 +275,22 @@ public class Wallets {
     }
 
     public static void loadWallets(File file) {
+        final ArrayList<Transaction> transactions = new ArrayList<>();
         for (final File child : file.listFiles()) {
-            String content = null;
-            content = FileUtils.read(child);
+            System.out.println("Loading wallet: " + child.getPath());
+            String content = FileUtils.read(child);
             Wallet load = (Wallet) PepePay.LOADER_MANAGER.load(content);
             addWallet(load);
+            transactions.addAll(load.getScheduledTransactions());
         }
 
-        for (final Wallet wallet : wallets) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    wallet.addScheduledTransactions();
-                }
-            }).start();
+        Collections.sort(transactions, Transaction.comparator);
+
+        for (Transaction transaction : transactions) {
+            Wallets.getWallet(transaction.getReceiver()).addTransaction(transaction);
+            Wallets.getWallet(transaction.getSender()).addTransaction(transaction);
         }
+
     }
 
     public static void saveAll() {

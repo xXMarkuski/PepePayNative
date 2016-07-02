@@ -39,7 +39,6 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         assetManager = getResources().getAssets();
 
         if (updateThread == null) {
@@ -230,7 +229,7 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
 
         @Override
         public int getCount() {
-            int size = Wallets.getOwnWallets().size();
+            int size = Wallets.getOwnWalletsCount();
             return size + 1;
         }
 
@@ -239,7 +238,7 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
             if (position == 0) {
                 return getString(R.string.createWallet);
             } else {
-                return Wallets.getName(Wallets.getOwnWallets().get(position - 1));
+                return Wallets.getName(Wallets.getOwnWalletID(position - 1));
             }
         }
 

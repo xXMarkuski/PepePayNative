@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import pepepay.pepepaynative.PepePay;
 import pepepay.pepepaynative.R;
 import pepepay.pepepaynative.backend.social31.connection.Connection;
@@ -39,7 +41,9 @@ public class WalletInfoFragment extends Fragment implements Wallets.WalletsListe
         WalletInfoFragment fragment = new WalletInfoFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
-        Wallet wallet = Wallets.getOwnWallets().get(walletNumber);
+        String id = Wallets.getOwnWalletID(walletNumber);
+        System.out.println(id);
+        Wallet wallet = Wallets.getWallet(id);
         if (wallet == null) throw new RuntimeException("wallet is null");
         fragment.setWallet(wallet);
         return fragment;
@@ -62,7 +66,12 @@ public class WalletInfoFragment extends Fragment implements Wallets.WalletsListe
         walletChangeButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                Wallets.addGodWallet(wallet);
+                if (Wallets.isGodWallet(wallet)) {
+                    Wallets.removeGodWallet(wallet);
+                } else {
+                    Wallets.addGodWallet(wallet);
+                }
+
                 System.out.println(PepePay.LOADER_MANAGER.save(Wallets.getGodWalletsIDs()));
                 return true;
             }
@@ -92,6 +101,12 @@ public class WalletInfoFragment extends Fragment implements Wallets.WalletsListe
         });
 
         transOverview = (LinearLayout) v.findViewById(R.id.transOverview);
+
+        ArrayList<Transaction> transactions = wallet.getTransactionsChronologically();
+        for (Transaction transaction : transactions) {
+            System.out.println(transaction.getAmount());
+            transOverview.addView(getView(transaction), 0);
+        }
 
         Wallets.addWalletAddListener(this);
 

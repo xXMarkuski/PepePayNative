@@ -27,12 +27,18 @@
             android:layout_height="wrap_content"
             android:text="Send Money" />
 
-        <LinearLayout
-            android:id="@+id/transOverview"
+        <ScrollView
+            android:id="@+id/scrollView"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_gravity="center_horizontal"
-            android:orientation="vertical"></LinearLayout>
+            android:layout_height="fill_parent">
+
+            <LinearLayout
+                android:id="@+id/transOverview"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center_horizontal"
+                android:orientation="vertical"></LinearLayout>
+        </ScrollView>
 
     </LinearLayout>
 
