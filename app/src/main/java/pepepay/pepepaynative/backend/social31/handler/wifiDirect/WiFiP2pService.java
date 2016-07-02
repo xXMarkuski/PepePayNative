@@ -1,4 +1,4 @@
-package pepepay.pepepaynative.backend.social31.wifiDirect;
+package pepepay.pepepaynative.backend.social31.handler.wifiDirect;
 
 import android.net.wifi.p2p.WifiP2pDevice;
 

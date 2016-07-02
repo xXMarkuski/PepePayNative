@@ -155,4 +155,15 @@ public class ConnectionManager {
         }
     }
 
+    public void disconnect(IDevice device) {
+        activeConnections.remove(device);
+
+        for (IDeviceConnectionHandler handler : handlers) {
+            if (canHandle(device, handler)) {
+                handler.disconnect(device);
+                return;
+            }
+        }
+    }
+
 }

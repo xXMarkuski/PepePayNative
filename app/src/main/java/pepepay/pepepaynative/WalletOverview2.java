@@ -20,7 +20,7 @@ import java.io.File;
 import java.util.Arrays;
 
 import pepepay.pepepaynative.backend.social31.handler.IDeviceConnectionHandler;
-import pepepay.pepepaynative.backend.social31.wifiDirect.WifiDirectConnectionHandler;
+import pepepay.pepepaynative.backend.social31.handler.wifiDirect.WifiDirectConnectionHandler;
 import pepepay.pepepaynative.backend.wallet2.Wallet;
 import pepepay.pepepaynative.backend.wallet2.Wallets;
 import pepepay.pepepaynative.backend.wallet2.transaction.Transaction;
