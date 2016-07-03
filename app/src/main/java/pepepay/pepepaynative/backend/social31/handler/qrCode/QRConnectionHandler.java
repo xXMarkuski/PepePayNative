@@ -56,7 +56,7 @@ public class QRConnectionHandler extends WifiDirectBackend<QRConnectionHandler> 
 
     @Override
     protected String getIDeviceName() {
-        return "Scan QR-Code";
+        return activity.getString(R.string.scan_qr);
     }
 
     @Override

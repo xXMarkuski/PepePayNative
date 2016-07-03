@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SimplePay</string>
+    <string name="aboutText">Placeholder: Entwickelt von Markus "Markuski" Toran.</string>
+    <string name="action_about">Über SimplePay</string>
+    <string name="amount">Betrag: </string>
+    <string name="cancel">Abbruch</string>
+    <string name="confirm">OK</string>
+    <string name="createTransaction">Transaktion tätigen</string>
+    <string name="createWallet">Konto erstellen</string>
+    <string name="delete_wallet">Konto löschen</string>
+    <string name="delete_wallet_Text">Sind sie sicher dass sie das Konto %s löschen wollen? Sie verlieren damit das darin enthaltene Geld %s</string>
+    <string name="optional">(Optional)</string>
+    <string name="purpose">Zweck:</string>
+    <string name="receiver">Empfänger:</string>
+    <string name="selectDevice">Wählen sie ein Gerät aus:</string>
+    <string name="selectWallet">Wählen sie ein Konto aus:</string>
+    <string name="sender">Absender:</string>
+    <string name="showTos">AGBs anzeigen</string>
+    <string name="time">Uhrzeit:</string>
+    <string name="tosGreeting">Durch die Nutzung dieser App stimmen sie unseren AGBs zu</string>
+    <string name="transactionInfo">Transaktionsinfo</string>
+    <string name="walletID">Konto ID:</string>
+    <string name="wallet_creation_name">Name:</string>
+    <string name="wrongPassword">PIN ungültig</string>
+    <string name="send_money">Geld versenden</string>
+    <string name="unnamed_wallet">Unbenanntes Konto </string>
+    <string name="scan_qr">QR-Code scannen</string>
+</resources>

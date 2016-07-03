@@ -1,18 +1,18 @@
 <resources>
-    <string name="app_name">PepePayNative</string>
-    <string name="title_activity_wallet_overview2">PepePay</string>
+    <string name="app_name">SimplePay</string>
+    <string name="title_activity_wallet_overview2" translatable="false">SimplePay</string>
     <string name="wallet_creation_name">Name:</string>
-    <string name="pin">PIN:</string>
-    <string name="wallet_creation_keysize">Keysize:</string>
+    <string name="pin" translatable="false">PIN:</string>
+    <string name="wallet_creation_keysize" translatable="false">Keysize:</string>
     <string name="selectDevice">Select a Device:</string>
     <string name="selectWallet">Select a Wallet:</string>
     <string name="confirm">Confirm</string>
-    <string name="amount">Amount:</string>
+    <string name="amount">Amount: </string>
     <string name="purpose">Purpose:</string>
     <string name="cancel">Cancel</string>
     <string name="delete_wallet">Delete Wallet</string>
-    <string name="delete_wallet_Text">Are you sure you want to delete the Wallet %s</string>
-    <string name="wrongPassword">Wrorng PIN</string>
+    <string name="delete_wallet_Text">Are you sure you want to delete the Wallet </string>
+    <string name="wrongPassword">Wrong PIN</string>
     <string name="sender">Sender:</string>
     <string name="receiver">Receiver:</string>
     <string name="time">Time:</string>
@@ -25,4 +25,7 @@
     <string name="action_about">About</string>
     <string name="aboutText">Placeholder: Made by Markus "Markuski" Toran. </string>
     <string name="optional"> (Optional) </string>
+    <string name="send_money">Send Money</string>
+    <string name="unnamed_wallet">Unnamed Wallet</string>
+    <string name="scan_qr">Scan QR-Code</string>
 </resources>
