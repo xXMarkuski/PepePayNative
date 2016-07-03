@@ -10,7 +10,6 @@ import java.util.HashMap;
 import pepepay.pepepaynative.PepePay;
 import pepepay.pepepaynative.backend.wallet2.transaction.Transaction;
 import pepepay.pepepaynative.utils.FileUtils;
-import pepepay.pepepaynative.utils.StringUtils;
 import pepepay.pepepaynative.utils.encryption.EncryptionUtils;
 
 public class Wallets {
@@ -23,8 +22,12 @@ public class Wallets {
     //God Wallets
     private static ArrayList<String> godWallets = new ArrayList<String>();
 
+
     //Wallet add Listeners
     private static ArrayList<WalletsListener> walletsListeners = new ArrayList<WalletsListener>();
+
+    //WalletId to Simple
+    private static HashMap<String, Integer> simpleMap = new HashMap<>();
 
     public static void generateAndAddWallet(final int keysize, final String name, final String pin, final WalletsListener listener) {
         for (WalletsListener walletAddListener : walletsListeners) {
@@ -57,7 +60,7 @@ public class Wallets {
     }
 
     public static String getDefaultName(Wallet wallet) {
-        return "Unnamed Wallet " + StringUtils.getSimple(wallet.getIdentifier());
+        return "Unnamed Wallet " + Wallets.getSimple(wallet);
     }
 
     public static void addWalletAddListener(WalletsListener walletAddListener) {
@@ -107,7 +110,7 @@ public class Wallets {
             result = walletID;
         }
         if (result.equals(walletID)) {
-            result = "Wallet " + StringUtils.getSimple(walletID);
+            result = "Wallet " + Wallets.getSimple(walletID);
         }
         return result;
     }
@@ -157,6 +160,12 @@ public class Wallets {
         if (wallet == null || wallets.contains(wallet)) return;
         System.out.println("added Wallet: " + wallet.getIdentifier());
         wallets.add(wallet);
+        if (privateKeys.containsKey(wallet.getIdentifier())) {
+            System.out.println("adasdasd");
+            for (WalletsListener walletsListener : walletsListeners) {
+                walletsListener.privateWalletAdded(wallet);
+            }
+        }
     }
 
     public static ArrayList<Wallet> getOwnWallets() {
@@ -235,7 +244,13 @@ public class Wallets {
     }
 
     public static int getOwnWalletsCount() {
-        return privateKeys.size();
+        int result = 0;
+        for (String s : privateKeys.keySet()) {
+            if (getWallet(s) != null) {
+                result++;
+            }
+        }
+        return result;
     }
 
     public static Wallet getOwnWallet(int i) {
@@ -264,14 +279,35 @@ public class Wallets {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    FileUtils.write(FileUtils.child(file, (StringUtils.getSimple(wallet.getIdentifier()) + "")), PepePay.LOADER_MANAGER.save(wallet));
+                    FileUtils.write(FileUtils.child(file, (Wallets.getSimple(wallet) + "")), PepePay.LOADER_MANAGER.save(wallet));
                 }
             }).start();
         }
     }
 
     public static void saveWallet(Wallet wallet) {
-        FileUtils.write(FileUtils.child(PepePay.walletFile, StringUtils.getSimple(wallet.getIdentifier()) + ""), PepePay.LOADER_MANAGER.save(wallet));
+        FileUtils.write(FileUtils.child(PepePay.walletFile, Wallets.getSimple(wallet) + ""), PepePay.LOADER_MANAGER.save(wallet));
+    }
+
+    public static int getSimple(String walletID) {
+        Integer integer = simpleMap.get(walletID);
+        if (integer == null) {
+            int result = 0;
+            for (char c : walletID.toCharArray()) {
+                result += c;
+            }
+            while (simpleMap.containsKey(integer)) {
+                result++;
+            }
+            simpleMap.put(walletID, result);
+            return result;
+        } else {
+            return integer;
+        }
+    }
+
+    public static int getSimple(Wallet wallet) {
+        return getSimple(wallet.getIdentifier());
     }
 
     public static void loadWallets(File file) {
@@ -281,6 +317,7 @@ public class Wallets {
             String content = FileUtils.read(child);
             Wallet load = (Wallet) PepePay.LOADER_MANAGER.load(content);
             addWallet(load);
+            simpleMap.put(load.getIdentifier(), Integer.parseInt(child.getName()));
             transactions.addAll(load.getScheduledTransactions());
         }
 
@@ -290,7 +327,6 @@ public class Wallets {
             Wallets.getWallet(transaction.getReceiver()).addTransaction(transaction);
             Wallets.getWallet(transaction.getSender()).addTransaction(transaction);
         }
-
     }
 
     public static void saveAll() {

@@ -56,13 +56,4 @@ public class StringUtils {
     public static byte[] decode(String string) {
         return Base64.decode(string);
     }
-
-    public static int getSimple(String string) {
-        int result = 0;
-        for (char c : string.toCharArray()) {
-            result += c;
-        }
-
-        return result;
-    }
 }

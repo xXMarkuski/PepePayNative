@@ -43,7 +43,6 @@ public class PepePay {
 
     public PepePay(List<IDeviceConnectionHandler> handlers) {
         PepePay.handlers = handlers;
-        System.out.println(handlers);
     }
 
     public static void runOnUIThread(Runnable runnable) {

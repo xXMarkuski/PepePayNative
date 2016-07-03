@@ -1,6 +1,13 @@
 package pepepay.pepepaynative.backend.social31.handler.qrCode;
 
 
+import android.graphics.Bitmap;
+
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+
 public class QRCreationHandler {
 
     public final static int WHITE = 0xFFFFFFFF;
@@ -8,7 +15,7 @@ public class QRCreationHandler {
     public final static int WIDTH = 400;
     public final static int HEIGHT = 400;
 
-    /*public Bitmap createQR(String data) throws WriterException {
+    public Bitmap createQR(String data) throws WriterException {
 
         BitMatrix result;
         try {
@@ -32,5 +39,5 @@ public class QRCreationHandler {
         Bitmap bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         bitmap.setPixels(pixels, 0, w, 0, 0, w, h);
         return bitmap;
-    }*/
+    }
 }

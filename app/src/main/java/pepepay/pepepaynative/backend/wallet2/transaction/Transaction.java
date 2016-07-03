@@ -61,7 +61,7 @@ public class Transaction implements Serializable {
         Wallet wallet = Wallets.getWallet(sender);
 
         //if (sender.equals(receiver)) return false;
-        System.out.println("send rec are not the same");
+        //System.out.println("send rec are not the same");
 
         try {
             String[] demul = StringUtils.demultiplex(this.getPurpose());
@@ -72,17 +72,17 @@ public class Transaction implements Serializable {
             return false;
         }
 
-        System.out.println("came from the true owner");
+        //System.out.println("came from the true owner");
 
         if (Wallets.isGodWallet(sender)) return true;
-        System.out.println("not god");
+        //System.out.println("not god");
         ArrayList<Transaction> transactions = wallet.getTransactionsBefore(time);
         for (Transaction transaction : transactions) {
             if (!transaction.isValid()) {
                 return false;
             }
         }
-        System.out.println("all prev trans are valid");
+        //System.out.println("all prev trans are valid");
 
         /*ArrayList<Transaction> allTrans = wallet.getTransactionsChronologically();
         if (allTrans.size() > 0) {
@@ -90,7 +90,7 @@ public class Transaction implements Serializable {
         }*/
 
         boolean b = wallet.calculateBalanceBefor(time) >= amount;
-        System.out.println(b);
+        //System.out.println(b);
         return b;
     }
 }

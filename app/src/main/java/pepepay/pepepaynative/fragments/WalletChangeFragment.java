@@ -16,7 +16,6 @@ import android.widget.TextView;
 import pepepay.pepepaynative.R;
 import pepepay.pepepaynative.backend.wallet2.Wallet;
 import pepepay.pepepaynative.backend.wallet2.Wallets;
-import pepepay.pepepaynative.utils.StringUtils;
 
 public class WalletChangeFragment extends DialogFragment {
 
@@ -49,7 +48,7 @@ public class WalletChangeFragment extends DialogFragment {
         nameSelector.setText(Wallets.getName(wallet));
 
         final TextView id = (TextView) view.findViewById(R.id.walletID);
-        id.setText(StringUtils.getSimple(wallet.getIdentifier()) + "");
+        id.setText(Wallets.getSimple(wallet) + "");
 
         Button deleteWallet = (Button) view.findViewById(R.id.deleteWalletButton);
         deleteWallet.setOnClickListener(new View.OnClickListener() {

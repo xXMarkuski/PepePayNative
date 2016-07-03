@@ -96,11 +96,9 @@ public class Wallet {
     public float calculateBalanceBefor(long time) {
         float balance = 0;
         for (Transaction transaction : getTransactionsBefore(receivedTransactions, time)) {
-            System.out.println(balance);
             balance += transaction.getAmount();
         }
         for (Transaction transaction : getTransactionsBefore(sendTransactions, time)) {
-            System.out.println(balance);
             balance -= transaction.getAmount();
         }
         return balance;

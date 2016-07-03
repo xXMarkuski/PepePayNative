@@ -253,4 +253,5 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
             return PagerAdapter.POSITION_NONE;
         }
     }
+
 }

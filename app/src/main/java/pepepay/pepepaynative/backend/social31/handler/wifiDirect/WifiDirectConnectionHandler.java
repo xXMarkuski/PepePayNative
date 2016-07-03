@@ -253,7 +253,7 @@ public class WifiDirectConnectionHandler implements IDeviceConnectionHandler<Wif
 
             @Override
             public void onFailure(int arg0) {
-                Log.i(TAG, "Service discovery failed");
+                Log.i(TAG, "Service discovery failed: " + arg0);
 
             }
         });

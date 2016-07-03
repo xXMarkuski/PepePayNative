@@ -9,18 +9,19 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.Result;
+
 import java.util.Arrays;
 
-import me.dm7.barcodescanner.zbar.BarcodeFormat;
-import me.dm7.barcodescanner.zbar.Result;
-import me.dm7.barcodescanner.zbar.ZBarScannerView;
+import me.dm7.barcodescanner.zxing.ZXingScannerView;
 import pepepay.pepepaynative.R;
 import pepepay.pepepaynative.WalletOverview2;
 import pepepay.pepepaynative.backend.social31.ConnectionManager;
 import pepepay.pepepaynative.backend.social31.handler.wifiDirect.WifiDirectBackend;
 import pepepay.pepepaynative.backend.social31.handler.wifiDirect.WifiDirectConnectionHandler;
 
-public class QRConnectionHandler extends WifiDirectBackend<QRConnectionHandler> implements ZBarScannerView.ResultHandler {
+public class QRConnectionHandler extends WifiDirectBackend<QRConnectionHandler> implements ZXingScannerView.ResultHandler {
     private static final String TAG = "QRConnectionHandler";
     private static QRConnectionHandler qr;
     private ConnectionManager manager;
@@ -61,7 +62,7 @@ public class QRConnectionHandler extends WifiDirectBackend<QRConnectionHandler> 
     @Override
     public void handleResult(Result rawResult) {
         // Do something with the result here
-        String contents = rawResult.getContents();
+        String contents = rawResult.getText();
 
         Log.v(TAG, contents); // Prints scan results
 
@@ -89,7 +90,7 @@ public class QRConnectionHandler extends WifiDirectBackend<QRConnectionHandler> 
 
     public static class QRConnectionHandlerActivity extends AppCompatActivity {
 
-        private ZBarScannerView mScannerView;
+        private ZXingScannerView mScannerView;
 
         public QRConnectionHandlerActivity() {
 
@@ -98,9 +99,10 @@ public class QRConnectionHandler extends WifiDirectBackend<QRConnectionHandler> 
         @Override
         public void onCreate(@Nullable Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            mScannerView = new ZBarScannerView(this);    // Programmatically initialize the scanner view
+            mScannerView = new ZXingScannerView(this);    // Programmatically initialize the scanner view
             setContentView(mScannerView);
-            mScannerView.setFormats(Arrays.asList(BarcodeFormat.QRCODE));
+            mScannerView.setFormats(Arrays.asList(BarcodeFormat.QR_CODE));
+            //System.out.println(generateWalletConnectionString(Wallets.getOwnWallet(0), this));
         }
 
         @Override
@@ -120,7 +122,7 @@ public class QRConnectionHandler extends WifiDirectBackend<QRConnectionHandler> 
             mScannerView.stopCamera();           // Stop camera on pause
         }
 
-        public ZBarScannerView getmScannerView() {
+        public ZXingScannerView getmScannerView() {
             return mScannerView;
         }
     }

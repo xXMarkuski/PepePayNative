@@ -32,32 +32,6 @@ Konto
 (6)	Die Guthabensgrenze darf nicht überschritten werden.
 (7)	Eine Kontoschließung des Nutzers ist möglich.
 (8)	Eine Kontoschließung seitens SimplePay ist möglich.
-Transaktionen
-(1)	Eine Wertgrenze bei Transaktionen ist möglich.
-(2)	Eine fehlerhafte Verbindung und Transaktion ist möglich.
-(3)	Das Wechseln von Geld in die virtuelle Währung kann mit Gebühren verbunden sein.
-(4)	Das Wechseln von der virtuellen Währung in Bargeld kann mit Gebühren verbunden sein.
-(5)	Der Nutzer ist verpflichtet die Vertraulichkeit des anderen Nutzers oder der Geldquelle zu überprüfen und sich zu erkundigen ob dieser/diese Root besitzt und gegebenenfalls die Transaktion nicht durchzuführen.
-(6)	Das Wechseln von der virtuellen Währung in Bargeld ist nicht gewährleistet.
-(7)	Das Durchführen einer Transaktion kann durch den Nutzer nicht abgebrochen werden.
-(8)	Das Durchführen einer Transaktion kann durch ein Nichteinhalten der anderen Punkte in den AGB`s von der App abgebrochen werden.
-(9)	Eine Rückerstattung des Geldes bei fehlerhaften Transaktionen kann nicht gewährleistet werden.
-(10)Die Transaktion kann bei verdächtigen Zahlungen von der App abgebrochen werden.
-Nutzung
-(1)	Die Nutzung der App ist nur bei akzeptieren der AGB`s erlaubt.
-(2)	Die Weitergabe der App ist nicht gestattet und strafbar.
-(3)	Die App und das verfügen über das Geld ist nur möglich, wenn alle Gebühren bezahlt wurden.
-(4)	Die App ist nur mit Android Geräten kompatibel.
-(5)	Nur SimplePay ist es gestattet Nutzerrechte zu vergeben.
-(6)	Das verändern der App ist nicht gestattet.
-(7)	Das generieren von Geld ist verboten und strafbar.
-(8)	SimplePay ist gestattet die Nutzerrechte zu entziehen.
-(9)	Das Einspielen von Backups ist strafbar.
-(10)Der Nutzer ist mit dem Unterschreiben der AGB`s mit einer Installation der App einverstanden und ist sich den Risiken bewusst.
-(11)Die Installation darf von SimplePay durchgeführt werden, wenn der Nutzer einverstanden ist.
-(12)Wenn der Nutzer eine Kontoschließung durchführt übernimmt er die volle Haftung und ist sich dem Risiko Geld zu verlieren bewusst.
-(13)Sobald der Nutzer die AGB`s unterschreibt ist er mit ihnen einverstanden und darf nicht gegen sie verstoßen.
-(14)Bei Missachtung der AGB`s können Strafzahlungen und Anklagen die Folge sein.
 Daten
 (1)	Bei verdächtigen Transaktionen darf SimplePay Transaktionsdaten auslesen, auswerten und überprüfen.
 (2)	Bei verdächtigen Geldbeträgen darf SimplePay Kontodaten auslesen, auswerten und überprüfen.
@@ -79,3 +53,29 @@ Haftung
 (10)Wir übernehmen keine Haftung für kurzfristig anfallende Gebühren.
 (11)SimplePay übernimmt keine Haftung für eine fehlerhafte Installation der App und die Folgen.
 (12)SimplePay garantiert keinen Wechsel von virtueller Währung in Bargeld.
+Transaktionen
+(1)	Eine Wertgrenze bei Transaktionen ist möglich.
+(2)	Eine fehlerhafte Verbindung und Transaktion ist möglich.
+(3)	Das Wechseln von Geld in die virtuelle Währung kann mit Gebühren verbunden sein.
+(4)	Das Wechseln von der virtuellen Währung in Bargeld kann mit Gebühren verbunden sein.
+(5)	Der Nutzer ist verpflichtet die Vertraulichkeit des anderen Nutzers oder der Geldquelle zu überprüfen und sich zu erkundigen ob dieser/diese Root besitzt und gegebenenfalls die Transaktion nicht durchzuführen.
+(6)	Das Wechseln von der virtuellen Währung in Bargeld ist nicht gewährleistet.
+(7)	Das Durchführen einer Transaktion kann durch den Nutzer nicht abgebrochen werden.
+(8)	Das Durchführen einer Transaktion kann durch ein Nichteinhalten der anderen Punkte in den AGBs von der App abgebrochen werden.
+(9)	Eine Rückerstattung des Geldes bei fehlerhaften Transaktionen kann nicht gewährleistet werden.
+(10)Die Transaktion kann bei verdächtigen Zahlungen von der App abgebrochen werden.
+Nutzung
+(1)	Die Nutzung der App ist nur bei akzeptieren der AGBs erlaubt.
+(2)	Die Weitergabe der App ist nicht gestattet und strafbar.
+(3)	Die App und das verfügen über das Geld ist nur möglich, wenn alle Gebühren bezahlt wurden.
+(4)	Die App ist nur mit Android Geräten kompatibel.
+(5)	Nur SimplePay ist es gestattet Nutzerrechte zu vergeben.
+(6)	Das verändern der App ist nicht gestattet.
+(7)	Das generieren von Geld ist verboten und strafbar.
+(8)	Das Einspielen von Backups ist strafbar.
+(9)	SimplePay ist gestattet die Nutzerrechte zu entziehen.
+(10)Der Nutzer ist mit dem Unterschreiben der AGBs mit einer Installation der App einverstanden und ist sich den Risiken bewusst.
+(11)Die Installation darf von SimplePay durchgeführt werden, wenn der Nutzer einverstanden ist.
+(12)Wenn der Nutzer eine Kontoschließung durchführt übernimmt er die volle Haftung und ist sich dem Risiko Geld zu verlieren bewusst.
+(13)Sobald der Nutzer die AGBs unterschreibt ist er mit ihnen einverstanden und darf nicht gegen sie verstoßen.
+(14)Bei Missachtung der AGBs können Strafzahlungen und Anklagen die Folge sein.

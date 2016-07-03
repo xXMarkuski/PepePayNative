@@ -1,12 +1,19 @@
 package pepepay.pepepaynative.backend.social31.handler.wifiDirect;
 
+import android.content.Context;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
+import android.net.wifi.p2p.WifiP2pDevice;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import pepepay.pepepaynative.backend.social31.ConnectionManager;
 import pepepay.pepepaynative.backend.social31.handler.IDevice;
 import pepepay.pepepaynative.backend.social31.handler.IDeviceConnectionHandler;
+import pepepay.pepepaynative.backend.wallet2.Wallet;
 import pepepay.pepepaynative.utils.Function;
+import pepepay.pepepaynative.utils.StringUtils;
 
 public abstract class WifiDirectBackend<T extends WifiDirectBackend> implements IDeviceConnectionHandler<WifiDirectBackend, WifiDirectBackend.WifiDirectBackendDevice> {
 
@@ -17,6 +24,30 @@ public abstract class WifiDirectBackend<T extends WifiDirectBackend> implements 
     public WifiDirectBackend(WifiDirectConnectionHandler handler) {
         this.handler = handler;
         this.device = new WifiDirectBackendDevice(this);
+    }
+
+    public static String generateDeviceConnectionString(Context context) {
+        WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        WifiInfo wInfo = wifiManager.getConnectionInfo();
+        String macAddress = wInfo.getMacAddress();
+
+        return StringUtils.multiplex("device", macAddress);
+    }
+
+    public static String generateWalletConnectionString(Wallet target, Context context) {
+        WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        WifiInfo wInfo = wifiManager.getConnectionInfo();
+        String macAddress = wInfo.getMacAddress();
+
+        return StringUtils.multiplex("wallet", macAddress, target.getIdentifier());
+    }
+
+    public static String generateTransactionConnectionString(Wallet target, Context context, float amount, String purpose) {
+        WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        WifiInfo wInfo = wifiManager.getConnectionInfo();
+        String macAddress = wInfo.getMacAddress();
+
+        return StringUtils.multiplex("transaction", macAddress, target.getIdentifier(), amount + "", purpose);
     }
 
     @Override
@@ -63,8 +94,26 @@ public abstract class WifiDirectBackend<T extends WifiDirectBackend> implements 
         return WifiDirectBackendDevice.class;
     }
 
-    protected void handleString(String string) {
+    protected boolean handleString(String string) {
+        try {
+            String[] data = StringUtils.demultiplex(string);
+            if (data[0].equals("device")) {
+                WifiP2pDevice device = new WifiP2pDevice();
+                device.deviceAddress = data[1];
+                wifiDirectDevice = new WifiDirectDevice(device);
+                return true;
+            } else if (data[0].equals("wallet")) {
 
+                return true;
+            } else if (data[0].equals("transaction")) {
+
+                return true;
+            }
+            return false;
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+            return false;
+        }
     }
 
     protected abstract String getIDeviceName();
