@@ -113,45 +113,54 @@ public class WifiDirectConnectionHandler implements IDeviceConnectionHandler<Wif
                     }
                     Log.i(TAG, String.valueOf(state));
                 } else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
+                    final Function<Void, Collection<WifiP2pDevice>> handler = new Function<Void, Collection<WifiP2pDevice>>() {
+                        @Override
+                        public Void eval(Collection<WifiP2pDevice> wifiP2pDevices) {
+                            ArrayList<IDevice> gone = new ArrayList<IDevice>();
+                            ArrayList<WifiDirectDevice> newDevices = new ArrayList<WifiDirectDevice>();
+                            for (WifiDirectDevice device : availableServices) {
+                                if (!wifiP2pDevices.contains(device.getWifiP2pDevice())) {
+                                    availableServices.remove(device);
+                                    gone.add(device);
+                                }
+                            }
+                            for (WifiP2pDevice newDevice : wifiP2pDevices) {
+                                boolean isContained = false;
+                                for (WifiDirectDevice device : availableServices) {
+                                    if (device.getWifiP2pDevice().equals(newDevice)) {
+                                        isContained = true;
+                                        break;
+                                    }
+                                }
+                                if (!isContained) {
+                                    if (newDevice.primaryDeviceType.startsWith("1")) {
+                                        //1 is device class "Computer" where tablets fall under
+                                        //10 is device class "Telephone" where smartphones fall under
+                                        //so i just check for prefix 1
+                                        newDevices.add(new WifiDirectDevice(newDevice));
+                                    }
+                                }
+                            }
+                            availableServices.addAll(newDevices);
+                            connManager.devicesChanged(newDevices, gone);
+                            return null;
+                        }
+                    };
                     //Updating peers with our Service
                     final Collection<WifiP2pDevice>[] deviceList = new Collection[1];
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
                         deviceList[0] = ((WifiP2pDeviceList) intent.getParcelableExtra(WifiP2pManager.EXTRA_P2P_DEVICE_LIST)).getDeviceList();
+                        handler.eval(deviceList[0]);
                     } else {
                         wifiP2pManager.requestPeers(channel, new WifiP2pManager.PeerListListener() {
                             @Override
                             public void onPeersAvailable(WifiP2pDeviceList peers) {
                                 deviceList[0] = peers.getDeviceList();
+                                handler.eval(deviceList[0]);
                             }
                         });
                     }
-                    ArrayList<IDevice> gone = new ArrayList<IDevice>();
-                    ArrayList<WifiDirectDevice> newDevices = new ArrayList<WifiDirectDevice>();
-                    for (WifiDirectDevice device : availableServices) {
-                        if (!deviceList[0].contains(device.getWifiP2pDevice())) {
-                            availableServices.remove(device);
-                            gone.add(device);
-                        }
-                    }
-                    for (WifiP2pDevice newDevice : deviceList[0]) {
-                        boolean isContained = false;
-                        for (WifiDirectDevice device : availableServices) {
-                            if (device.getWifiP2pDevice().equals(newDevice)) {
-                                isContained = true;
-                                break;
-                            }
-                        }
-                        if (!isContained) {
-                            if (newDevice.primaryDeviceType.startsWith("1")) {
-                                //1 is device class "Computer" where tablets fall under
-                                //10 is device class "Telephone" where smartphones fall under
-                                //so i just check for prefix 1
-                                newDevices.add(new WifiDirectDevice(newDevice));
-                            }
-                        }
-                    }
-                    availableServices.addAll(newDevices);
-                    connManager.devicesChanged(newDevices, gone);
+
                 } else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
                     // Respond to new connection or disconnections
                     if (wifiP2pManager == null) {

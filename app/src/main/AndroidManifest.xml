@@ -9,10 +9,10 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
-
     <uses-feature android:name="android.hardware.wifi.direct" />
-    <uses-feature android:name="android.hardware.camera.any" android:required="false" />
-
+    <uses-feature
+        android:name="android.hardware.camera.any"
+        android:required="false" />
 
 
     <application
@@ -25,13 +25,17 @@
             android:name=".WalletOverview2"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_activity_wallet_overview2"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/splashScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".backend.social31.handler.qrCode.QRConnectionHandler$QRConnectionHandlerActivity"></activity>
+        <activity
+            android:name=".backend.social31.handler.qrCode.QRConnectionHandler$QRConnectionHandlerActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/title_activity_wallet_overview2"
+            android:screenOrientation="landscape" />
     </application>
 
 </manifest>

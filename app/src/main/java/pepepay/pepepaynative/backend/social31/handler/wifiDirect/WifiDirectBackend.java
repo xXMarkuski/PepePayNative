@@ -39,7 +39,9 @@ public abstract class WifiDirectBackend<T extends WifiDirectBackend> implements 
         WifiInfo wInfo = wifiManager.getConnectionInfo();
         String macAddress = wInfo.getMacAddress();
 
-        return StringUtils.multiplex("wallet", macAddress, target.getIdentifier());
+        String wallet = StringUtils.multiplex("wallet", macAddress, target.getIdentifier() + "");
+        System.out.println(wallet);
+        return wallet;
     }
 
     public static String generateTransactionConnectionString(Wallet target, Context context, float amount, String purpose) {
@@ -86,7 +88,7 @@ public abstract class WifiDirectBackend<T extends WifiDirectBackend> implements 
 
     @Override
     public boolean canSend() {
-        return handler.canSend();
+        return wifiDirectDevice != null && handler.canSend();
     }
 
     @Override
@@ -101,6 +103,7 @@ public abstract class WifiDirectBackend<T extends WifiDirectBackend> implements 
                 WifiP2pDevice device = new WifiP2pDevice();
                 device.deviceAddress = data[1];
                 wifiDirectDevice = new WifiDirectDevice(device);
+                handler.connect(new WifiDirectDevice(device));
                 return true;
             } else if (data[0].equals("wallet")) {
 

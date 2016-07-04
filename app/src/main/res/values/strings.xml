@@ -11,7 +11,7 @@
     <string name="purpose">Purpose:</string>
     <string name="cancel">Cancel</string>
     <string name="delete_wallet">Delete Wallet</string>
-    <string name="delete_wallet_Text">Are you sure you want to delete the Wallet </string>
+    <string name="delete_wallet_Text">Are you sure you want to delete the Wallet %s</string>
     <string name="wrongPassword">Wrong PIN</string>
     <string name="sender">Sender:</string>
     <string name="receiver">Receiver:</string>

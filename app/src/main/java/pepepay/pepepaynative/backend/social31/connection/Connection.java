@@ -10,6 +10,7 @@ import java.util.Iterator;
 import pepepay.pepepaynative.PepePay;
 import pepepay.pepepaynative.backend.social3.connection.processor.ConnectionProcessor;
 import pepepay.pepepaynative.backend.social3.connection.processor.DefaultConnectionProcessor;
+import pepepay.pepepaynative.backend.social3.connection.processor.WalletConnectionProcessor;
 import pepepay.pepepaynative.backend.social31.ConnectionManager;
 import pepepay.pepepaynative.backend.social31.handler.IDevice;
 import pepepay.pepepaynative.backend.social31.packages.Parcel;
@@ -28,6 +29,10 @@ public class Connection implements ReceiveHandler {
     public static final String getWalletNoTransaction = "getWalletNoTransactions";
     public static final String getTransactions = "getTransactions";
     public static final String getTransactionsAfter = "getTransactionsAfter";
+    public static final String getWalletIDForSimple = "getWalletIDForSimple";
+
+    public static final String connectionProcessor = "pros";
+    public static final String connectionProcessorWallet = "wallet";
 
     public static final String REQ = "req";
     public static final String ANS = "ans";
@@ -115,16 +120,30 @@ public class Connection implements ReceiveHandler {
                 Log.d(TAG, "getWallet: " + str[1]);
                 Wallet wallet = Wallets.getWallet(str[1]);
                 connection.send(parcel.getAnswer(PepePay.LOADER_MANAGER.save(wallet)));
-            } else if (str[0].equals("pros")) {
-
+            } else if (str[0].equals(Connection.connectionProcessor)) {
+                if (str[1].equals(Connection.connectionProcessorWallet)) {
+                    Wallet ownWallet = Wallets.getOwnWallet(0);
+                    processor = new WalletConnectionProcessor(manager, Wallets.getWallet(str[2]), Wallets.getPrivateKey(ownWallet), ownWallet);
+                    connection.send(parcel.getAnswer(ownWallet.getPublicKey()));
+                }
             } else if (str[0].equals(Connection.getName)) {
                 Log.d(TAG, "getName: " + str[1]);
                 connection.send(parcel.getAnswer(Wallets.getName(str[1])));
             } else if (str[0].equals(Connection.getWalletNoTransaction)) {
                 Log.d(TAG, "getWalletNoTransaction: " + str[1]);
-                String key = PepePay.LOADER_MANAGER.save(Wallets.getWallet(str[1]).getPublicKey());
+                final Wallet wallet = Wallets.getWallet(str[1]);
+                String key = PepePay.LOADER_MANAGER.save(wallet.getPublicKey());
                 String transaction = PepePay.LOADER_MANAGER.save(new ArrayList<Transaction>());
                 connection.send(parcel.getAnswer(StringUtils.multiplex("w", StringUtils.multiplex(key, transaction))));
+                /*if(Wallets.isOwnWallet(wallet)){
+                    connection.send(Parcel.toParcel(StringUtils.multiplex(Connection.connectionProcessor, Connection.connectionProcessorWallet, str[1]), Connection.REQ), new Function<Void, String>() {
+                        @Override
+                        public Void eval(String s) {
+                            processor = new WalletConnectionProcessor(manager, Wallets.getWallet(s), Wallets.getPrivateKey(wallet), wallet);
+                            return null;
+                        }
+                    });
+                }*/
             } else if (str[0].equals(Connection.getTransactions)) {
                 Log.d(TAG, "getTransactions: " + str[1]);
                 Wallet wallet = Wallets.getWallet(str[1]);
@@ -142,6 +161,8 @@ public class Connection implements ReceiveHandler {
                 Log.d(TAG, "getTransactionsAfter: " + str[1]);
                 Wallet wallet = Wallets.getWallet(str[1]);
                 connection.send(parcel.getAnswer(wallet.getTransactionsAfter(Long.parseLong(str[2]))));
+            } else if (str[0].equals(Connection.getWalletIDForSimple)) {
+                connection.send(parcel.getAnswer(Wallets.getWalletIDForSimple(str[1])));
             }
 
         } catch (Throwable throwable) {
@@ -224,78 +245,6 @@ public class Connection implements ReceiveHandler {
                 }
             });
         }
-
-
-
-
-
-
-
-
-        /*System.out.println("handleTransaction " + transaction.getSender());
-
-        if (Wallets.isGodWallet(transaction.getSender())) {
-            System.out.println("godConfirmed");
-            Wallets.getWallet(transaction.getReceiver()).addTransaction(transaction);
-            callback.eval(null);
-            return;
-        }
-
-        Wallet wallet = Wallets.getWallet(transaction.getSender());
-        final Function<Void, Parcel> processTransactionParcel = new Function<Void, Parcel>() {
-            @Override
-            public Void eval(Parcel parcel) {
-                connection.send(parcel, new Function<Void, String>() {
-                    @Override
-                    public Void eval(String s) {
-                        final int[] handled = {0};
-                        final ArrayList<Transaction> transactions = (ArrayList<Transaction>) PepePay.LOADER_MANAGER.load(s);
-                        if(transactions.size() == 0){
-                            callback.eval(null);
-                        }else {
-                            for (Transaction trans : transactions) {
-                                if (trans.getSender().equals(transaction.getSender())) {
-                                    Wallets.getWallet(transaction.getReceiver()).addTransaction(transaction);
-                                    handled[0]++;
-                                    if(handled[0] == transactions.size()){
-                                        callback.eval(null);
-                                    }
-                                } else {
-                                    handleTransaction(connection, transaction, new Function<Void, Void>() {
-                                        @Override
-                                        public Void eval(Void aVoid) {
-                                            Wallets.getWallet(transaction.getReceiver()).addTransaction(transaction);
-                                            handled[0]++;
-                                            if(handled[0] == transactions.size()){
-                                                callback.eval(null);
-                                            }
-                                            return null;
-                                        }
-                                    });
-                                }
-                            }
-                        }
-                        return null;
-                    }
-                });
-                return null;
-            }
-        };
-        if (wallet != null) {
-            processTransactionParcel.eval(Parcel.toParcel(StringUtils.multiplex(Connection.getTransactionsAfter, transaction.getSender(), transaction.getTime() + ""), Connection.REQ));
-        } else {
-            connection.send(Parcel.toParcel(StringUtils.multiplex(Connection.getWalletNoTransaction, transaction.getSender()), Connection.REQ), new Function<Void, String>() {
-                @Override
-                public Void eval(String s) {
-                    Object load = PepePay.LOADER_MANAGER.load(s);
-                    if (load instanceof Wallet) {
-                        Wallets.addWallet((Wallet) load);
-                        processTransactionParcel.eval(Parcel.toParcel(StringUtils.multiplex(Connection.getTransactions, transaction.getSender()), Connection.REQ));
-                    }
-                    return null;
-                }
-            });
-        }*/
     }
 
     public void disconnect() {

@@ -1,9 +1,6 @@
 package pepepay.pepepaynative.backend.social31.handler.qrCode;
 
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -50,11 +47,6 @@ public class QRConnectionHandler extends WifiDirectBackend<QRConnectionHandler> 
     }
 
     @Override
-    public boolean canSend() {
-        return true;
-    }
-
-    @Override
     protected String getIDeviceName() {
         return activity.getString(R.string.scan_qr);
     }
@@ -69,18 +61,13 @@ public class QRConnectionHandler extends WifiDirectBackend<QRConnectionHandler> 
         // If you would like to resume scanning, call this method below:
         //mScannerView.resumeCameraPreview(this);
 
-        handleString(contents);
+        qrConnectionHandlerActivity.getmScannerView().resumeCameraPreview(null);
         if (qrConnectionHandlerActivity != null) {
-            qrConnectionHandlerActivity.getmScannerView().resumeCameraPreview(null);
-            final Dialog[] greeting = new Dialog[]{null};
-            final AlertDialog.Builder builder = new AlertDialog.Builder(qrConnectionHandlerActivity);
-            greeting[0] = builder.setMessage(R.string.aboutText).setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    qrConnectionHandlerActivity.finish();
-                }
-            }).create();
-            greeting[0].show();
+            if (handleString(contents)) {
+                qrConnectionHandlerActivity.finish();
+            } else {
+                qrConnectionHandlerActivity.getmScannerView().resumeCameraPreview(this);
+            }
         }
     }
 
@@ -125,6 +112,13 @@ public class QRConnectionHandler extends WifiDirectBackend<QRConnectionHandler> 
         public ZXingScannerView getmScannerView() {
             return mScannerView;
         }
+
+        @Override
+        public void onBackPressed() {
+            super.onBackPressed();
+
+        }
     }
+
 
 }

@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/HGPayNative.iml" filepath="$PROJECT_DIR$/HGPayNative.iml" />
       <module fileurl="file://$PROJECT_DIR$/PepePayNative.iml" filepath="$PROJECT_DIR$/PepePayNative.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>

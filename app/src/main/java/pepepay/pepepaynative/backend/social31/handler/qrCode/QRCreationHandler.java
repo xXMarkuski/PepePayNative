@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
-import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 
 public class QRCreationHandler {
@@ -15,13 +14,13 @@ public class QRCreationHandler {
     public final static int WIDTH = 400;
     public final static int HEIGHT = 400;
 
-    public Bitmap createQR(String data) throws WriterException {
+    public static Bitmap createQR(String data) {
 
         BitMatrix result;
         try {
             result = new MultiFormatWriter().encode(data,
                     BarcodeFormat.QR_CODE, WIDTH, HEIGHT, null);
-        } catch (IllegalArgumentException iae) {
+        } catch (Throwable iae) {
             // Unsupported format
             return null;
         }

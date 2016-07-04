@@ -269,6 +269,15 @@ public class Wallets {
         removeGodWallet(wallet.getIdentifier());
     }
 
+    public static String getWalletIDForSimple(String simple) {
+        for (Wallet wallet : wallets) {
+            if ((Wallets.getSimple(wallet) + "").equals(simple)) {
+                return wallet.getIdentifier();
+            }
+        }
+        return null;
+    }
+
     /**
      * Point to file which points to wallets
      *
