@@ -9,7 +9,7 @@
     <string name="createTransaction">Transaktion tätigen</string>
     <string name="createWallet">Konto erstellen</string>
     <string name="delete_wallet">Konto löschen</string>
-    <string name="delete_wallet_Text">Sind sie sicher dass sie das Konto %s löschen wollen? Sie verlieren damit das darin enthaltene Geld %s</string>
+    <string name="delete_wallet_Text">Sind sie sicher dass sie das Konto "%s" löschen wollen? Sie verlieren damit das darin enthaltene Geld</string>
     <string name="optional">(Optional)</string>
     <string name="purpose">Zweck:</string>
     <string name="receiver">Empfänger:</string>
