@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
+
     <uses-feature android:name="android.hardware.wifi.direct" />
     <uses-feature
         android:name="android.hardware.camera.any"
@@ -35,7 +36,8 @@
             android:name=".backend.social31.handler.qrCode.QRConnectionHandler$QRConnectionHandlerActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_wallet_overview2"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar" />
     </application>
 
 </manifest>

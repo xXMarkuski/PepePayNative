@@ -30,6 +30,7 @@ public class Connection implements ReceiveHandler {
     public static final String getTransactions = "getTransactions";
     public static final String getTransactionsAfter = "getTransactionsAfter";
     public static final String getWalletIDForSimple = "getWalletIDForSimple";
+    public static final String beginTransCheck = "beginTransCheck";
 
     public static final String connectionProcessor = "pros";
     public static final String connectionProcessorWallet = "wallet";
@@ -160,9 +161,15 @@ public class Connection implements ReceiveHandler {
             } else if (str[0].equals(Connection.getTransactionsAfter)) {
                 Log.d(TAG, "getTransactionsAfter: " + str[1]);
                 Wallet wallet = Wallets.getWallet(str[1]);
-                connection.send(parcel.getAnswer(wallet.getTransactionsAfter(Long.parseLong(str[2]))));
+                if (str.length < 4) {
+                    connection.send(parcel.getAnswer(wallet.getTransactionsAfter(Long.parseLong(str[2]))));
+                } else {
+                    connection.send(parcel.getAnswer(wallet.getTransactionsAfterBefore(Long.parseLong(str[2]), Long.parseLong(str[3]))));
+                }
             } else if (str[0].equals(Connection.getWalletIDForSimple)) {
                 connection.send(parcel.getAnswer(Wallets.getWalletIDForSimple(str[1])));
+            } else if (str[0].equals(Connection.beginTransCheck)) {
+                negotiateTransaction(connection, str[1]);
             }
 
         } catch (Throwable throwable) {
@@ -170,18 +177,30 @@ public class Connection implements ReceiveHandler {
         }
 
         if (data.equals(Connection.requestWalletIDs)) {
-            Log.d(TAG, "requestWalletIDs");
+            Log.d(TAG, Connection.requestWalletIDs);
             Parcel answer = parcel.getAnswer(Wallets.getOwnWalletIds());
             connection.send(answer);
         } else if (data.equals(Connection.getNames)) {
-            Log.d(TAG, "getNames");
+            Log.d(TAG, Connection.getNames);
             connection.send(parcel.getAnswer(Wallets.getNames(Wallets.getOwnWallets())));
         }
         return null;
     }
 
     private void handleTransaction(final Connection connection, final Transaction transaction, final Function<Void, Void> callback) {
+        handleTransaction(connection, transaction, callback, new Function<Void, Void>() {
+            @Override
+            public Void eval(Void aVoid) {
+                return null;
+            }
+        });
+    }
 
+    private void handleTransaction(final Connection connection, final Transaction transaction, final Function<Void, Void> callback, final Function<Void, Void> killcallback) {
+        /*if(killTransHandling) {
+            killcallback.eval(null);
+            return;
+        }*/
         final Function<Void, String> handler = new Function<Void, String>() {
             @Override
             public Void eval(String s) {
@@ -221,22 +240,20 @@ public class Connection implements ReceiveHandler {
             }
         };
 
-        /*if (Wallets.getWallet(transaction.getSender()) != null) {
-            Log.d(TAG, "known Wallet");
-            ArrayList<Transaction> chronologically = Wallets.getWallet(transaction.getSender()).getTransactionsChronologically();
-            int i = chronologically.size() - 1;
-            System.out.println(i);
-            long time = chronologically.get(i).getTime();
-            System.out.println(time);
-            connection.send(Parcel.toParcel(StringUtils.multiplex(Connection.getTransactionsAfter, transaction.getSender(),  time + ""), Connection.REQ), handler);
-        } else */
-        {
-            Log.d(TAG, "unknown Wallet");
+        Wallet senderWallet = Wallets.getWallet(transaction.getSender());
+        if (senderWallet == null) {
             connection.send(Parcel.toParcel(StringUtils.multiplex(Connection.getWalletNoTransaction, transaction.getSender()), Connection.REQ), new Function<Void, String>() {
                 @Override
                 public Void eval(String s) {
                     try {
                         Wallets.addWallet((Wallet) PepePay.LOADER_MANAGER.load(s));
+                        connection.send(Parcel.toParcel(StringUtils.multiplex(Connection.getName, transaction.getSender()), Connection.REQ), new Function<Void, String>() {
+                            @Override
+                            public Void eval(String s) {
+                                Wallets.addName(transaction.getSender(), s);
+                                return null;
+                            }
+                        });
                         connection.send(Parcel.toParcel(StringUtils.multiplex(Connection.getTransactions, transaction.getSender(), transaction.getTime() + ""), Connection.REQ), handler);
                     } catch (Throwable throwable) {
                         throwable.printStackTrace();
@@ -244,7 +261,35 @@ public class Connection implements ReceiveHandler {
                     return null;
                 }
             });
+        } else {
+            connection.send(Parcel.toParcel(StringUtils.multiplex(Connection.getTransactionsAfter, transaction.getSender(), senderWallet.getLastTransaction().getTime() + "", transaction.getTime() + ""), Connection.REQ), handler);
         }
+    }
+
+    public void negotiateTransaction(final Connection connection, final String walletId) {
+        connection.send(Parcel.toParcel(StringUtils.multiplex(Connection.getTransactions), Connection.REQ), new Function<Void, String>() {
+            @Override
+            public Void eval(String s) {
+                try {
+                    final ArrayList<Transaction> transactions = (ArrayList<Transaction>) PepePay.LOADER_MANAGER.load(s);
+                    final Iterator<Transaction> iter = transactions.iterator();
+                    final Function<Void, Void>[] callback = new Function[]{null};
+                    callback[0] = new Function<Void, Void>() {
+                        @Override
+                        public Void eval(Void aVoid) {
+                            if (iter.hasNext()) {
+                                handleTransaction(connection, iter.next(), callback[0]);
+                            }
+                            return null;
+                        }
+                    };
+                    callback[0].eval(null);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+                return null;
+            }
+        });
     }
 
     public void disconnect() {

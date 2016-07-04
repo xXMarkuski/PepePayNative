@@ -17,6 +17,7 @@ import pepepay.pepepaynative.PepePay;
 import pepepay.pepepaynative.R;
 import pepepay.pepepaynative.backend.social31.connection.Connection;
 import pepepay.pepepaynative.backend.social31.handler.IDevice;
+import pepepay.pepepaynative.backend.social31.packages.Parcel;
 import pepepay.pepepaynative.backend.wallet2.Wallet;
 import pepepay.pepepaynative.backend.wallet2.Wallets;
 import pepepay.pepepaynative.backend.wallet2.transaction.Transaction;
@@ -87,6 +88,7 @@ public class WalletInfoFragment extends Fragment implements Wallets.WalletsListe
                         SelectWalletFragment walletSelector = SelectWalletFragment.newInstance(connection, new Function<Void, Wallet>() {
                             @Override
                             public Void eval(Wallet wallet) {
+                                connection.send(Parcel.toParcel(Connection.beginTransCheck, Connection.REQ));
                                 TransactionFragment transactionFragment = TransactionFragment.newInstance(connection, WalletInfoFragment.this.wallet, wallet);
                                 transactionFragment.show(fm, "dialog");
                                 return null;

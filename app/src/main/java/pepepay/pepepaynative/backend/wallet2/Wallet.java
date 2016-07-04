@@ -224,6 +224,20 @@ public class Wallet {
         return result;
     }
 
+    public Transaction getLastTransaction() {
+        ArrayList<Transaction> tr = getTransactionsChronologically();
+        return tr.get(tr.size() - 1);
+    }
+
+    public ArrayList<Transaction> getTransactionsAfterBefore(long after, long befor) {
+        ArrayList<Transaction> result = new ArrayList<Transaction>();
+        for (Transaction transaction : getTranactions()) {
+            if (transaction.getTime() > after && transaction.getTime() < befor)
+                result.add(transaction);
+        }
+        return result;
+    }
+
     public static class WalletLoader implements Loader<Wallet> {
 
         public WalletLoader() {

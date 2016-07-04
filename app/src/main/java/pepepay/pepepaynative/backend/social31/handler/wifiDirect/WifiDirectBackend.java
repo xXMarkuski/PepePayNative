@@ -17,8 +17,9 @@ import pepepay.pepepaynative.utils.StringUtils;
 
 public abstract class WifiDirectBackend<T extends WifiDirectBackend> implements IDeviceConnectionHandler<WifiDirectBackend, WifiDirectBackend.WifiDirectBackendDevice> {
 
+    protected WifiDirectBackendDevice device;
+    protected ConnectionManager manager;
     private WifiDirectConnectionHandler handler;
-    private WifiDirectBackendDevice device;
     private WifiDirectDevice wifiDirectDevice;
 
     public WifiDirectBackend(WifiDirectConnectionHandler handler) {
@@ -64,7 +65,7 @@ public abstract class WifiDirectBackend<T extends WifiDirectBackend> implements 
 
     @Override
     public void init(ConnectionManager manager) {
-
+        this.manager = manager;
     }
 
     @Override
@@ -106,6 +107,10 @@ public abstract class WifiDirectBackend<T extends WifiDirectBackend> implements 
                 handler.connect(new WifiDirectDevice(device));
                 return true;
             } else if (data[0].equals("wallet")) {
+                WifiP2pDevice device = new WifiP2pDevice();
+                device.deviceAddress = data[1];
+                wifiDirectDevice = new WifiDirectDevice(device);
+                handler.connect(new WifiDirectDevice(device));
 
                 return true;
             } else if (data[0].equals("transaction")) {
