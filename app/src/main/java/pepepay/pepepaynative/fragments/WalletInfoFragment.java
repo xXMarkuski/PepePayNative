@@ -22,6 +22,7 @@ import pepepay.pepepaynative.backend.wallet2.Wallet;
 import pepepay.pepepaynative.backend.wallet2.Wallets;
 import pepepay.pepepaynative.backend.wallet2.transaction.Transaction;
 import pepepay.pepepaynative.utils.Function;
+import pepepay.pepepaynative.utils.StringUtils;
 
 public class WalletInfoFragment extends Fragment implements Wallets.WalletsListener {
     private Button walletChangeButton;
@@ -88,7 +89,7 @@ public class WalletInfoFragment extends Fragment implements Wallets.WalletsListe
                         SelectWalletFragment walletSelector = SelectWalletFragment.newInstance(connection, new Function<Void, Wallet>() {
                             @Override
                             public Void eval(Wallet wallet) {
-                                connection.send(Parcel.toParcel(Connection.beginTransCheck, Connection.REQ));
+                                connection.send(Parcel.toParcel(StringUtils.multiplex(Connection.beginTransCheck, wallet.getIdentifier()), Connection.REQ));
                                 TransactionFragment transactionFragment = TransactionFragment.newInstance(connection, WalletInfoFragment.this.wallet, wallet);
                                 transactionFragment.show(fm, "dialog");
                                 return null;
