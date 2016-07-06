@@ -118,7 +118,8 @@ public class WifiDirectConnectionHandler implements IDeviceConnectionHandler<Wif
                         public Void eval(Collection<WifiP2pDevice> wifiP2pDevices) {
                             ArrayList<IDevice> gone = new ArrayList<IDevice>();
                             ArrayList<WifiDirectDevice> newDevices = new ArrayList<WifiDirectDevice>();
-                            for (WifiDirectDevice device : availableServices) {
+                            ArrayList<WifiDirectDevice> copy = new ArrayList<>(availableServices);
+                            for (WifiDirectDevice device : copy) {
                                 if (!wifiP2pDevices.contains(device.getWifiP2pDevice())) {
                                     availableServices.remove(device);
                                     gone.add(device);

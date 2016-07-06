@@ -28,4 +28,13 @@
     <string name="send_money">Send Money</string>
     <string name="unnamed_wallet">Unnamed Wallet</string>
     <string name="scan_qr">Scan QR-Code</string>
+    <string name="walletChange">Change Wallet</string>
+    <string name="SelectQRType">Select QR Code Type</string>
+    <string name="action_createQR">Create QR-Code</string>
+    <string name="createDeviceQR">Create Device QR Code</string>
+    <string name="createWalletQR">Create Wallet QR Code</string>
+    <string name="createTransactionQR">Create Transaction QR Code</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

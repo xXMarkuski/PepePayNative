@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import java.io.File;
 import java.util.Arrays;
 
+import pepepay.pepepaynative.activities.qr.QRCreatorActivity;
 import pepepay.pepepaynative.backend.social31.handler.IDeviceConnectionHandler;
 import pepepay.pepepaynative.backend.social31.handler.qrCode.QRConnectionHandler;
 import pepepay.pepepaynative.backend.social31.handler.wifiDirect.WifiDirectConnectionHandler;
@@ -106,16 +107,12 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_wallet_overview2, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
@@ -136,6 +133,9 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
             }).create();
             greeting[0].show();
             return true;
+        } else if (id == R.id.action_createQR) {
+            Intent intent = new Intent(this, QRCreatorActivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
@@ -210,6 +210,10 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
                 tab.setText(mSectionsPagerAdapter.getPageTitle(i));
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
     }
 
     public void startActivity(Class<? extends Activity> clazz) {

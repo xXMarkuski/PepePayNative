@@ -76,7 +76,7 @@ public class WalletChangeFragment extends DialogFragment {
             }
         });
 
-        builder.setTitle(R.string.selectDevice).setView(view);
+        builder.setTitle(R.string.walletChange).setView(view);
         builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
