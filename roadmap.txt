@@ -1,0 +1,13 @@
+- Wallet selection swipe(l/r)			                            done
+- fix text input lag                                                done
+- stop accepting transactions exeeding balance	                    done
+- localization (incl. rebrand in simplepay)                         done
+- verify transactions                                               done
+- nfc connection                                                    wip
+- qr code connection                                                wip
+- wallet removing                                                   done
+- disconnect without wifi-killing                                   done
+- automatically turn on wifi			                            done
+- ui tweaking                                                       wip
+- error messages for users
+- maybe replacing ui with android material design                   done
