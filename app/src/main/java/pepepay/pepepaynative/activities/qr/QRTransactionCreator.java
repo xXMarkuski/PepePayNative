@@ -43,6 +43,7 @@ public class QRTransactionCreator extends Fragment {
         SelectWalletFragment.newInstance(PepePay.CONNECTION_MANAGER.connect(LocalConnectionHandler.device), new Function<Void, Wallet>() {
             @Override
             public Void eval(final Wallet wallet) {
+                if (wallet == null) return null;
                 QRTransactionHelper.newInstance(new Function2<Void, Float, String>() {
                     @Override
                     public Void eval(Float s, String s2) {

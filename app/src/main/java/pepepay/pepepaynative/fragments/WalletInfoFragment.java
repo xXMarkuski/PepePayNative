@@ -89,6 +89,7 @@ public class WalletInfoFragment extends Fragment implements Wallets.WalletsListe
                         SelectWalletFragment walletSelector = SelectWalletFragment.newInstance(connection, new Function<Void, Wallet>() {
                             @Override
                             public Void eval(Wallet wallet) {
+                                if (wallet == null) return null;
                                 connection.send(Parcel.toParcel(StringUtils.multiplex(Connection.beginTransCheck, wallet.getIdentifier()), Connection.REQ));
                                 TransactionFragment transactionFragment = TransactionFragment.newInstance(connection, WalletInfoFragment.this.wallet, wallet);
                                 transactionFragment.show(fm, "dialog");

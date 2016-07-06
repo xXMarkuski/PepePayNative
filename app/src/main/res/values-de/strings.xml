@@ -32,4 +32,5 @@
     <string name="createTransactionQR">QR-Code für Transaktionen erstellen</string>
     <string name="createWalletQR">QR-Code für Kontos erstellen</string>
     <string name="walletChange">Konto ändern</string>
+    <string name="createTransactionQRTitle">Transaktions QR-Code erstellen</string>
 </resources>

@@ -60,7 +60,7 @@ public class SelectWalletFragment extends DialogFragment {
             }
         };
 
-        final int[] selectedItem = {0};
+        final int[] selectedItem = {-1};
 
         builder.setTitle(R.string.selectWallet).setIcon(android.R.drawable.ic_menu_info_details).setSingleChoiceItems(adapter, 0, new DialogInterface.OnClickListener() {
             @Override
@@ -137,7 +137,11 @@ public class SelectWalletFragment extends DialogFragment {
         builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                callback.eval(adapter.getItem(selectedItem[0]));
+                if (selectedItem[0] != -1) {
+                    callback.eval(adapter.getItem(selectedItem[0]));
+                } else {
+                    callback.eval(null);
+                }
 
             }
         }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
