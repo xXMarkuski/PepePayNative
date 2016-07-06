@@ -28,7 +28,7 @@ public class QRSelectTypeFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_qr_select_type, container);
         ListView selector = (ListView) view.findViewById(R.id.qrTypeSelector);
         ArrayList<String> types = new ArrayList<String>(Arrays.asList(getString(R.string.createDeviceQR), getString(R.string.createWalletQR), getString(R.string.createTransactionQR)));
@@ -37,13 +37,16 @@ public class QRSelectTypeFragment extends Fragment {
         selector.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                if (container != null) {
+                    container.removeAllViews();
+                }
                 if (i == 0) {
-                    transaction.add(R.id.qrPlaceholder, QRDeviceCreator.newInstance());
+                    transaction.replace(R.id.qrPlaceholder, QRDeviceCreator.newInstance());
                 } else if (i == 1) {
-
+                    transaction.replace(R.id.qrPlaceholder, QRWalletCreator.newInstance());
                 } else if (i == 2) {
-
+                    transaction.replace(R.id.qrPlaceholder, QRTransactionCreator.newInstance());
                 }
                 transaction.addToBackStack(null).commit();
             }

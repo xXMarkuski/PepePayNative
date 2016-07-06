@@ -25,12 +25,6 @@ public class WalletCreateFragment extends Fragment implements Wallets.WalletsLis
     public WalletCreateFragment() {
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment WalletCreateFragment.
-     */
     public static WalletCreateFragment newInstance() {
         WalletCreateFragment fragment = new WalletCreateFragment();
         Bundle args = new Bundle();
@@ -50,11 +44,12 @@ public class WalletCreateFragment extends Fragment implements Wallets.WalletsLis
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Wallets.generateAndAddWallet(11, nameSelector.getText() + "", pinSelector.getText() + "");
+                Wallets.generateAndAddWallet(11, nameSelector.getText() + "", pinSelector.getText() + "", WalletCreateFragment.this);
             }
         });
 
-        Wallets.addWalletAddListener(this);
+        Log.d(TAG, "unclickable");
+        okButton.setClickable(false);
 
         return view;
     }
@@ -67,8 +62,6 @@ public class WalletCreateFragment extends Fragment implements Wallets.WalletsLis
 
     @Override
     public void privateWalletGeneratingBegin() {
-        Log.d(TAG, "unclickable");
-        okButton.setClickable(false);
     }
 
     @Override

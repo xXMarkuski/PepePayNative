@@ -34,4 +34,8 @@
     <string name="createDeviceQR">Create Device QR Code</string>
     <string name="createWalletQR">Create Wallet QR Code</string>
     <string name="createTransactionQR">Create Transaction QR Code</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="createTransactionQRTitle">Create Transaction QR Code</string>
 </resources>

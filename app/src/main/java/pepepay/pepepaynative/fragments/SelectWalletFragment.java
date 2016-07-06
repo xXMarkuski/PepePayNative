@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -43,7 +42,6 @@ public class SelectWalletFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        LayoutInflater inflater = getActivity().getLayoutInflater();
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final ArrayList<Wallet> wallets = new ArrayList<>();
         final ArrayAdapter<Wallet> adapter = new ArrayAdapter<Wallet>(this.getContext(), android.R.layout.select_dialog_singlechoice, wallets) {

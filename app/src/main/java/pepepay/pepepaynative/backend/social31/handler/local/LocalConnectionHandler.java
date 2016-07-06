@@ -10,7 +10,7 @@ import pepepay.pepepaynative.utils.Function;
 
 public class LocalConnectionHandler implements IDeviceConnectionHandler<LocalConnectionHandler, LocalDevice> {
 
-    public LocalDevice device;
+    public static LocalDevice device;
 
     @Override
     public boolean canInit() {
@@ -19,7 +19,7 @@ public class LocalConnectionHandler implements IDeviceConnectionHandler<LocalCon
 
     @Override
     public void preInit(ConnectionManager manager) {
-
+        device = new LocalDevice(manager);
     }
 
     @Override

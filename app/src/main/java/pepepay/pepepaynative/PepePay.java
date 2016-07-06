@@ -10,7 +10,6 @@ import java.util.List;
 import pepepay.pepepaynative.backend.social31.ConnectionManager;
 import pepepay.pepepaynative.backend.social31.handler.IDeviceConnectionHandler;
 import pepepay.pepepaynative.backend.social31.handler.local.LocalConnectionHandler;
-import pepepay.pepepaynative.backend.social31.handler.local.LocalDevice;
 import pepepay.pepepaynative.backend.wallet2.Wallet;
 import pepepay.pepepaynative.backend.wallet2.Wallets;
 import pepepay.pepepaynative.utils.Options;
@@ -19,7 +18,7 @@ import pepepay.pepepaynative.utils.loader.loaders.SerializableLoader;
 
 public class PepePay {
 
-    public static final int PROTOCOL_VERSION_MAJOR = 0;
+    public static final int PROTOCOL_VERSION_MAJOR = 1;
     public static final int PROTOCOL_VERSION_MINOR = 12;
     public static final int PROTOCOL_VERSION_PATCHLEVEL = 1;
     public static final String PROTOCOL_VERSION = PROTOCOL_VERSION_MAJOR + "." + PROTOCOL_VERSION_MINOR + "." + PROTOCOL_VERSION_PATCHLEVEL;
@@ -37,7 +36,6 @@ public class PepePay {
     public static Options OPTIONS;
 
     public static ConnectionManager CONNECTION_MANAGER;
-    public static LocalDevice LOCAL_DEVICE;
     public static Activity ACTIVITY;
     private static List<IDeviceConnectionHandler> handlers;
 

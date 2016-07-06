@@ -11,7 +11,8 @@ public class QRCreatorActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qr_creator);
+
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.qrPlaceholder, QRSelectTypeFragment.newInstance()).commit();
+                .replace(R.id.qrPlaceholder, QRSelectTypeFragment.newInstance()).commit();
     }
 }

@@ -161,8 +161,8 @@ public class Wallets {
         System.out.println("added Wallet: " + wallet.getIdentifier());
         wallets.add(wallet);
         if (privateKeys.containsKey(wallet.getIdentifier())) {
-            System.out.println("adasdasd");
-            for (WalletsListener walletsListener : walletsListeners) {
+            ArrayList<WalletsListener> copy = new ArrayList<>(walletsListeners);
+            for (WalletsListener walletsListener : copy) {
                 walletsListener.privateWalletAdded(wallet);
             }
         }
