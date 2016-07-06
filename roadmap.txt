@@ -11,3 +11,5 @@
 - ui tweaking                                                       wip
 - error messages for users
 - maybe replacing ui with android material design                   done
+-fixing walletSelection being blank after running in background
+-only showing pin input in transactions when required
