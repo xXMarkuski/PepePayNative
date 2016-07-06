@@ -2,6 +2,7 @@ package pepepay.pepepaynative.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,9 +10,14 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import pepepay.pepepaynative.R;
+import pepepay.pepepaynative.backend.wallet2.Wallet;
 import pepepay.pepepaynative.backend.wallet2.Wallets;
+import pepepay.pepepaynative.backend.wallet2.transaction.Transaction;
 
-public class WalletCreateFragment extends Fragment {
+public class WalletCreateFragment extends Fragment implements Wallets.WalletsListener {
+
+    private  String TAG = "WalletCreateFragment";
+
     private TextView nameSelector;
     private TextView pinSelector;
     private Button okButton;
@@ -48,6 +54,35 @@ public class WalletCreateFragment extends Fragment {
             }
         });
 
+        Wallets.addWalletAddListener(this);
+
         return view;
+    }
+
+    @Override
+    public void privateWalletAdded(Wallet wallet) {
+        Log.d(TAG, "clickable");
+        okButton.setClickable(true);
+    }
+
+    @Override
+    public void privateWalletGeneratingBegin() {
+        Log.d(TAG, "unclickable");
+        okButton.setClickable(false);
+    }
+
+    @Override
+    public void nameChange(String walletID, String newName) {
+
+    }
+
+    @Override
+    public void balanceChange(String walletID, Transaction newTransaction) {
+
+    }
+
+    @Override
+    public void walletDeleted(Wallet wallet) {
+
     }
 }

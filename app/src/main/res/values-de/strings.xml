@@ -26,10 +26,10 @@
     <string name="send_money">Geld versenden</string>
     <string name="unnamed_wallet">Unbenanntes Konto </string>
     <string name="scan_qr">QR-Code scannen</string>
-    <string name="SelectQRType">QR-Code art auswählen</string>
+    <string name="SelectQRType">Art des QR-Code auswählen</string>
     <string name="action_createQR">QR-Code erstellen</string>
-    <string name="createDeviceQR">Geräte QR-Code erstellen</string>
-    <string name="createTransactionQR">Transaktions QR-Code erstellen</string>
-    <string name="createWalletQR">Konto QR-Code erstellen</string>
+    <string name="createDeviceQR">QR-Code für dein Gerät erstellen</string>
+    <string name="createTransactionQR">QR-Code für Transaktionen erstellen</string>
+    <string name="createWalletQR">QR-Code für Kontos erstellen</string>
     <string name="walletChange">Konto ändern</string>
 </resources>

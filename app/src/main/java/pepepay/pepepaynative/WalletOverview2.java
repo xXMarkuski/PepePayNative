@@ -14,6 +14,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -33,10 +34,14 @@ import pepepay.pepepaynative.utils.FileUtils;
 
 public class WalletOverview2 extends AppCompatActivity implements Wallets.WalletsListener {
 
+    private String TAG = "WalletOverview2";
+
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     private TabLayout tabLayout;
     private Thread updateThread;
+
+    private Integer lastTab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -183,6 +188,7 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
 
     @Override
     protected void onPause() {
+        lastTab = mViewPager.getCurrentItem();
         super.onPause();
         Wallets.saveAll();
         PepePay.OPTIONS.save(PepePay.optionsFile);
@@ -193,6 +199,13 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
     protected void onResume() {
         super.onResume();
         PepePay.CONNECTION_MANAGER.onResume();
+        if (lastTab == null && mSectionsPagerAdapter.getCount() > 1) {
+            mViewPager.setCurrentItem(1);
+        } else if (mSectionsPagerAdapter.getCount() > 1){
+            mViewPager.setCurrentItem(lastTab);
+        } else {
+            mViewPager.setCurrentItem(0);
+        }
     }
 
     @Override
