@@ -84,6 +84,7 @@ public class QRConnectionHandler extends WifiDirectBackend<QRConnectionHandler> 
     public static class QRConnectionHandlerActivity extends Activity {
 
         private ZXingScannerView mScannerView;
+        private boolean canStop;
 
         public QRConnectionHandlerActivity() {
 
@@ -96,7 +97,6 @@ public class QRConnectionHandler extends WifiDirectBackend<QRConnectionHandler> 
             mScannerView = new ZXingScannerView(this);    // Programmatically initialize the scanner view
             setContentView(mScannerView);
             mScannerView.setFormats(Arrays.asList(BarcodeFormat.QR_CODE));
-            //System.out.println(generateWalletConnectionString(Wallets.getOwnWallet(0), this));
         }
 
         @Override
@@ -106,6 +106,7 @@ public class QRConnectionHandler extends WifiDirectBackend<QRConnectionHandler> 
                 mScannerView.setResultHandler(qr); // Register ourselves as a handler for scan results.
                 qr.setQRConnectionHandlerActivity(this);
             }
+            canStop = true;
             mScannerView.startCamera();          // Start camera on resume
         }
 
@@ -114,9 +115,17 @@ public class QRConnectionHandler extends WifiDirectBackend<QRConnectionHandler> 
         public void onPause() {
             super.onPause();
             if (qr != null) {
-                mScannerView.setResultHandler(null); // Register ourselves as a handler for scan results.
+                mScannerView.setResultHandler(null);
             }
-            mScannerView.stopCamera();           // Stop camera on pause
+            if (canStop) {
+                try {
+                    mScannerView.stopCamera();           // Stop camera on pause
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                    this.finish();
+                }
+                canStop = false;
+            }
         }
 
         public ZXingScannerView getmScannerView() {

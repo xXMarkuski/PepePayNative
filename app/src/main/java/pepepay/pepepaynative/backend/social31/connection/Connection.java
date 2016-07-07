@@ -45,6 +45,9 @@ public class Connection implements ReceiveHandler {
     private ConnectionManager manager;
     private HashMap<Parcel, Function<Void, String>> parcelCallback;
 
+    private Function<Void, Void> negotiateTransactionCallback = null;
+    private boolean negotiong = false;
+
     public Connection(IDevice device, ConnectionManager manager) {
         target = device;
         toSend = new ArrayList<Parcel>();
@@ -98,18 +101,34 @@ public class Connection implements ReceiveHandler {
 
 
     @Override
-    public Void eval(Parcel parcel, Connection connection) {
+    public Void eval(Parcel parcel, final Connection connection) {
         String data = parcel.getData();
         try {
-            Object obj = PepePay.LOADER_MANAGER.load(data);
+            final Object obj = PepePay.LOADER_MANAGER.load(data);
             if (obj instanceof Transaction) {
                 Log.d(TAG, "Transaction");
-                handleTransaction(connection, (Transaction) obj, new Function<Void, Void>() {
-                    @Override
-                    public Void eval(Void aVoid) {
-                        return null;
-                    }
-                });
+                if (negotiong) {
+                    negotiateTransactionCallback = new Function<Void, Void>() {
+                        @Override
+                        public Void eval(Void aVoid) {
+                            handleTransaction(connection, (Transaction) obj, new Function<Void, Void>() {
+                                @Override
+                                public Void eval(Void aVoid) {
+                                    return null;
+                                }
+                            });
+                            negotiateTransactionCallback = null;
+                            return null;
+                        }
+                    };
+                } else {
+                    handleTransaction(connection, (Transaction) obj, new Function<Void, Void>() {
+                        @Override
+                        public Void eval(Void aVoid) {
+                            return null;
+                        }
+                    });
+                }
             }
         } catch (Throwable throwable) {
             throwable.printStackTrace();
@@ -188,19 +207,6 @@ public class Connection implements ReceiveHandler {
     }
 
     private void handleTransaction(final Connection connection, final Transaction transaction, final Function<Void, Void> callback) {
-        handleTransaction(connection, transaction, callback, new Function<Void, Void>() {
-            @Override
-            public Void eval(Void aVoid) {
-                return null;
-            }
-        });
-    }
-
-    private void handleTransaction(final Connection connection, final Transaction transaction, final Function<Void, Void> callback, final Function<Void, Void> killcallback) {
-        /*if(killTransHandling) {
-            killcallback.eval(null);
-            return;
-        }*/
         final Function<Void, String> handler = new Function<Void, String>() {
             @Override
             public Void eval(String s) {
@@ -267,6 +273,7 @@ public class Connection implements ReceiveHandler {
     }
 
     public void negotiateTransaction(final Connection connection, final String walletId) {
+        negotiong = true;
         connection.send(Parcel.toParcel(StringUtils.multiplex(Connection.getTransactions), Connection.REQ), new Function<Void, String>() {
             @Override
             public Void eval(String s) {
@@ -279,6 +286,11 @@ public class Connection implements ReceiveHandler {
                         public Void eval(Void aVoid) {
                             if (iter.hasNext()) {
                                 handleTransaction(connection, iter.next(), callback[0]);
+                            } else {
+                                if (negotiateTransactionCallback != null) {
+                                    negotiateTransactionCallback.eval(null);
+                                }
+                                negotiong = false;
                             }
                             return null;
                         }

@@ -8,8 +8,8 @@ android {
         applicationId "pepepay.pepepaynative"
         minSdkVersion 16
         targetSdkVersion 24
-        versionCode 3
-        versionName "1.12.1"
+        versionCode 4
+        versionName "1.12.2"
     }
     buildTypes {
         release {
