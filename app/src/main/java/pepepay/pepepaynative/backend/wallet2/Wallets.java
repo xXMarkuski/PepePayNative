@@ -330,12 +330,17 @@ public class Wallets {
             transactions.addAll(load.getScheduledTransactions());
         }
 
-        Collections.sort(transactions, Transaction.comparator);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Collections.sort(transactions, Transaction.comparator);
 
-        for (Transaction transaction : transactions) {
-            Wallets.getWallet(transaction.getReceiver()).addTransaction(transaction);
-            Wallets.getWallet(transaction.getSender()).addTransaction(transaction);
-        }
+                for (Transaction transaction : transactions) {
+                    Wallets.getWallet(transaction.getReceiver()).addTransaction(transaction);
+                    Wallets.getWallet(transaction.getSender()).addTransaction(transaction);
+                }
+            }
+        }).start();
     }
 
     public static void saveAll() {

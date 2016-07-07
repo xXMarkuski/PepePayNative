@@ -12,6 +12,7 @@ import pepepay.pepepaynative.backend.social31.handler.IDeviceConnectionHandler;
 import pepepay.pepepaynative.backend.social31.handler.local.LocalConnectionHandler;
 import pepepay.pepepaynative.backend.wallet2.Wallet;
 import pepepay.pepepaynative.backend.wallet2.Wallets;
+import pepepay.pepepaynative.utils.FileUtils;
 import pepepay.pepepaynative.utils.Options;
 import pepepay.pepepaynative.utils.loader.LoaderManager;
 import pepepay.pepepaynative.utils.loader.loaders.SerializableLoader;
@@ -64,6 +65,8 @@ public class PepePay {
         PepePay.privateFile = privateFile;
         PepePay.nameFile = nameFile;
         PepePay.optionsFile = optionsFile;
+
+        Wallets.loadGodWallets(FileUtils.readAsset("godWallets"));
 
         if (godWalletsFile.exists()) {
             Wallets.loadGodWallets(godWalletsFile);

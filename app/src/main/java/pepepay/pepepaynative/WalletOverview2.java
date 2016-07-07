@@ -103,9 +103,6 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
             }).setCancelable(false).create();
             greeting[0].show();
         }
-
-        Wallets.loadGodWallets(FileUtils.readAsset("godWallets"));
-
     }
 
 

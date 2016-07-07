@@ -53,6 +53,7 @@ public class TransactionFragment extends DialogFragment {
         builder.setTitle(R.string.createTransaction).setView(view).setIcon(android.R.drawable.ic_menu_info_details);
 
         final TextView amountSelector = (TextView) view.findViewById(R.id.amountSelector);
+        amountSelector.setText("0");
         final SeekBar amountSelectorBar = (SeekBar) view.findViewById(R.id.amountSelectorBar);
         final TextView pinSelector = (TextView) view.findViewById(R.id.pinSelector);
         final TextView purposeSelector = (TextView) view.findViewById(R.id.purposeSelector);

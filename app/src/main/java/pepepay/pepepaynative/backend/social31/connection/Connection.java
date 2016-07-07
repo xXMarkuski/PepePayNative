@@ -274,7 +274,7 @@ public class Connection implements ReceiveHandler {
 
     public void negotiateTransaction(final Connection connection, final String walletId) {
         negotiong = true;
-        connection.send(Parcel.toParcel(StringUtils.multiplex(Connection.getTransactions), Connection.REQ), new Function<Void, String>() {
+        connection.send(Parcel.toParcel(StringUtils.multiplex(Connection.getTransactions, walletId), Connection.REQ), new Function<Void, String>() {
             @Override
             public Void eval(String s) {
                 try {

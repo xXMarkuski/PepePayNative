@@ -13,6 +13,6 @@
 - maybe replacing ui with android material design                   done
 -fixing walletSelection being blank after running in background
 -only showing pin input in transactions when required
--change amount in transactions to int
+-change amount in transactions to int                               nein
 -"share"-button for qr-codes
 -place create qr-code menu directly on title bar
