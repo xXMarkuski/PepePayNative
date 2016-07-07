@@ -42,6 +42,7 @@ public class QRWalletCreator extends Fragment {
         SelectWalletFragment.newInstance(PepePay.CONNECTION_MANAGER.connect(LocalConnectionHandler.device), new Function<Void, Wallet>() {
             @Override
             public Void eval(Wallet wallet) {
+                if (wallet != null)
                 qrView.setImageBitmap(QRCreationHandler.createQR(WifiDirectBackend.generateWalletConnectionString(wallet, getContext())));
                 return null;
             }
