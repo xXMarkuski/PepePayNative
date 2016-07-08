@@ -93,7 +93,12 @@ public class WifiDirectConnectionHandler implements IDeviceConnectionHandler<Wif
         wifiP2pManager = (WifiP2pManager) activity.getSystemService(Context.WIFI_P2P_SERVICE);
         channel = wifiP2pManager.initialize(activity, activity.getMainLooper(), null);
 
-        disconnect();
+        disconnect(new Function<Void, Void>() {
+            @Override
+            public Void eval(Void aVoid) {
+                return null;
+            }
+        });
 
         receiver = new BroadcastReceiver() {
             @Override
@@ -365,14 +370,25 @@ public class WifiDirectConnectionHandler implements IDeviceConnectionHandler<Wif
     }
 
     @Override
-    public void connect(WifiDirectDevice target) {
-        connectedDevice = target;
-        connectP2p(target.getWifiP2pDevice());
+    public void connect(final WifiDirectDevice target) {
+        disconnect(new Function<Void, Void>() {
+            @Override
+            public Void eval(Void aVoid) {
+                connectedDevice = target;
+                connectP2p(target.getWifiP2pDevice());
+                return null;
+            }
+        });
     }
 
     @Override
     public void disconnect(WifiDirectDevice target) {
-        this.disconnect();
+        this.disconnect(new Function<Void, Void>() {
+            @Override
+            public Void eval(Void aVoid) {
+                return null;
+            }
+        });
     }
 
     @Override
@@ -394,7 +410,7 @@ public class WifiDirectConnectionHandler implements IDeviceConnectionHandler<Wif
         return WifiDirectDevice.class;
     }
 
-    public void disconnect() {
+    public void disconnect(final Function<Void, Void> callback) {
         if (wifiP2pManager != null && channel != null) {
             wifiP2pManager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {
                 @Override
@@ -405,6 +421,7 @@ public class WifiDirectConnectionHandler implements IDeviceConnectionHandler<Wif
 
                             @Override
                             public void onSuccess() {
+                                callback.eval(null);
                                 Log.d(TAG, "removeGroup onSuccess -");
                             }
 

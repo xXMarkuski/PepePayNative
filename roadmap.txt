@@ -3,16 +3,16 @@
 - stop accepting transactions exeeding balance	                    done
 - localization (incl. rebrand in simplepay)                         done
 - verify transactions                                               done
-- nfc connection                                                    wip
+- nfc connection                                                    on hold
 - qr code connection                                                wip
 - wallet removing                                                   done
-- disconnect without wifi-killing                                   done
+- disconnect without wifi-killing                                   wip
 - automatically turn on wifi			                            done
 - ui tweaking                                                       wip
 - error messages for users
 - maybe replacing ui with android material design                   done
 -fixing walletSelection being blank after running in background
 -only showing pin input in transactions when required
--change amount in transactions to int                               nein
+-change amount in transactions to int                               done
 -"share"-button for qr-codes
 -place create qr-code menu directly on title bar

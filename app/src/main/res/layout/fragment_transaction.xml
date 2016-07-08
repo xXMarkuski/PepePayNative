@@ -31,7 +31,7 @@
                 android:layout_column="1"
                 android:ems="10"
                 android:gravity="fill_horizontal|clip_horizontal|center|end|right|fill"
-                android:inputType="numberDecimal" />
+                android:inputType="number" />
 
         </TableRow>
 
