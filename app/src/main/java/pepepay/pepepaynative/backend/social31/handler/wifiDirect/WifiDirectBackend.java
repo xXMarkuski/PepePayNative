@@ -112,6 +112,7 @@ public abstract class WifiDirectBackend<T extends WifiDirectBackend> implements 
                 wifiDirectDevice = new WifiDirectDevice(device);
                 handler.connect(new WifiDirectDevice(device));
                 String walletID = data[2];
+                manager.getConnection(this.device).setTargetWalletID(walletID);
 
                 return true;
             } else if (data[0].equals("transaction")) {

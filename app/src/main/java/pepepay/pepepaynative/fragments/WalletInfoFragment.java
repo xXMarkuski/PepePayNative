@@ -86,17 +86,43 @@ public class WalletInfoFragment extends Fragment implements Wallets.WalletsListe
                     @Override
                     public Void eval(IDevice iDevice) {
                         final Connection connection = PepePay.CONNECTION_MANAGER.connect(iDevice);
-                        SelectWalletFragment walletSelector = SelectWalletFragment.newInstance(connection, new Function<Void, Wallet>() {
-                            @Override
-                            public Void eval(Wallet wallet) {
-                                if (wallet == null) return null;
-                                connection.send(Parcel.toParcel(StringUtils.multiplex(Connection.beginTransCheck, wallet.getIdentifier()), Connection.REQ));
-                                TransactionFragment transactionFragment = TransactionFragment.newInstance(connection, WalletInfoFragment.this.wallet, wallet);
-                                transactionFragment.show(fm, "dialog");
-                                return null;
+                        if (connection.getTargetWalletID() != null) {
+                            if (Wallets.getWallet(connection.getTargetWalletID()) == null) {
+                                connection.send(Parcel.toParcel(StringUtils.multiplex(Connection.getWalletNoTransaction, connection.getTargetWalletID()), Connection.REQ), new Function<Void, String>() {
+                                    @Override
+                                    public Void eval(String s) {
+                                        try {
+                                            Wallets.addWallet((Wallet) PepePay.LOADER_MANAGER.load(s));
+                                            connection.send(Parcel.toParcel(StringUtils.multiplex(Connection.getName, connection.getTargetWalletID()), Connection.REQ), new Function<Void, String>() {
+                                                @Override
+                                                public Void eval(String s) {
+                                                    Wallets.addName(connection.getTargetWalletID(), s);
+                                                    connection.send(Parcel.toParcel(StringUtils.multiplex(Connection.beginTransCheck, wallet.getIdentifier()), Connection.REQ));
+                                                    TransactionFragment transactionFragment = TransactionFragment.newInstance(connection, WalletInfoFragment.this.wallet, wallet);
+                                                    transactionFragment.show(fm, "dialog");
+                                                    return null;
+                                                }
+                                            });
+                                        } catch (Throwable throwable) {
+                                            throwable.printStackTrace();
+                                        }
+                                        return null;
+                                    }
+                                });
                             }
-                        });
-                        walletSelector.show(fm, "dialog");
+                        } else {
+                            SelectWalletFragment walletSelector = SelectWalletFragment.newInstance(connection, new Function<Void, Wallet>() {
+                                @Override
+                                public Void eval(Wallet wallet) {
+                                    if (wallet == null) return null;
+                                    connection.send(Parcel.toParcel(StringUtils.multiplex(Connection.beginTransCheck, wallet.getIdentifier()), Connection.REQ));
+                                    TransactionFragment transactionFragment = TransactionFragment.newInstance(connection, WalletInfoFragment.this.wallet, wallet);
+                                    transactionFragment.show(fm, "dialog");
+                                    return null;
+                                }
+                            });
+                            walletSelector.show(fm, "dialog");
+                        }
                         return null;
                     }
                 });

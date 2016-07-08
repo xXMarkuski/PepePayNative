@@ -166,4 +166,8 @@ public class ConnectionManager {
         }
     }
 
+    public Connection getConnection(IDevice iDevice) {
+        return activeConnections.get(iDevice);
+    }
+
 }
