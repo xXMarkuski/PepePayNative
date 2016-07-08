@@ -111,9 +111,17 @@ public abstract class WifiDirectBackend<T extends WifiDirectBackend> implements 
                 device.deviceAddress = data[1];
                 wifiDirectDevice = new WifiDirectDevice(device);
                 handler.connect(new WifiDirectDevice(device));
+                String walletID = data[2];
 
                 return true;
             } else if (data[0].equals("transaction")) {
+                WifiP2pDevice device = new WifiP2pDevice();
+                device.deviceAddress = data[1];
+                wifiDirectDevice = new WifiDirectDevice(device);
+                handler.connect(new WifiDirectDevice(device));
+                String walletID = data[2];
+                float amount = Float.parseFloat(data[3]);
+                String purpose = data[4];
 
                 return true;
             }

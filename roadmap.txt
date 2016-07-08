@@ -11,8 +11,8 @@
 - ui tweaking                                                       wip
 - error messages for users
 - maybe replacing ui with android material design                   done
--fixing walletSelection being blank after running in background
--only showing pin input in transactions when required
--change amount in transactions to int                               done
--"share"-button for qr-codes
--place create qr-code menu directly on title bar
+- fixing walletSelection being blank after running in background
+- only showing pin input in transactions when required
+- change amount in transactions to int                               done
+- "share"-button for qr-codes
+- place create qr-code menu directly on title bar

@@ -302,7 +302,7 @@ public class WifiDirectConnectionHandler implements IDeviceConnectionHandler<Wif
 
             @Override
             public void onFailure(int errorCode) {
-                Log.i(TAG, "Failed connecting to service");
+                Log.i(TAG, "Failed connecting to service :" + errorCode);
             }
         });
     }
@@ -371,14 +371,20 @@ public class WifiDirectConnectionHandler implements IDeviceConnectionHandler<Wif
 
     @Override
     public void connect(final WifiDirectDevice target) {
-        disconnect(new Function<Void, Void>() {
+        Log.d(TAG, "conecting to " + target);
+        Function<Void, Void> function = new Function<Void, Void>() {
             @Override
             public Void eval(Void aVoid) {
                 connectedDevice = target;
                 connectP2p(target.getWifiP2pDevice());
                 return null;
             }
-        });
+        };
+        if (connectedDevice != null) {
+            disconnect(function);
+        } else {
+            function.eval(null);
+        }
     }
 
     @Override
@@ -411,6 +417,7 @@ public class WifiDirectConnectionHandler implements IDeviceConnectionHandler<Wif
     }
 
     public void disconnect(final Function<Void, Void> callback) {
+        connectedDevice = null;
         if (wifiP2pManager != null && channel != null) {
             wifiP2pManager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {
                 @Override

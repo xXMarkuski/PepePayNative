@@ -45,6 +45,8 @@ public class Connection implements ReceiveHandler {
     private ConnectionManager manager;
     private HashMap<Parcel, Function<Void, String>> parcelCallback;
 
+    private String targetWalletID;
+
     private Function<Void, Void> negotiateTransactionCallback = null;
     private boolean negotiong = false;
 
@@ -306,5 +308,13 @@ public class Connection implements ReceiveHandler {
 
     public void disconnect() {
         manager.disconnect(target);
+    }
+
+    public String getTargetWalletID() {
+        return targetWalletID;
+    }
+
+    public void setTargetWalletID(String targetWalletID) {
+        this.targetWalletID = targetWalletID;
     }
 }
