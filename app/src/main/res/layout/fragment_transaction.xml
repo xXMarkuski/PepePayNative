@@ -40,9 +40,9 @@
             android:layout_height="match_parent">
 
             <SeekBar
+                android:id="@+id/amountSelectorBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/amountSelectorBar"
                 android:layout_column="1"
                 android:layout_span="3"
                 android:max="1000"

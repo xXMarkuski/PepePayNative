@@ -61,7 +61,7 @@ public class Transaction implements Serializable {
     }
 
     public boolean isValid() {
-        if(verified) return true;
+        if (verified) return true;
         Wallet wallet = Wallets.getWallet(sender);
 
         if (sender.equals(receiver)) {
