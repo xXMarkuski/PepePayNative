@@ -54,4 +54,8 @@ public class FileUtils {
     public static File child(File file, String subpath) {
         return new File(file, subpath);
     }
+
+    public static String read(String path) {
+        return read(new File(PepePay.ACTIVITY.getFilesDir(), path));
+    }
 }

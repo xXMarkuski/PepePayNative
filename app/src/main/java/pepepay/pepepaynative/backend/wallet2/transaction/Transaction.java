@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 
+import pepepay.pepepaynative.PepePay;
 import pepepay.pepepaynative.backend.wallet2.Wallet;
 import pepepay.pepepaynative.backend.wallet2.Wallets;
 import pepepay.pepepaynative.utils.StringUtils;
@@ -60,37 +61,36 @@ public class Transaction implements Serializable {
     public boolean isValid() {
         Wallet wallet = Wallets.getWallet(sender);
 
-        //if (sender.equals(receiver)) return false;
-        //System.out.println("send rec are not the same");
-
-        try {
-            String[] demul = StringUtils.demultiplex(this.getPurpose());
-            if (!EncryptionUtils.complexBase64RsaDecrypt(wallet.getPublicKey(), demul[1]).equals(time + receiver))
-                return false;
-
-        } catch (Throwable t) {
+        if (sender.equals(receiver)) {
+            PepePay.ERROL.errol("sender and rec. are the same");
             return false;
         }
 
-        //System.out.println("came from the true owner");
+        try {
+            String[] demul = StringUtils.demultiplex(this.getPurpose());
+            if (!EncryptionUtils.complexBase64RsaDecrypt(wallet.getPublicKey(), demul[1]).equals(time + receiver)) {
+                PepePay.ERROL.errol("not valid sender");
+                return false;
+            }
 
-        if (Wallets.isGodWallet(sender)) return true;
-        //System.out.println("not god");
+        } catch (Throwable t) {
+            PepePay.ERROL.errol("not valid sender" + t.getMessage());
+            return false;
+        }
+
+        if (Wallets.isGodWallet(sender)) {
+            PepePay.ERROL.errol("god wallet");
+            return true;
+        }
         ArrayList<Transaction> transactions = wallet.getTransactionsBefore(time);
         for (Transaction transaction : transactions) {
             if (!transaction.isValid()) {
+                PepePay.ERROL.errol("not all prev trans are valid");
                 return false;
             }
         }
-        //System.out.println("all prev trans are valid");
-
-        /*ArrayList<Transaction> allTrans = wallet.getTransactionsChronologically();
-        if (allTrans.size() > 0) {
-            if (!Wallets.isGodWallet(allTrans.get(0).getSender())) return false;
-        }*/
-
         boolean b = wallet.calculateBalanceBefor(time) >= amount;
-        //System.out.println(b);
+        System.out.println(b);
         return b;
     }
 }

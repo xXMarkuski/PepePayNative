@@ -35,4 +35,5 @@
     <string name="createWalletQR">Create Wallet QR Code</string>
     <string name="createTransactionQR">Create Transaction QR Code</string>
     <string name="createTransactionQRTitle">Create Transaction QR Code</string>
+    <string name="errorOccurred">An Error Occurred. Plase show SimplePay this message so we can help</string>
 </resources>
