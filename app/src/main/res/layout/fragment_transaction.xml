@@ -46,8 +46,7 @@
                 android:layout_column="1"
                 android:layout_span="3"
                 android:max="1000"
-                android:progress="0"
-                android:thumb="@drawable/abc_seekbar_thumb_material" />
+                android:progress="0" />
         </TableRow>
 
         <TableRow

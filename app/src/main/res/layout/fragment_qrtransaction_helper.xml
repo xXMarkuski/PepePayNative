@@ -40,8 +40,7 @@
                 android:layout_column="1"
                 android:layout_span="3"
                 android:indeterminate="false"
-                android:max="1000"
-                android:thumb="@drawable/abc_seekbar_thumb_material" />
+                android:max="1000" />
         </TableRow>
 
         <TableRow

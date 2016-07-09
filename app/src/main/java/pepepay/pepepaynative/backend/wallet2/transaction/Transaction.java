@@ -30,6 +30,8 @@ public class Transaction implements Serializable {
     //WalletID of confirmer, time encrypted with private key of confirmer and public key of sender. only needed
     //private final ObjectMap<String, String> confirmations;
 
+    private transient boolean verified = false;
+
     public Transaction(String sender, String receiver, float amount, long time, String purpose) {
         this.sender = sender;
         this.receiver = receiver;
@@ -59,6 +61,7 @@ public class Transaction implements Serializable {
     }
 
     public boolean isValid() {
+        if(verified) return true;
         Wallet wallet = Wallets.getWallet(sender);
 
         if (sender.equals(receiver)) {
@@ -82,7 +85,7 @@ public class Transaction implements Serializable {
             PepePay.ERROL.errol("god wallet");
             return true;
         }
-        ArrayList<Transaction> transactions = wallet.getTransactionsBefore(time);
+        ArrayList<Transaction> transactions = wallet.getTransactionsBefore(wallet.getReceivedTransactions(), time);
         for (Transaction transaction : transactions) {
             if (!transaction.isValid()) {
                 PepePay.ERROL.errol("not all prev trans are valid");
@@ -91,6 +94,7 @@ public class Transaction implements Serializable {
         }
         boolean b = wallet.calculateBalanceBefor(time) >= amount;
         System.out.println(b);
+        verified = b;
         return b;
     }
 }

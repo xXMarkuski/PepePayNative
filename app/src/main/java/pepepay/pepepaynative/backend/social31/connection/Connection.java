@@ -229,11 +229,21 @@ public class Connection implements ReceiveHandler {
                                 if (next.getReceiver().equals(transaction.getSender())) {
                                     handleTransaction(connection, next, function[0]);
                                 } else {
-                                    Wallets.getWallet(transaction.getSender()).addTransaction(transaction);
+                                    new Thread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Wallets.getWallet(transaction.getReceiver()).addTransaction(transaction);
+                                        }
+                                    }).start();
                                     function[0].eval(null);
                                 }
                             } else {
-                                Wallets.getWallet(transaction.getReceiver()).addTransaction(transaction);
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Wallets.getWallet(transaction.getReceiver()).addTransaction(transaction);
+                                    }
+                                }).start();
                                 callback.eval(null);
                             }
                             return null;

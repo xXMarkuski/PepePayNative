@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.0"
+    compileSdkVersion 23
+    buildToolsVersion "23.0.3"
 
     defaultConfig {
         applicationId "pepepay.pepepaynative"
         minSdkVersion 16
-        targetSdkVersion 24
+        targetSdkVersion 23
         versionCode 7
         versionName "1.12.5"
     }
@@ -25,8 +25,8 @@ dependencies {
     compile "com.madgag.spongycastle:core:$spongycastleVersion"
     compile "com.madgag.spongycastle:prov:$spongycastleVersion"
     compile group: 'com.google.guava', name: 'guava', version: '19.0'
-    compile 'com.android.support:appcompat-v7:24.0.0'
-    compile 'com.android.support:design:24.0.0'
-    compile 'com.android.support:support-v4:24.0.0'
+    compile 'com.android.support:appcompat-v7:23.0.0'
+    compile 'com.android.support:design:23.0.0'
+    compile 'com.android.support:support-v4:23.0.0'
     compile 'me.dm7.barcodescanner:zxing:1.8.4'
 }

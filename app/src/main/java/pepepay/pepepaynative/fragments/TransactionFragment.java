@@ -91,9 +91,14 @@ public class TransactionFragment extends DialogFragment {
                     @Override
                     public void onClick(View v) {
                         if (Wallets.isValidPassword(from, pinSelector.getText() + "")) {
-                            Transaction transaction = from.getSendTransaction(to, Wallets.getPrivateKey(from, pinSelector.getText() + ""), Float.parseFloat(amountSelector.getText() + ""), purposeSelector.getText() + "");
+                            final Transaction transaction = from.getSendTransaction(to, Wallets.getPrivateKey(from, pinSelector.getText() + ""), Float.parseFloat(amountSelector.getText() + ""), purposeSelector.getText() + "");
                             connection.send(Parcel.toParcel(PepePay.LOADER_MANAGER.save(transaction), Connection.REQ));
-                            from.addTransaction(transaction);
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    from.addTransaction(transaction);
+                                }
+                            }).start();
                             dialog.dismiss();
                         } else {
                             error.setText(R.string.wrongPassword);
