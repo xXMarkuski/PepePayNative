@@ -381,6 +381,7 @@ public class WifiDirectConnectionHandler implements IDeviceConnectionHandler<Wif
             }
         };
         if (connectedDevice != null) {
+            Log.d(TAG, "disconnecting current connection");
             disconnect(function);
         } else {
             function.eval(null);

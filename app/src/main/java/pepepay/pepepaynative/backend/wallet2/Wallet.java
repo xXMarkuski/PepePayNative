@@ -226,6 +226,7 @@ public class Wallet {
 
     public Transaction getLastTransaction() {
         ArrayList<Transaction> tr = getTransactionsChronologically();
+        if(tr.size() == 0) return null;
         return tr.get(tr.size() - 1);
     }
 

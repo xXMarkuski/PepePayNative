@@ -280,7 +280,14 @@ public class Connection implements ReceiveHandler {
                 }
             });
         } else {
-            connection.send(Parcel.toParcel(StringUtils.multiplex(Connection.getTransactionsAfter, transaction.getSender(), senderWallet.getLastTransaction().getTime() + "", transaction.getTime() + ""), Connection.REQ), handler);
+            Transaction lastTransaction = senderWallet.getLastTransaction();
+            String time = "";
+            if (lastTransaction != null) {
+                time = lastTransaction.getTime() + "";
+            } else {
+                time = "0";
+            }
+            connection.send(Parcel.toParcel(StringUtils.multiplex(Connection.getTransactionsAfter, transaction.getSender(), time, transaction.getTime() + ""), Connection.REQ), handler);
         }
     }
 

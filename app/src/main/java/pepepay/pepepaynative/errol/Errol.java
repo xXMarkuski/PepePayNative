@@ -43,7 +43,12 @@ public class Errol {
             }
         });
         try {
-            builder.create().show();
+            PepePay.runOnUIThread(new Runnable() {
+                @Override
+                public void run() {
+                    builder.create().show();
+                }
+            });
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
