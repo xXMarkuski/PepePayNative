@@ -69,16 +69,20 @@ public class Transaction implements Serializable {
             return false;
         }
 
-        try {
-            String[] demul = StringUtils.demultiplex(this.getPurpose());
-            if (!EncryptionUtils.complexBase64RsaDecrypt(wallet.getPublicKey(), demul[1]).equals(time + receiver)) {
-                PepePay.ERROL.errol("not valid sender");
-                return false;
-            }
+        boolean correct = false;
+        while (!correct) {
+            try {
+                String[] demul = StringUtils.demultiplex(this.getPurpose());
+                if (!EncryptionUtils.complexBase64RsaDecrypt(wallet.getPublicKey(), demul[1]).equals(time + receiver)) {
+                    PepePay.ERROL.errol("not valid sender");
+                    return false;
+                } else {
+                    correct = true;
+                }
 
-        } catch (Throwable t) {
-            PepePay.ERROL.errol("not valid sender" + t.getMessage());
-            return false;
+            } catch (Throwable t) {
+                PepePay.ERROL.errol("error verifying sender" + t.getMessage());
+            }
         }
 
         if (Wallets.isGodWallet(sender)) {
