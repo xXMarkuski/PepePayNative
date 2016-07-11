@@ -16,3 +16,7 @@
 - change amount in transactions to int                               done
 - "share"-button for qr-codes
 - place create qr-code menu directly on title bar
+- fix crash when connected before app starts
+- restrt service request after disconnect
+- remove error "god wallet" (or reduce to one per app start)
+- fix ui tabs not updating after creating wallet
