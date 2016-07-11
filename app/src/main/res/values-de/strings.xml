@@ -33,5 +33,5 @@
     <string name="createWalletQR">QR-Code für Kontos erstellen</string>
     <string name="walletChange">Konto ändern</string>
     <string name="createTransactionQRTitle">Transaktions QR-Code erstellen</string>
-    <string name="errorOccurred">Fehler. Zeige diese Meldung dem SimplePay, damit wir helfen können.</string>
+    <string name="errorOccurred">Fehler. Zeige uns diese Meldung, damit wir helfen können.</string>
 </resources>
