@@ -59,7 +59,7 @@ public class WalletInfoFragment extends Fragment implements Wallets.WalletsListe
         View v = inflater.inflate(R.layout.fragment_wallet_info, container, false);
         final FragmentManager fm = WalletInfoFragment.this.getFragmentManager();
         final TextView walletName = (TextView) v.findViewById(R.id.walletName);
-                walletChangeButton = (Button) v.findViewById(R.id.editButton);
+        walletChangeButton = (Button) v.findViewById(R.id.editButton);
         walletName.setText(Wallets.getName(wallet) + ": " + wallet.getBalance());
         walletChangeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,7 +67,7 @@ public class WalletInfoFragment extends Fragment implements Wallets.WalletsListe
                 WalletChangeFragment.newInstance(wallet).show(fm, "dialog");
             }
         });
-        walletChangeButton.setOnLongClickListener(new View.OnLongClickListener() {
+       /* walletChangeButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 if (Wallets.isGodWallet(wallet)) {
@@ -79,7 +79,7 @@ public class WalletInfoFragment extends Fragment implements Wallets.WalletsListe
                 System.out.println(PepePay.LOADER_MANAGER.save(Wallets.getGodWalletsIDs()));
                 return true;
             }
-        });
+        });*/
         final Button sendMoneyButton = (Button) v.findViewById(R.id.sendMoney);
         sendMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override

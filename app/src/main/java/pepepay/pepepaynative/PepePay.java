@@ -77,9 +77,9 @@ public class PepePay {
 
         Wallets.loadGodWallets(FileUtils.readAsset("godWallets"));
 
-        if (godWalletsFile.exists()) {
+        /*if (godWalletsFile.exists()) {
             Wallets.loadGodWallets(godWalletsFile);
-        }
+        }*/
         if (walletFile.exists()) {
             Wallets.loadWallets(walletFile);
         }
