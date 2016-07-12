@@ -134,9 +134,6 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
             }).create();
             greeting[0].show();
             return true;
-        } else if (id == R.id.action_createQR) {
-            Intent intent = new Intent(this, QRCreatorActivity.class);
-            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
