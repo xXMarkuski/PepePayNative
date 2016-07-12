@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import pepepay.pepepaynative.PepePay;
+import pepepay.pepepaynative.WalletOverview2;
 import pepepay.pepepaynative.backend.social31.ConnectionManager;
 import pepepay.pepepaynative.backend.social31.handler.IDevice;
 import pepepay.pepepaynative.backend.social31.handler.IDeviceConnectionHandler;
@@ -436,6 +437,9 @@ public class WifiDirectConnectionHandler implements IDeviceConnectionHandler<Wif
                             public void onSuccess() {
                                 callback.eval(null);
                                 Log.d(TAG, "removeGroup onSuccess -");
+                                discoverService();
+                                Intent intent = new Intent(activity, WalletOverview2.class);
+                                activity.startActivity(intent);
                             }
 
                             @Override

@@ -13,12 +13,28 @@
         android:orientation="vertical"
         android:weightSum="1">
 
-        <Button
-            android:id="@+id/nameButton"
-            android:layout_width="fill_parent"
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="Wallet Name" />
+            android:weightSum="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Name: Balance"
+                android:id="@+id/walletName"
+                android:layout_weight="1.00"
+                android:gravity="center" />
+
+            <Button
+                android:id="@+id/editButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/editWallet" />
+        </LinearLayout>
 
         <Button
             android:id="@+id/sendMoney"

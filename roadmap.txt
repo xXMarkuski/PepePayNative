@@ -3,9 +3,7 @@
     - restart service request after disconnect
 - ui tweaking                                                           wip
     - error messages for users                                          wip
-    - fixing walletSelection being blank after running in background
-    - only showing pin input in transactions when required
-    - remove error "god wallet" (or reduce to one per app start)
+    - fixing walletSelection being blank after running in background    on hold
     - fix ui tabs not updating after creating wallet
 - qr code connection                                                    on hold
     - "share"-button for qr-codes

@@ -55,10 +55,12 @@ public class WalletInfoFragment extends Fragment implements Wallets.WalletsListe
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         if (wallet == null) return null;
+
         View v = inflater.inflate(R.layout.fragment_wallet_info, container, false);
         final FragmentManager fm = WalletInfoFragment.this.getFragmentManager();
-        walletChangeButton = (Button) v.findViewById(R.id.nameButton);
-        walletChangeButton.setText(Wallets.getName(wallet) + "(" + wallet.getBalance() + ")");
+        final TextView walletName = (TextView) v.findViewById(R.id.walletName);
+                walletChangeButton = (Button) v.findViewById(R.id.editButton);
+        walletName.setText(Wallets.getName(wallet) + ": " + wallet.getBalance());
         walletChangeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
