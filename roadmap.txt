@@ -1,7 +1,6 @@
 - standard wifi connection                                              done
     - fix crash when connected before app starts
     - restart service request after disconnect
-    - disconnect without wifi-killing                                   wip
 - ui tweaking                                                           wip
     - error messages for users                                          wip
     - fixing walletSelection being blank after running in background

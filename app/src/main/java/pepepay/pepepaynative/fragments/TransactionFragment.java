@@ -58,6 +58,8 @@ public class TransactionFragment extends DialogFragment {
         final TextView pinSelector = (TextView) view.findViewById(R.id.pinSelector);
         final TextView purposeSelector = (TextView) view.findViewById(R.id.purposeSelector);
         final TextView error = (TextView) view.findViewById(R.id.errorText);
+        final TextView pinText = (TextView) view.findViewById(R.id.pinText);
+
         pinSelector.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -127,6 +129,11 @@ public class TransactionFragment extends DialogFragment {
         });
         if (!Wallets.isGodWallet(from)) {
             amountSelectorBar.setMax((int) from.getBalance());
+        }
+
+        if (Wallets.isValidPassword(from, "")) {
+            pinSelector.setVisibility(View.GONE);
+            pinText.setVisibility(View.GONE);
         }
 
         return dialog;

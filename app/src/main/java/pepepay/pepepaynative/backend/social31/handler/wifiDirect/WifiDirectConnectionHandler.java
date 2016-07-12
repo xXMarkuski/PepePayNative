@@ -27,6 +27,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import pepepay.pepepaynative.PepePay;
 import pepepay.pepepaynative.backend.social31.ConnectionManager;
 import pepepay.pepepaynative.backend.social31.handler.IDevice;
 import pepepay.pepepaynative.backend.social31.handler.IDeviceConnectionHandler;
@@ -235,6 +236,7 @@ public class WifiDirectConnectionHandler implements IDeviceConnectionHandler<Wif
             @Override
             public void onFailure(int error) {
                 Log.i(TAG, "Failed to add a service");
+                PepePay.ERROL.errol("Restart app and wifi [addingLocalService" + error + "]");
             }
         });
 
@@ -257,6 +259,7 @@ public class WifiDirectConnectionHandler implements IDeviceConnectionHandler<Wif
                     @Override
                     public void onFailure(int arg0) {
                         Log.i(TAG, "Failed adding service discovery request");
+                        PepePay.ERROL.errol("Restart app and wifi [addingServiceRequest" + arg0 + "]");
                     }
                 });
         wifiP2pManager.discoverServices(channel, new WifiP2pManager.ActionListener() {
@@ -269,6 +272,7 @@ public class WifiDirectConnectionHandler implements IDeviceConnectionHandler<Wif
             @Override
             public void onFailure(int arg0) {
                 Log.i(TAG, "Service discovery failed: " + arg0);
+                PepePay.ERROL.errol("Restart app and wifi [addingServiceDiscovery" + arg0 + "]");
 
             }
         });
@@ -303,6 +307,7 @@ public class WifiDirectConnectionHandler implements IDeviceConnectionHandler<Wif
             @Override
             public void onFailure(int errorCode) {
                 Log.i(TAG, "Failed connecting to service :" + errorCode);
+                PepePay.ERROL.errol("Restart app and wifi [connect" + errorCode + "]");
             }
         });
     }
@@ -436,6 +441,7 @@ public class WifiDirectConnectionHandler implements IDeviceConnectionHandler<Wif
                             @Override
                             public void onFailure(int reason) {
                                 Log.d(TAG, "removeGroup onFailure -" + reason);
+                                PepePay.ERROL.errol("Restart app and wifi [disconnect" + reason + "]");
                             }
                         });
                     }
