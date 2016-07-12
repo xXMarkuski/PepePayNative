@@ -67,18 +67,6 @@
                 android:textColor="@android:color/holo_red_dark" />
         </TableRow>
 
-        <RelativeLayout
-            android:id="@+id/qrLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ImageView
-                android:id="@+id/qrView"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true" />
-        </RelativeLayout>
     </TableLayout>
 
 </FrameLayout>

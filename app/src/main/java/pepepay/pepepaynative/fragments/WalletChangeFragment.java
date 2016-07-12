@@ -28,12 +28,6 @@ public class WalletChangeFragment extends DialogFragment {
     public WalletChangeFragment() {
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment WalletChangeFragment.
-     */
     public static WalletChangeFragment newInstance(Wallet wallet) {
         WalletChangeFragment fragment = new WalletChangeFragment();
         Bundle args = new Bundle();
@@ -90,9 +84,6 @@ public class WalletChangeFragment extends DialogFragment {
             }
         });
         builder.setIcon(android.R.drawable.ic_menu_edit);
-
-        ImageView imageView = (ImageView) view.findViewById(R.id.qrView);
-        //imageView.setImageBitmap(QRCreationHandler.createQR(WifiDirectBackend.generateWalletConnectionString(wallet, view.getContext())));
 
         return builder.create();
     }
