@@ -23,7 +23,6 @@
     <string name="tosGreeting">By using this app you agree with our terms of service</string>
     <string name="showTos">Show terms of service</string>
     <string name="action_about">About</string>
-    <string name="aboutText">Placeholder: Made by Markus "Markuski" Toran. </string>
     <string name="optional"> (Optional) </string>
     <string name="send_money">Send Money</string>
     <string name="unnamed_wallet">Unnamed Wallet</string>
@@ -36,5 +35,6 @@
     <string name="createTransactionQR">Create Transaction QR Code</string>
     <string name="createTransactionQRTitle">Create Transaction QR Code</string>
     <string name="errorOccurred">An Error Occurred. Plase show SimplePay this message so we can help</string>
-    <string name="editWallet">EDIT</string>
+    <string name="editWallet">INFO</string>
+    <string name="aboutText" translatable="false">Made by TDMzdA== alias Markus Toran, Roman Amblank, Aaron Alef und Benjamin Borrell</string>
 </resources>

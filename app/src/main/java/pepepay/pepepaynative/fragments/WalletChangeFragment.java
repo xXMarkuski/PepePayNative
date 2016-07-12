@@ -92,7 +92,7 @@ public class WalletChangeFragment extends DialogFragment {
         builder.setIcon(android.R.drawable.ic_menu_edit);
 
         ImageView imageView = (ImageView) view.findViewById(R.id.qrView);
-        imageView.setImageBitmap(QRCreationHandler.createQR(WifiDirectBackend.generateWalletConnectionString(wallet, view.getContext())));
+        //imageView.setImageBitmap(QRCreationHandler.createQR(WifiDirectBackend.generateWalletConnectionString(wallet, view.getContext())));
 
         return builder.create();
     }

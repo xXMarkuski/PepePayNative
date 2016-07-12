@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">SimplePay</string>
-    <string name="aboutText">Placeholder: Entwickelt von Markus "Markuski" Toran.</string>
     <string name="action_about">Über SimplePay</string>
     <string name="amount">Betrag: </string>
     <string name="cancel">Abbruch</string>
@@ -34,4 +33,5 @@
     <string name="walletChange">Konto ändern</string>
     <string name="createTransactionQRTitle">Transaktions QR-Code erstellen</string>
     <string name="errorOccurred">Fehler. Zeige uns diese Meldung, damit wir helfen können.</string>
+    <string name="editWallet">INFO</string>
 </resources>
