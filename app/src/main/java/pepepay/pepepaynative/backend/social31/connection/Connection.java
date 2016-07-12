@@ -31,6 +31,7 @@ public class Connection implements ReceiveHandler {
     public static final String getTransactionsAfter = "getTransactionsAfter";
     public static final String getWalletIDForSimple = "getWalletIDForSimple";
     public static final String beginTransCheck = "beginTransCheck";
+    public static final String disconnect = "disconnect";
 
     public static final String connectionProcessor = "pros";
     public static final String connectionProcessorWallet = "wallet";
@@ -116,6 +117,7 @@ public class Connection implements ReceiveHandler {
                             handleTransaction(connection, (Transaction) obj, new Function<Void, Void>() {
                                 @Override
                                 public Void eval(Void aVoid) {
+                                    disconnect();
                                     return null;
                                 }
                             });
@@ -127,6 +129,7 @@ public class Connection implements ReceiveHandler {
                     handleTransaction(connection, (Transaction) obj, new Function<Void, Void>() {
                         @Override
                         public Void eval(Void aVoid) {
+                            disconnect();
                             return null;
                         }
                     });
@@ -204,6 +207,9 @@ public class Connection implements ReceiveHandler {
         } else if (data.equals(Connection.getNames)) {
             Log.d(TAG, Connection.getNames);
             connection.send(parcel.getAnswer(Wallets.getNames(Wallets.getOwnWallets())));
+        } else if (data.equals(Connection.disconnect)) {
+            Log.d(TAG, Connection.disconnect);
+            disconnect(false);
         }
         return null;
     }
@@ -323,8 +329,16 @@ public class Connection implements ReceiveHandler {
         });
     }
 
-    public void disconnect() {
+    public void disconnect(boolean sendNotify) {
+        if(sendNotify)
+        send(Parcel.toParcel(Connection.disconnect, Connection.REQ));
+
+        System.out.println("disconectr");
         manager.disconnect(target);
+    }
+
+    public void disconnect() {
+        disconnect(true);
     }
 
     public String getTargetWalletID() {
