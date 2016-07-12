@@ -49,7 +49,7 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
 
         if (updateThread == null) {
             WifiDirectConnectionHandler wifiDirectConnectionHandler = new WifiDirectConnectionHandler(this);
-            new PepePay(Arrays.<IDeviceConnectionHandler>asList(wifiDirectConnectionHandler, new QRConnectionHandler(wifiDirectConnectionHandler, this))).create(new File(this.getFilesDir(), "godWallets"), new File(this.getFilesDir(), "wallets"), new File(this.getFilesDir(), "private"), new File(this.getFilesDir(), "names"), new File(this.getFilesDir(), "options"), new File(this.getFilesDir(), "errols"), this);
+            new PepePay(Arrays.<IDeviceConnectionHandler>asList(wifiDirectConnectionHandler)).create(new File(this.getFilesDir(), "godWallets"), new File(this.getFilesDir(), "wallets"), new File(this.getFilesDir(), "private"), new File(this.getFilesDir(), "names"), new File(this.getFilesDir(), "options"), new File(this.getFilesDir(), "errols"), this);
 
             updateThread = new Thread(new Runnable() {
                 @Override
