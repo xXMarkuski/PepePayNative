@@ -43,7 +43,6 @@ public class WalletChangeFragment extends DialogFragment {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final View view = inflater.inflate(R.layout.fragment_wallet_change, null);
         final EditText nameSelector = (EditText) view.findViewById(R.id.nameSelector);
-        final RelativeLayout qrlayout = (RelativeLayout) view.findViewById(R.id.qrLayout);
         nameSelector.setText(Wallets.getName(wallet));
 
         final TextView id = (TextView) view.findViewById(R.id.walletID);
