@@ -45,6 +45,8 @@ public class WalletCreateFragment extends Fragment implements Wallets.WalletsLis
             @Override
             public void onClick(View v) {
                 Wallets.generateAndAddWallet(11, nameSelector.getText() + "", pinSelector.getText() + "", WalletCreateFragment.this);
+                nameSelector.setText("");
+                pinSelector.setText("");
                 Log.d(TAG, "unclickable");
                 okButton.setClickable(false);
             }
