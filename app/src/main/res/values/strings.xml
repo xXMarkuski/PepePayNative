@@ -37,5 +37,5 @@
     <string name="errorOccurred">An Error Occurred. Plase show SimplePay this message so we can help</string>
     <string name="editWallet">INFO</string>
     <string name="aboutText" translatable="false">Made by TDMzdA== alias Markus Toran, Roman Amblank, Aaron Alef und Benjamin Borrell</string>
-    <string name="exitingApp">Exiting app due to finished Transaction, Please restart SimplePay</string>
+    <string name="exitingApp">Exiting app due to finished Transaction</string>
 </resources>

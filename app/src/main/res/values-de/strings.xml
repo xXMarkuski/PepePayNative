@@ -34,5 +34,5 @@
     <string name="createTransactionQRTitle">Transaktions QR-Code erstellen</string>
     <string name="errorOccurred">Fehler. Zeige uns diese Meldung, damit wir helfen können.</string>
     <string name="editWallet">INFO</string>
-    <string name="exitingApp">Beende app, weil die Transaction abgeschlossen wurde, Bitte SimplePay neustarten</string>
+    <string name="exitingApp">Beende app, weil die Transaction abgeschlossen wurde</string>
 </resources>
