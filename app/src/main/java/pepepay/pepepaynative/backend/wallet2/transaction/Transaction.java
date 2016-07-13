@@ -88,7 +88,7 @@ public class Transaction implements Serializable {
         }*/
 
         if (Wallets.isGodWallet(sender)) {
-            PepePay.ERROL.errol("god wallet");
+            //PepePay.ERROL.errol("god wallet");
             return true;
         }
         ArrayList<Transaction> transactions = wallet.getTransactionsBefore(wallet.getReceivedTransactions(), time);

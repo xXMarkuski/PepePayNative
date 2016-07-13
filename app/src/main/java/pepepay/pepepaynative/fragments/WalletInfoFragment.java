@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 import pepepay.pepepaynative.PepePay;
@@ -25,9 +27,9 @@ import pepepay.pepepaynative.utils.Function;
 import pepepay.pepepaynative.utils.StringUtils;
 
 public class WalletInfoFragment extends Fragment implements Wallets.WalletsListener {
-    private Button walletChangeButton;
     private Wallet wallet;
     private LinearLayout transOverview;
+    private TextView walletName;
 
     public WalletInfoFragment() {
     }
@@ -58,9 +60,9 @@ public class WalletInfoFragment extends Fragment implements Wallets.WalletsListe
 
         View v = inflater.inflate(R.layout.fragment_wallet_info, container, false);
         final FragmentManager fm = WalletInfoFragment.this.getFragmentManager();
-        final TextView walletName = (TextView) v.findViewById(R.id.walletName);
-        walletChangeButton = (Button) v.findViewById(R.id.editButton);
+        walletName = (TextView) v.findViewById(R.id.walletName);
         walletName.setText(Wallets.getName(wallet) + ": " + wallet.getBalance());
+        TextView walletChangeButton = (Button) v.findViewById(R.id.editButton);
         walletChangeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -164,7 +166,7 @@ public class WalletInfoFragment extends Fragment implements Wallets.WalletsListe
     @Override
     public void nameChange(String walletID, String newName) {
         if (walletID.equals(wallet.getIdentifier())) {
-            walletChangeButton.setText(newName);
+            walletName.setText(Wallets.getName(wallet) + ": " + wallet.getBalance());
         }
     }
 
@@ -174,7 +176,7 @@ public class WalletInfoFragment extends Fragment implements Wallets.WalletsListe
             @Override
             public void run() {
                 if (walletID.equals(wallet.getIdentifier())) {
-                    walletChangeButton.setText(Wallets.getName(wallet) + "(" + wallet.getBalance() + ")");
+                    walletName.setText(Wallets.getName(wallet) + ": " + wallet.getBalance());
                     transOverview.addView(getView(newTransaction), 0);
                 }
             }
