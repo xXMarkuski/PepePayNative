@@ -333,7 +333,7 @@ public class Connection implements ReceiveHandler {
         if(sendNotify)
         send(Parcel.toParcel(Connection.disconnect, Connection.REQ));
 
-        System.out.println("disconectr");
+        System.out.println("disconect");
         manager.disconnect(target);
     }
 
