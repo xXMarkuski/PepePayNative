@@ -6,99 +6,106 @@
 
     <!-- TODO: Update blank fragment layout -->
 
-    <TableLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:baselineAligned="false"
-        android:contextClickable="false"
-        android:shrinkColumns="0"
-        android:stretchColumns="1">
+        android:id="@+id/scrollView2" >
 
-        <TableRow
+        <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:baselineAligned="false"
+            android:contextClickable="false"
+            android:shrinkColumns="0"
+            android:stretchColumns="1">
 
-            <TextView
-                android:id="@+id/amountText"
-                android:layout_column="0"
-                android:text="@string/amount"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-            <EditText
-                android:id="@+id/amountSelector"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_column="1"
-                android:ems="10"
-                android:gravity="fill_horizontal|clip_horizontal|center|end|right|fill"
-                android:inputType="number" />
+                <TextView
+                    android:id="@+id/amountText"
+                    android:layout_column="0"
+                    android:text="@string/amount"
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
 
-        </TableRow>
+                <EditText
+                    android:id="@+id/amountSelector"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="1"
+                    android:ems="10"
+                    android:gravity="fill_horizontal|clip_horizontal|center|end|right|fill"
+                    android:inputType="number" />
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            </TableRow>
 
-            <SeekBar
-                android:id="@+id/amountSelectorBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_column="1"
-                android:layout_span="3"
-                android:max="1000"
-                android:progress="0" />
-        </TableRow>
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+                <SeekBar
+                    android:id="@+id/amountSelectorBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="1"
+                    android:layout_span="3"
+                    android:max="1000"
+                    android:progress="0" />
+            </TableRow>
 
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_column="0"
-                android:text="@string/purpose"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-            <EditText
-                android:id="@+id/purposeSelector"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_column="1"
-                android:hint="@string/optional" />
-        </TableRow>
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="0"
+                    android:text="@string/purpose"
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+                <EditText
+                    android:id="@+id/purposeSelector"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="1"
+                    android:hint="@string/optional" />
+            </TableRow>
 
-            <TextView
-                android:id="@+id/pinText"
-                android:layout_column="0"
-                android:text="@string/pin"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-            <EditText
-                android:id="@+id/pinSelector"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_column="1"
-                android:ems="10"
-                android:inputType="textPassword" />
-        </TableRow>
+                <TextView
+                    android:id="@+id/pinText"
+                    android:layout_column="0"
+                    android:text="@string/pin"
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+                <EditText
+                    android:id="@+id/pinSelector"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="1"
+                    android:ems="10"
+                    android:inputType="textPassword" />
+            </TableRow>
 
-            <TextView
-                android:id="@+id/errorText"
-                android:layout_column="0"
-                android:layout_span="2"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="@android:color/holo_red_dark" />
-        </TableRow>
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-    </TableLayout>
+                <TextView
+                    android:id="@+id/errorText"
+                    android:layout_column="0"
+                    android:layout_span="2"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="@android:color/holo_red_dark" />
+            </TableRow>
+
+        </TableLayout>
+    </ScrollView>
+
 </FrameLayout>
