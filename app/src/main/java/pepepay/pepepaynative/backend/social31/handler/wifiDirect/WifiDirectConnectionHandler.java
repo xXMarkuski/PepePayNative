@@ -441,7 +441,7 @@ public class WifiDirectConnectionHandler implements IDeviceConnectionHandler<Wif
                                 callback.eval(null);
                                 Log.d(TAG, "removeGroup onSuccess -");
                                 discoverService();
-                                Toast.makeText(activity, R.string.exitingApp, Toast.LENGTH_LONG);
+                                Toast.makeText(activity, R.string.exitingApp, Toast.LENGTH_LONG).show();
                                 activity.finish();
                                 System.exit(0);
                             }
