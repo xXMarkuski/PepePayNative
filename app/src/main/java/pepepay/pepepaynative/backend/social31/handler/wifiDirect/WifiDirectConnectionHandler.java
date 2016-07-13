@@ -20,6 +20,7 @@ import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceRequest;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ import java.util.Map;
 import java.util.concurrent.SynchronousQueue;
 
 import pepepay.pepepaynative.PepePay;
+import pepepay.pepepaynative.R;
 import pepepay.pepepaynative.WalletOverview2;
 import pepepay.pepepaynative.backend.social31.ConnectionManager;
 import pepepay.pepepaynative.backend.social31.handler.IDevice;
@@ -439,6 +441,7 @@ public class WifiDirectConnectionHandler implements IDeviceConnectionHandler<Wif
                                 callback.eval(null);
                                 Log.d(TAG, "removeGroup onSuccess -");
                                 discoverService();
+                                Toast.makeText(activity, R.string.exitingApp, Toast.LENGTH_LONG);
                                 activity.finish();
                                 System.exit(0);
                             }
