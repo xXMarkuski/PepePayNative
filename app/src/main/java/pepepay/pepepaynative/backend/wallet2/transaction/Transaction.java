@@ -76,6 +76,7 @@ public class Transaction implements Serializable {
                 System.out.println(demul[1]);
                 System.out.println(demul[0]);
                 if (!EncryptionUtils.complexBase64RsaDecrypt(wallet.getPublicKey(), demul[1]).equals(time + receiver)) {
+                    System.out.println(EncryptionUtils.complexBase64RsaDecrypt(wallet.getPublicKey(), demul[1]));
                     PepePay.ERROL.errol("not valid sender");
                     return false;
                 } else {

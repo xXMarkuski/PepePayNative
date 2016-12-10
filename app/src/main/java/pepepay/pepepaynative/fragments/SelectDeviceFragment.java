@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckedTextView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -58,10 +59,8 @@ public class SelectDeviceFragment extends DialogFragment {
 
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
-                CheckedTextView view = new CheckedTextView(this.getContext());
-                view.setText(devices.get(position).getName());
-                view.setCheckMarkDrawable(android.R.drawable.btn_radio);
-                view.setTextAppearance(getContext(), android.R.style.TextAppearance_DeviceDefault_Large);
+                View view = super.getView(position, convertView, parent);
+                ((TextView)view).setText(devices.get(position).getName());
                 return view;
             }
         };
