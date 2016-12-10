@@ -44,7 +44,7 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.AppTheme_NoActionBar);
+        setTheme(R.style.AppThemeDark);
         super.onCreate(savedInstanceState);
 
         if (updateThread == null) {

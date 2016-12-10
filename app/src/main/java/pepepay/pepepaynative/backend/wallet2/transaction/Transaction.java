@@ -69,7 +69,7 @@ public class Transaction implements Serializable {
             return false;
         }
 
-        /*boolean correct = false;
+        boolean correct = false;
         while (!correct) {
             try {
                 String[] demul = StringUtils.demultiplex(this.getPurpose());
@@ -85,7 +85,7 @@ public class Transaction implements Serializable {
             } catch (Throwable t) {
                 PepePay.ERROL.errol("error verifying sender" + t.getMessage());
             }
-        }*/
+        }
 
         if (Wallets.isGodWallet(sender)) {
             //PepePay.ERROL.errol("god wallet");
