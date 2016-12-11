@@ -22,4 +22,8 @@ public class WifiSalutDevice implements IDevice<SalutConnectionHandler> {
     public String getName() {
         return salutDevice.readableName;
     }
+
+    public SalutDevice getSalutDevice() {
+        return salutDevice;
+    }
 }
