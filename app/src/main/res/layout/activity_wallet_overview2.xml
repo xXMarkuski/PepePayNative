@@ -21,8 +21,8 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            android:theme="@style/LightTheme"
-            app:popupTheme="@style/Theme.AppCompat.Light.DarkActionBar"
+            android:theme="@style/LightTheme.DarkToolbar"
+            app:popupTheme="@style/LightTheme"
             app:layout_scrollFlags="enterAlways">
         </android.support.v7.widget.Toolbar>
 
@@ -32,7 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
-            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            android:theme="@style/LightTheme.DarkToolbar"
             app:tabMode="scrollable" />
 
     </android.support.design.widget.AppBarLayout>
