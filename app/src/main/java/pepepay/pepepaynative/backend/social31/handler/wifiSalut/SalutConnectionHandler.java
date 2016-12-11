@@ -3,18 +3,21 @@ package pepepay.pepepaynative.backend.social31.handler.wifiSalut;
 import android.app.Activity;
 import android.os.Build;
 
-import com.peak.salut.*;
 import com.peak.salut.Callbacks.SalutDataCallback;
 import com.peak.salut.Callbacks.SalutDeviceCallback;
+import com.peak.salut.Salut;
+import com.peak.salut.SalutDataReceiver;
+import com.peak.salut.SalutDevice;
+import com.peak.salut.SalutServiceData;
 
 import pepepay.pepepaynative.backend.social31.ConnectionManager;
-import pepepay.pepepaynative.backend.social31.handler.IDevice;
 import pepepay.pepepaynative.backend.social31.handler.IDeviceConnectionHandler;
 import pepepay.pepepaynative.utils.Function;
 
 
 
-public class SalutConnectionHandler implements IDeviceConnectionHandler<SalutConnectionHandler, WifiSalutDevice>, SalutDataCallback {
+public class SalutConnectionHandler implements IDeviceConnectionHandler<SalutConnectionHandler, WifiSalutDevice>, SalutDataCallback
+{
 
     public static final String TAG = "salutconnectionhandler";
 
@@ -23,7 +26,6 @@ public class SalutConnectionHandler implements IDeviceConnectionHandler<SalutCon
     public SalutDataReceiver dataReceiver;
     public SalutServiceData serviceData;
     public Salut network;
-    public SalutDataCallback callback;
 
     private final Activity activity;
     private ConnectionManager connManager;
@@ -97,9 +99,15 @@ public class SalutConnectionHandler implements IDeviceConnectionHandler<SalutCon
     }
 
     @Override
-    public void requestAvailableDevices(Function callback) {
+    public void requestAvailableDevices(final Function callback) {
+        network.discoverNetworkServices(new SalutDeviceCallback() {
+            @Override
+            public void call(SalutDevice salutDevice) {
 
+            }
+        });
     }
+
 
     @Override
     public void onDataReceived(Object o) {
