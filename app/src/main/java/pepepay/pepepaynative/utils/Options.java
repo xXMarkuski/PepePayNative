@@ -10,6 +10,8 @@ import pepepay.pepepaynative.PepePay;
 public class Options {
 
     public static final String IS_DEBUG_ENABLED = "debug";
+    public static final String USER_DEFINED_DEVICE_NAME = "name";
+    public static final String STANDARD_FORM_CONTRACT = "agbs";
 
     private HashMap<String, ? super Object> options;
     private ArrayList<Function2<Void, String, ? super Object>> callbacks;

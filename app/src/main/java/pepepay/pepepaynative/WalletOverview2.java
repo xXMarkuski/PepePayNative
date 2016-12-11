@@ -28,6 +28,7 @@ import pepepay.pepepaynative.backend.wallet2.transaction.Transaction;
 import pepepay.pepepaynative.fragments.WalletCreateFragment;
 import pepepay.pepepaynative.fragments.WalletInfoFragment;
 import pepepay.pepepaynative.utils.FileUtils;
+import pepepay.pepepaynative.utils.Options;
 
 public class WalletOverview2 extends AppCompatActivity implements Wallets.WalletsListener {
 
@@ -79,19 +80,21 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
-        if (!PepePay.OPTIONS.get("agbs", false)) {
+        if (!PepePay.OPTIONS.get(Options.STANDARD_FORM_CONTRACT, false)) {
             final AlertDialog.Builder builder = new AlertDialog.Builder(this);
             final Dialog[] greeting = new Dialog[]{null};
             greeting[0] = builder.setMessage(R.string.tosGreeting).setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    PepePay.OPTIONS.set("agbs", true);
+                    PepePay.OPTIONS.set(Options.STANDARD_FORM_CONTRACT, true);
+
+                    PepePay.OPTIONS.set(Options.USER_DEFINED_DEVICE_NAME, "");
                 }
             }).setNeutralButton(R.string.showTos, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     final AlertDialog.Builder builder = new AlertDialog.Builder(WalletOverview2.this);
-                    builder.setMessage(FileUtils.readAsset("agbs")).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    builder.setMessage(FileUtils.readAsset(Options.STANDARD_FORM_CONTRACT)).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             greeting[0].show();
@@ -102,7 +105,6 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
             greeting[0].show();
         }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -122,7 +124,7 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     final AlertDialog.Builder builder = new AlertDialog.Builder(WalletOverview2.this);
-                    builder.setMessage(FileUtils.readAsset("agbs")).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    builder.setMessage(FileUtils.readAsset(Options.STANDARD_FORM_CONTRACT)).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             greeting[0].show();
