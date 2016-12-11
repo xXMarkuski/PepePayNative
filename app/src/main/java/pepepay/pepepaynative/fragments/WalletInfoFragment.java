@@ -48,7 +48,6 @@ public class WalletInfoFragment extends Fragment implements Wallets.WalletsListe
         Bundle args = new Bundle();
         fragment.setArguments(args);
         String id = Wallets.getOwnWalletID(walletNumber);
-        System.out.println(id);
         Wallet wallet = Wallets.getWallet(id);
         if (wallet == null) throw new RuntimeException("wallet is null");
         fragment.setWallet(wallet);
@@ -140,7 +139,6 @@ public class WalletInfoFragment extends Fragment implements Wallets.WalletsListe
 
         ArrayList<Transaction> transactions = wallet.getTransactionsChronologically();
         for (Transaction transaction : transactions) {
-            System.out.println(transaction.getAmount());
             transOverview.addView(getView(transaction), 0);
         }
 
@@ -195,7 +193,6 @@ public class WalletInfoFragment extends Fragment implements Wallets.WalletsListe
     }
 
     public View getView(final Transaction transaction) {
-        System.out.println(transaction);
         View view = LayoutInflater.from(getContext()).inflate(R.layout.transaction_small, null);
         int color = Color.BLACK;
         String textWallet = "";
@@ -210,18 +207,18 @@ public class WalletInfoFragment extends Fragment implements Wallets.WalletsListe
             textAmount = "-" + transaction.getAmount();
         }
 
-        System.out.println(textAmount);
-
         ((TextView)view.findViewById(R.id.walletName)).setText(textWallet);
 
         ((TextView)view.findViewById(R.id.amount)).setText(textAmount);
         ((TextView)view.findViewById(R.id.amount)).setTextColor(color);
-        view.setOnClickListener(new View.OnClickListener() {
+
+        view.findViewById(R.id.cardClickable).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 TransactionInfoFragment.newInstance(transaction).show(getFragmentManager(), "dialog");
             }
         });
+
         return view;
     }
 
