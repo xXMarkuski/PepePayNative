@@ -3,6 +3,7 @@ package pepepay.pepepaynative.backend.social31.handler.wifiSalut;
 import android.app.Activity;
 import android.os.Build;
 
+import com.peak.salut.Callbacks.SalutCallback;
 import com.peak.salut.Callbacks.SalutDataCallback;
 import com.peak.salut.Callbacks.SalutDeviceCallback;
 import com.peak.salut.Salut;
@@ -22,6 +23,7 @@ public class SalutConnectionHandler implements IDeviceConnectionHandler<SalutCon
     public static final String TAG = "salutconnectionhandler";
 
     public static final String SERVICE_NAME = "pepepay";
+    public static final int REFRESH_TIME = 5;
 
     public SalutDataReceiver dataReceiver;
     public SalutServiceData serviceData;
@@ -61,6 +63,22 @@ public class SalutConnectionHandler implements IDeviceConnectionHandler<SalutCon
                 connManager.incomingConnection(new WifiSalutDevice(device), SalutConnectionHandler.this);
             }
         });
+
+
+    }
+
+    private void discoverServices(){
+        network.discoverWithTimeout(new SalutCallback() {
+            @Override
+            public void call() {
+
+            }
+        }, new SalutCallback() {
+            @Override
+            public void call() {
+
+            }
+        }, REFRESH_TIME);
     }
 
     @Override
@@ -100,12 +118,7 @@ public class SalutConnectionHandler implements IDeviceConnectionHandler<SalutCon
 
     @Override
     public void requestAvailableDevices(final Function callback) {
-        network.discoverNetworkServices(new SalutDeviceCallback() {
-            @Override
-            public void call(SalutDevice salutDevice) {
 
-            }
-        });
     }
 
 
