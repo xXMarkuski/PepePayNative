@@ -28,6 +28,7 @@ import pepepay.pepepaynative.backend.wallet2.transaction.Transaction;
 import pepepay.pepepaynative.fragments.WalletCreateFragment;
 import pepepay.pepepaynative.fragments.WalletInfoFragment;
 import pepepay.pepepaynative.utils.FileUtils;
+import pepepay.pepepaynative.utils.Options;
 
 public class WalletOverview2 extends AppCompatActivity implements Wallets.WalletsListener {
 
@@ -86,8 +87,9 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     PepePay.OPTIONS.set(Options.STANDARD_FORM_CONTRACT, true);
+
+                    PepePay.OPTIONS.set(Options.USER_DEFINED_DEVICE_NAME, getUserDeviceName());
                 }
-                PepePay.OPTIONS.set(Options.USER_DEFINED_DEVICE_NAME, getUserDeviceName());
             }).setNeutralButton(R.string.showTos, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {

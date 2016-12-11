@@ -141,8 +141,7 @@ public class WalletInfoFragment extends Fragment implements Wallets.WalletsListe
         ArrayList<Transaction> transactions = wallet.getTransactionsChronologically();
         for (Transaction transaction : transactions) {
             System.out.println(transaction.getAmount());
-            getView(transaction);
-            //transOverview.addView(getView(transaction), 0);
+            transOverview.addView(getView(transaction), 0);
         }
 
         Wallets.addWalletAddListener(this);
@@ -196,7 +195,8 @@ public class WalletInfoFragment extends Fragment implements Wallets.WalletsListe
     }
 
     public View getView(final Transaction transaction) {
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.transaction_small, transOverview);
+        System.out.println(transaction);
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.transaction_small, null);
         int color = Color.BLACK;
         String textWallet = "";
         String textAmount = "";
@@ -209,6 +209,9 @@ public class WalletInfoFragment extends Fragment implements Wallets.WalletsListe
             textWallet = Wallets.getName(transaction.getReceiver());
             textAmount = "-" + transaction.getAmount();
         }
+
+        System.out.println(textAmount);
+
         ((TextView)view.findViewById(R.id.walletName)).setText(textWallet);
 
         ((TextView)view.findViewById(R.id.amount)).setText(textAmount);
