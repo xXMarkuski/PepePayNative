@@ -4,6 +4,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -139,7 +141,8 @@ public class WalletInfoFragment extends Fragment implements Wallets.WalletsListe
         ArrayList<Transaction> transactions = wallet.getTransactionsChronologically();
         for (Transaction transaction : transactions) {
             System.out.println(transaction.getAmount());
-            transOverview.addView(getView(transaction), 0);
+            getView(transaction);
+            //transOverview.addView(getView(transaction), 0);
         }
 
         Wallets.addWalletAddListener(this);
@@ -193,18 +196,23 @@ public class WalletInfoFragment extends Fragment implements Wallets.WalletsListe
     }
 
     public View getView(final Transaction transaction) {
-        TextView view = new TextView(this.getContext());
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.transaction_small, transOverview);
         int color = Color.BLACK;
-        String text = "";
+        String textWallet = "";
+        String textAmount = "";
         if (transaction.getReceiver().equals(wallet.getIdentifier())) {
             color = this.getContext().getResources().getColor(android.R.color.holo_green_dark);
-            text = Wallets.getName(transaction.getSender()) + " +" + transaction.getAmount();
+            textWallet = Wallets.getName(transaction.getSender());
+            textAmount = "+" + transaction.getAmount();
         } else if (transaction.getSender().equals(wallet.getIdentifier())) {
             color = this.getContext().getResources().getColor(android.R.color.holo_red_dark);
-            text = Wallets.getName(transaction.getReceiver()) + " -" + transaction.getAmount();
+            textWallet = Wallets.getName(transaction.getReceiver());
+            textAmount = "-" + transaction.getAmount();
         }
-        view.setTextColor(color);
-        view.setText(text);
+        ((TextView)view.findViewById(R.id.walletName)).setText(textWallet);
+
+        ((TextView)view.findViewById(R.id.amount)).setText(textAmount);
+        ((TextView)view.findViewById(R.id.amount)).setTextColor(color);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -38,4 +38,7 @@
     <string name="editWallet">INFO</string>
     <string name="aboutText" translatable="false">Made by TDMzdA== alias Markus Toran, Roman Amblank, Aaron Alef und Benjamin Borrell</string>
     <string name="exitingApp">Exiting app due to finished Transaction</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

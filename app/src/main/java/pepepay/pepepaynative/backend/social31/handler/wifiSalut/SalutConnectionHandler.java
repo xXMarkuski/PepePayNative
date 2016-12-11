@@ -56,7 +56,7 @@ public class SalutConnectionHandler implements IDeviceConnectionHandler<SalutCon
         network.startNetworkService(new SalutDeviceCallback() {
             @Override
             public void call(SalutDevice device) {
-                connManager.incomingConnection(new WifiSalutDevice(device), this);
+                connManager.incomingConnection(new WifiSalutDevice(device), SalutConnectionHandler.this);
             }
         });
     }

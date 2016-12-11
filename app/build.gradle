@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.0"
+    buildToolsVersion "25.0.1"
 
     defaultConfig {
         applicationId "pepepay.pepepaynativetest"
@@ -26,11 +26,13 @@ dependencies {
     compile "com.madgag.spongycastle:core:$spongycastleVersion"
     compile "com.madgag.spongycastle:prov:$spongycastleVersion"
     compile 'com.google.guava:guava:20.0'
-    compile 'com.android.support:appcompat-v7:25.0.0'
-    compile 'com.android.support:design:25.0.0'
-    compile 'com.android.support:support-v4:25.0.0'
+    compile 'com.android.support:appcompat-v7:25.0.1'
+    compile 'com.android.support:design:25.0.1'
+    compile 'com.android.support:support-v4:25.0.1'
+    compile 'com.android.support:cardview-v7:25.0.1'
     compile 'me.dm7.barcodescanner:zxing:1.8.4'
     compile 'com.github.markrjr:salut:v0.5.0'
     apt 'com.bluelinelabs:logansquare-compiler:1.3.4'
     compile 'com.bluelinelabs:logansquare:1.3.4'
+
 }

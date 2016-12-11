@@ -20,9 +20,7 @@ import android.view.MenuItem;
 import java.io.File;
 import java.util.Arrays;
 
-import pepepay.pepepaynative.activities.qr.QRCreatorActivity;
 import pepepay.pepepaynative.backend.social31.handler.IDeviceConnectionHandler;
-import pepepay.pepepaynative.backend.social31.handler.qrCode.QRConnectionHandler;
 import pepepay.pepepaynative.backend.social31.handler.wifiDirect.WifiDirectConnectionHandler;
 import pepepay.pepepaynative.backend.wallet2.Wallet;
 import pepepay.pepepaynative.backend.wallet2.Wallets;
@@ -44,7 +42,7 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.AppThemeDark);
+        setTheme(R.style.LightTheme_NoActionBar);
         super.onCreate(savedInstanceState);
 
         if (updateThread == null) {
