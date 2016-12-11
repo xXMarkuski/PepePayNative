@@ -11,6 +11,8 @@ import com.peak.salut.SalutDataReceiver;
 import com.peak.salut.SalutDevice;
 import com.peak.salut.SalutServiceData;
 
+import java.util.ArrayList;
+
 import pepepay.pepepaynative.backend.social31.ConnectionManager;
 import pepepay.pepepaynative.backend.social31.handler.IDeviceConnectionHandler;
 import pepepay.pepepaynative.utils.Function;
@@ -31,6 +33,8 @@ public class SalutConnectionHandler implements IDeviceConnectionHandler<SalutCon
 
     private final Activity activity;
     private ConnectionManager connManager;
+
+    private ArrayList<WifiSalutDevice> availableDevices = new ArrayList<>();
 
 
 
@@ -64,19 +68,46 @@ public class SalutConnectionHandler implements IDeviceConnectionHandler<SalutCon
             }
         });
 
-
+        while(true) {
+            if(!network.isDiscovering) {
+                discoverServices();
+            }
+        }
     }
 
     private void discoverServices(){
+        final ArrayList<WifiSalutDevice> oldDevices = new ArrayList<>(availableDevices);
+        final ArrayList<WifiSalutDevice> newDevices = new ArrayList<>();
+        final ArrayList<WifiSalutDevice> goneDevices = new ArrayList<>();
+
+        availableDevices.clear();
         network.discoverWithTimeout(new SalutCallback() {
             @Override
             public void call() {
-
+                for(SalutDevice dev : network.foundDevices) {
+                    WifiSalutDevice device = new WifiSalutDevice(dev);
+                    availableDevices.add(device);
+                    Boolean isNew = true;
+                    for(WifiSalutDevice oldDev : oldDevices){
+                        if(device.equals(oldDev)){
+                            isNew = false;
+                        }
+                    }
+                    if(isNew){
+                        newDevices.add(device);
+                    }
+                }
+                for(WifiSalutDevice dev : oldDevices) {
+                    if(!availableDevices.contains(dev)) {
+                        goneDevices.add(dev);
+                    }
+                }
+                connManager.devicesChanged(newDevices, goneDevices);
             }
         }, new SalutCallback() {
             @Override
             public void call() {
-
+                connManager.devicesChanged(newDevices, oldDevices);
             }
         }, REFRESH_TIME);
     }
