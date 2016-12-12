@@ -29,6 +29,14 @@ public class EncryptionUtils {
     private static KeyPairGenerator rsaKeyGen;
 
     static {
+        init();
+    }
+
+
+    /**
+     * DO NOT CALL - only used for testing purposes
+     */
+    public static void init(){
         try {
             rsaCipher = Cipher.getInstance("RSA/NONE/OAEPWithSHA256AndMGF1Padding", PepePay.castle);
             aesCipher = Cipher.getInstance("AES/CFB/PKCS5Padding", PepePay.castle);
