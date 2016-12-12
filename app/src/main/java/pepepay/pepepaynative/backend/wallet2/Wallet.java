@@ -7,7 +7,7 @@ import java.util.Collections;
 
 import pepepay.pepepaynative.PepePay;
 import pepepay.pepepaynative.backend.wallet2.transaction.Transaction;
-import pepepay.pepepaynative.utils.Function2;
+import pepepay.pepepaynative.utils.function.Function2;
 import pepepay.pepepaynative.utils.StringUtils;
 import pepepay.pepepaynative.utils.encryption.EncryptionUtils;
 import pepepay.pepepaynative.utils.loader.Loader;

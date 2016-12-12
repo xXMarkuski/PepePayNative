@@ -4,16 +4,12 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -25,7 +21,7 @@ import pepepay.pepepaynative.backend.social31.packages.Parcel;
 import pepepay.pepepaynative.backend.wallet2.Wallet;
 import pepepay.pepepaynative.backend.wallet2.Wallets;
 import pepepay.pepepaynative.backend.wallet2.transaction.Transaction;
-import pepepay.pepepaynative.utils.Function;
+import pepepay.pepepaynative.utils.function.Function;
 import pepepay.pepepaynative.utils.StringUtils;
 
 public class WalletInfoFragment extends Fragment implements Wallets.WalletsListener {
@@ -40,14 +36,13 @@ public class WalletInfoFragment extends Fragment implements Wallets.WalletsListe
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param walletNumber The index of the wallet in Wallets.getOwnWallets()
+     * @param id The id of the wallet
      * @return A new instance of fragment WalletInfoFragment.
      */
-    public static WalletInfoFragment newInstance(int walletNumber) {
+    public static WalletInfoFragment newInstance(String id) {
         WalletInfoFragment fragment = new WalletInfoFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
-        String id = Wallets.getOwnWalletID(walletNumber);
         Wallet wallet = Wallets.getWallet(id);
         if (wallet == null) throw new RuntimeException("wallet is null");
         fragment.setWallet(wallet);

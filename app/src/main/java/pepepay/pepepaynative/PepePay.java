@@ -22,7 +22,7 @@ public class PepePay {
 
     public static final int PROTOCOL_VERSION_MAJOR = 1;
     public static final int PROTOCOL_VERSION_MINOR = 12;
-    public static final int PROTOCOL_VERSION_PATCHLEVEL = 5;
+    public static final int PROTOCOL_VERSION_PATCHLEVEL = 10;
     public static final String PROTOCOL_VERSION = PROTOCOL_VERSION_MAJOR + "." + PROTOCOL_VERSION_MINOR + "." + PROTOCOL_VERSION_PATCHLEVEL;
 
     public static final LoaderManager LOADER_MANAGER = new LoaderManager();

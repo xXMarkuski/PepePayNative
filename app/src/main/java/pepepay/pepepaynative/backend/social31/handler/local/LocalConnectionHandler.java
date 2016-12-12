@@ -6,7 +6,7 @@ import java.util.Arrays;
 
 import pepepay.pepepaynative.backend.social31.ConnectionManager;
 import pepepay.pepepaynative.backend.social31.handler.IDeviceConnectionHandler;
-import pepepay.pepepaynative.utils.Function;
+import pepepay.pepepaynative.utils.function.Function;
 
 public class LocalConnectionHandler implements IDeviceConnectionHandler<LocalConnectionHandler, LocalDevice> {
 

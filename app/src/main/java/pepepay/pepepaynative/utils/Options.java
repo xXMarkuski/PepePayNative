@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import pepepay.pepepaynative.PepePay;
+import pepepay.pepepaynative.utils.function.Function2;
 
 
 public class Options {

@@ -11,8 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:shrinkColumns="0"
-        android:stretchColumns="1">
+        android:shrinkColumns="1">
 
         <TableRow
             android:layout_width="match_parent"

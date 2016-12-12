@@ -3,7 +3,7 @@ package pepepay.pepepaynative.backend.social31.handler;
 import java.util.ArrayList;
 
 import pepepay.pepepaynative.backend.social31.ConnectionManager;
-import pepepay.pepepaynative.utils.Function;
+import pepepay.pepepaynative.utils.function.Function;
 
 public interface IDeviceConnectionHandler<T extends IDeviceConnectionHandler, U extends IDevice<T>> {
 

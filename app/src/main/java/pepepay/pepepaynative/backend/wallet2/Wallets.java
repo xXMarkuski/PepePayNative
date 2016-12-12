@@ -244,13 +244,7 @@ public class Wallets {
     }
 
     public static int getOwnWalletsCount() {
-        int result = 0;
-        for (String s : privateKeys.keySet()) {
-            if (getWallet(s) != null) {
-                result++;
-            }
-        }
-        return result;
+        return getOwnWallets().size();
     }
 
     public static Wallet getOwnWallet(int i) {
@@ -258,7 +252,7 @@ public class Wallets {
     }
 
     public static String getOwnWalletID(int i) {
-        return new ArrayList<>(privateKeys.keySet()).get(i);
+        return getOwnWallets().get(i).getIdentifier();
     }
 
     public static void removeGodWallet(String walletID) {

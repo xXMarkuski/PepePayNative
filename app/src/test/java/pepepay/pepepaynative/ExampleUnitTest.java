@@ -1,7 +1,13 @@
 package pepepay.pepepaynative;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
+import java.security.Security;
+
+import pepepay.pepepaynative.utils.encryption.EncryptionUtils;
+
+import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertEquals;
 
 /**

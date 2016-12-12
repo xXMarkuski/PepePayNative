@@ -42,6 +42,11 @@
         <activity
             android:name=".activities.qr.QRCreatorActivity"
             android:configChanges="keyboardHidden|orientation|screenSize" />
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="d48dc3191c53cf51b261bbf6cb01f4e4256cd2ae"
+            />
     </application>
 
 </manifest>

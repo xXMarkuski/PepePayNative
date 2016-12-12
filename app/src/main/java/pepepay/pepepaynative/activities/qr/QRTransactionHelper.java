@@ -10,7 +10,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import pepepay.pepepaynative.R;
-import pepepay.pepepaynative.utils.Function2;
+import pepepay.pepepaynative.utils.function.Function2;
 
 public class QRTransactionHelper extends DialogFragment {
 

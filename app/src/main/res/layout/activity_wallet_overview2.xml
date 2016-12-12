@@ -31,9 +31,10 @@
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"
+            android:layout_gravity="center_vertical|center_horizontal"
             android:theme="@style/LightTheme.DarkToolbar"
-            app:tabMode="scrollable" />
+            app:tabMode="scrollable"
+            app:tabGravity="center" />
 
     </android.support.design.widget.AppBarLayout>
 

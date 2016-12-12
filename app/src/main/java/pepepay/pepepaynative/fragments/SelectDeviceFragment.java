@@ -9,7 +9,6 @@ import android.support.v4.app.DialogFragment;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.CheckedTextView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -18,8 +17,8 @@ import pepepay.pepepaynative.PepePay;
 import pepepay.pepepaynative.R;
 import pepepay.pepepaynative.backend.social31.handler.IDevice;
 import pepepay.pepepaynative.backend.wallet2.Wallet;
-import pepepay.pepepaynative.utils.Function;
-import pepepay.pepepaynative.utils.Function2;
+import pepepay.pepepaynative.utils.function.Function;
+import pepepay.pepepaynative.utils.function.Function2;
 
 public class SelectDeviceFragment extends DialogFragment {
     private Function<Void, IDevice> callback;

@@ -27,15 +27,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.SynchronousQueue;
 
 import pepepay.pepepaynative.PepePay;
 import pepepay.pepepaynative.R;
-import pepepay.pepepaynative.WalletOverview2;
 import pepepay.pepepaynative.backend.social31.ConnectionManager;
 import pepepay.pepepaynative.backend.social31.handler.IDevice;
 import pepepay.pepepaynative.backend.social31.handler.IDeviceConnectionHandler;
-import pepepay.pepepaynative.utils.Function;
+import pepepay.pepepaynative.utils.function.Function;
 
 
 public class WifiDirectConnectionHandler implements IDeviceConnectionHandler<WifiDirectConnectionHandler, WifiDirectDevice>, Handler.Callback,

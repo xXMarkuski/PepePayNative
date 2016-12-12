@@ -50,10 +50,10 @@ public class StringUtils {
     }
 
     public static String encode(byte[] array) {
-        return Base64.toBase64String(array);
+        return android.util.Base64.encodeToString(array, android.util.Base64.DEFAULT);
     }
 
     public static byte[] decode(String string) {
-        return Base64.decode(string);
+        return android.util.Base64.decode(string, android.util.Base64.DEFAULT);
     }
 }

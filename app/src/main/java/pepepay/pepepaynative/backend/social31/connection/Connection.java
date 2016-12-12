@@ -18,7 +18,7 @@ import pepepay.pepepaynative.backend.social31.receive.ReceiveHandler;
 import pepepay.pepepaynative.backend.wallet2.Wallet;
 import pepepay.pepepaynative.backend.wallet2.Wallets;
 import pepepay.pepepaynative.backend.wallet2.transaction.Transaction;
-import pepepay.pepepaynative.utils.Function;
+import pepepay.pepepaynative.utils.function.Function;
 import pepepay.pepepaynative.utils.StringUtils;
 
 public class Connection implements ReceiveHandler {

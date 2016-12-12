@@ -7,8 +7,8 @@ import java.util.List;
 import pepepay.pepepaynative.backend.social31.connection.Connection;
 import pepepay.pepepaynative.backend.social31.handler.IDevice;
 import pepepay.pepepaynative.backend.social31.handler.IDeviceConnectionHandler;
-import pepepay.pepepaynative.utils.Function;
-import pepepay.pepepaynative.utils.Function2;
+import pepepay.pepepaynative.utils.function.Function;
+import pepepay.pepepaynative.utils.function.Function2;
 
 public class ConnectionManager {
 

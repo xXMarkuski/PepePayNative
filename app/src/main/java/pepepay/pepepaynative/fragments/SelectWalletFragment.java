@@ -19,7 +19,7 @@ import pepepay.pepepaynative.backend.social31.connection.Connection;
 import pepepay.pepepaynative.backend.social31.packages.Parcel;
 import pepepay.pepepaynative.backend.wallet2.Wallet;
 import pepepay.pepepaynative.backend.wallet2.Wallets;
-import pepepay.pepepaynative.utils.Function;
+import pepepay.pepepaynative.utils.function.Function;
 import pepepay.pepepaynative.utils.LongUtils;
 import pepepay.pepepaynative.utils.StringUtils;
 

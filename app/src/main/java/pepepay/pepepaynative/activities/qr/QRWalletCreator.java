@@ -14,7 +14,7 @@ import pepepay.pepepaynative.backend.social31.handler.qrCode.QRCreationHandler;
 import pepepay.pepepaynative.backend.social31.handler.wifiDirect.WifiDirectBackend;
 import pepepay.pepepaynative.backend.wallet2.Wallet;
 import pepepay.pepepaynative.fragments.SelectWalletFragment;
-import pepepay.pepepaynative.utils.Function;
+import pepepay.pepepaynative.utils.function.Function;
 
 public class QRWalletCreator extends Fragment {
     public QRWalletCreator() {

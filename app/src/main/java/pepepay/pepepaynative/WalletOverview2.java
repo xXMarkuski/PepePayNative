@@ -17,9 +17,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.crashlytics.android.Crashlytics;
+
 import java.io.File;
 import java.util.Arrays;
 
+import io.fabric.sdk.android.Fabric;
 import pepepay.pepepaynative.backend.social31.handler.IDeviceConnectionHandler;
 import pepepay.pepepaynative.backend.social31.handler.wifiDirect.WifiDirectConnectionHandler;
 import pepepay.pepepaynative.backend.wallet2.Wallet;
@@ -45,6 +48,8 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.LightTheme_NoActionBar);
         super.onCreate(savedInstanceState);
+
+        Fabric.with(this, new Crashlytics());
 
         if (updateThread == null) {
             WifiDirectConnectionHandler wifiDirectConnectionHandler = new WifiDirectConnectionHandler(this);
@@ -241,7 +246,8 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
             if (position == 0) {
                 return WalletCreateFragment.newInstance();
             } else {
-                return WalletInfoFragment.newInstance(position - 1);
+                System.out.println(position + "  " + Wallets.getOwnWalletID(position - 1));
+                return WalletInfoFragment.newInstance(Wallets.getOwnWalletID(position - 1));
             }
         }
 
