@@ -224,10 +224,6 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
         }
     }
 
-    @Override
-    public void onBackPressed() {
-    }
-
     public void startActivity(Class<? extends Activity> clazz) {
         Intent myIntent = new Intent(this, clazz);
         this.startActivity(myIntent);

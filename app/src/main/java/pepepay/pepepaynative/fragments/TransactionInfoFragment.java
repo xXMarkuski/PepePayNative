@@ -49,7 +49,7 @@ public class TransactionInfoFragment extends DialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final View view = inflater.inflate(R.layout.fragment_transaction_info, null);
-        builder.setTitle(R.string.transactionInfo).setView(view).setIcon(android.R.drawable.ic_dialog_info);
+        builder.setTitle(R.string.transactionInfo).setView(view).setIcon(android.R.drawable.ic_menu_info_details);
 
         TextView amount = (TextView) view.findViewById(R.id.amount);
         TextView sender = (TextView) view.findViewById(R.id.sender);

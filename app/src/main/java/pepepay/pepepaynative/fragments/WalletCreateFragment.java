@@ -48,7 +48,7 @@ public class WalletCreateFragment extends Fragment implements Wallets.WalletsLis
                 nameSelector.setText("");
                 pinSelector.setText("");
                 Log.d(TAG, "unclickable");
-                okButton.setClickable(false);
+                okButton.setEnabled(false);
             }
         });
 
@@ -59,7 +59,12 @@ public class WalletCreateFragment extends Fragment implements Wallets.WalletsLis
     @Override
     public void privateWalletAdded(Wallet wallet) {
         Log.d(TAG, "clickable");
-        okButton.setClickable(true);
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                okButton.setEnabled(true);
+            }
+        });
     }
 
     @Override

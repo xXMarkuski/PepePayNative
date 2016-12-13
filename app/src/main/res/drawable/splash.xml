@@ -2,12 +2,12 @@
 
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
-        <color android:color="@color/background_material_light" />
+        <color android:color="@color/colorPrimary" />
     </item>
     <item>
         <bitmap
-            android:gravity="center"
-            android:src="@drawable/splashold"
-            android:tileMode="disabled" />
+            android:src="@mipmap/splash"
+            android:tileMode="disabled"
+            android:gravity="center"/>
     </item>
 </layer-list>
