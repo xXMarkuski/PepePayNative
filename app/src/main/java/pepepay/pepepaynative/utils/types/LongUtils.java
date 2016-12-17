@@ -1,4 +1,4 @@
-package pepepay.pepepaynative.utils;
+package pepepay.pepepaynative.utils.types;
 
 import java.util.Random;
 

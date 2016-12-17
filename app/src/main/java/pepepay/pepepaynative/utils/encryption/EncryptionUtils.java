@@ -19,7 +19,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 import pepepay.pepepaynative.PepePay;
 import pepepay.pepepaynative.utils.Holder2;
-import pepepay.pepepaynative.utils.StringUtils;
+import pepepay.pepepaynative.utils.types.StringUtils;
 
 public class EncryptionUtils {
 

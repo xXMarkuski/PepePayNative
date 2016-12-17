@@ -56,6 +56,10 @@ public class FileUtils {
     }
 
     public static String read(String path) {
-        return read(new File(PepePay.ACTIVITY.getFilesDir(), path));
+        return read(getFile(path));
+    }
+
+    public static File getFile(String path){
+        return new File(PepePay.ACTIVITY.getFilesDir(), path);
     }
 }

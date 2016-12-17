@@ -18,9 +18,11 @@ import java.util.Locale;
 import pepepay.pepepaynative.R;
 import pepepay.pepepaynative.backend.wallet2.Wallets;
 import pepepay.pepepaynative.backend.wallet2.transaction.Transaction;
-import pepepay.pepepaynative.utils.StringUtils;
+import pepepay.pepepaynative.utils.types.StringUtils;
 
 public class TransactionInfoFragment extends DialogFragment {
+
+    private static final String TRANSACTION = "transaction";
 
     public static final DateFormat format = new SimpleDateFormat("dd MMM, HH:mm:ss", Locale.getDefault());
 
@@ -29,23 +31,23 @@ public class TransactionInfoFragment extends DialogFragment {
     public TransactionInfoFragment() {
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment TransactionInfoFragment.
-     */
     public static TransactionInfoFragment newInstance(Transaction transaction) {
         TransactionInfoFragment fragment = new TransactionInfoFragment();
         Bundle args = new Bundle();
+        args.putSerializable(TRANSACTION, transaction);
         fragment.setArguments(args);
-        fragment.setTransaction(transaction);
         return fragment;
     }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            transaction = (Transaction) savedInstanceState.getSerializable(TRANSACTION);
+        } else {
+            transaction = (Transaction) getArguments().getSerializable(TRANSACTION);
+        }
+
         LayoutInflater inflater = getActivity().getLayoutInflater();
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final View view = inflater.inflate(R.layout.fragment_transaction_info, null);
@@ -73,7 +75,9 @@ public class TransactionInfoFragment extends DialogFragment {
         return builder.create();
     }
 
-    public void setTransaction(Transaction transaction) {
-        this.transaction = transaction;
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable(TRANSACTION, transaction);
+        super.onSaveInstanceState(outState);
     }
 }

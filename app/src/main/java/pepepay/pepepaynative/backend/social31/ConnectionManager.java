@@ -1,5 +1,7 @@
 package pepepay.pepepaynative.backend.social31;
 
+import com.crashlytics.android.answers.Answers;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -129,7 +131,7 @@ public class ConnectionManager {
     }
 
     public void update() {
-        for (Connection connection : activeConnections.values()) {
+        for (Connection connection : (new HashMap<>(activeConnections)).values()) {
             connection.update();
         }
 

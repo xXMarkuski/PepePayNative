@@ -13,7 +13,7 @@ import pepepay.pepepaynative.backend.social31.handler.IDevice;
 import pepepay.pepepaynative.backend.social31.handler.IDeviceConnectionHandler;
 import pepepay.pepepaynative.backend.wallet2.Wallet;
 import pepepay.pepepaynative.utils.function.Function;
-import pepepay.pepepaynative.utils.StringUtils;
+import pepepay.pepepaynative.utils.types.StringUtils;
 
 public abstract class WifiDirectBackend<T extends WifiDirectBackend> implements IDeviceConnectionHandler<WifiDirectBackend, WifiDirectBackend.WifiDirectBackendDevice> {
 

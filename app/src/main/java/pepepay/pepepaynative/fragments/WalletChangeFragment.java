@@ -23,22 +23,30 @@ import pepepay.pepepaynative.backend.wallet2.Wallets;
 
 public class WalletChangeFragment extends DialogFragment {
 
+    private static final String WALLETID = "walletid";
+
     private Wallet wallet;
 
     public WalletChangeFragment() {
     }
 
-    public static WalletChangeFragment newInstance(Wallet wallet) {
+    public static WalletChangeFragment newInstance(String walletID) {
         WalletChangeFragment fragment = new WalletChangeFragment();
         Bundle args = new Bundle();
+        args.putString(WALLETID, walletID);
         fragment.setArguments(args);
-        fragment.setWallet(wallet);
         return fragment;
     }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        if(savedInstanceState != null){
+            wallet = Wallets.getWallet(savedInstanceState.getString(WALLETID));
+        } else {
+            wallet = Wallets.getWallet(getArguments().getString(WALLETID));
+        }
+
         LayoutInflater inflater = getActivity().getLayoutInflater();
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final View view = inflater.inflate(R.layout.fragment_wallet_change, null);
@@ -87,7 +95,9 @@ public class WalletChangeFragment extends DialogFragment {
         return builder.create();
     }
 
-    public void setWallet(Wallet wallet) {
-        this.wallet = wallet;
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString(WALLETID, wallet.getIdentifier());
+        super.onSaveInstanceState(outState);
     }
 }

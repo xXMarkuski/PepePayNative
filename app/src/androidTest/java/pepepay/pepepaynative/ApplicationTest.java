@@ -83,6 +83,7 @@ public class ApplicationTest {
         String enc = EncryptionUtils.complexBase64RsaEncrypt(keys.getPrivate(), data);
         String enc2 = EncryptionUtils.complexBase64RsaEncrypt(keys.getPublic(), data);
 
+        Security.insertProviderAt(new org.spongycastle.jce.provider.BouncyCastleProvider(), 1);
         EncryptionUtils.init();
 
         String dec = EncryptionUtils.complexBase64RsaDecrypt(keys.getPublic(), enc);
@@ -102,6 +103,7 @@ public class ApplicationTest {
 
         String messageenc = EncryptionUtils.messageRsaEncrypt(keys.getPrivate(), keys.getPublic(), data);
 
+        Security.insertProviderAt(new org.spongycastle.jce.provider.BouncyCastleProvider(), 1);
         EncryptionUtils.init();
 
         String messagedec = EncryptionUtils.messageRsaDecrypt(keys.getPublic(), keys.getPrivate(), messageenc);

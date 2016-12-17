@@ -41,17 +41,15 @@ public class PepePay {
     public static ConnectionManager CONNECTION_MANAGER;
     public static Activity ACTIVITY;
     public static Errol ERROL;
-    private static List<IDeviceConnectionHandler> handlers;
-
-    public PepePay(List<IDeviceConnectionHandler> handlers) {
-        PepePay.handlers = handlers;
-    }
 
     public static void runOnUIThread(Runnable runnable) {
         ACTIVITY.runOnUiThread(runnable);
     }
 
-    public void create(File godWalletsFile, File walletFile, File privateFile, File nameFile, File optionsFile, File errolFile, Activity activity) {
+    public static void create(List<IDeviceConnectionHandler> handlers, File godWalletsFile, File walletFile, File privateFile, File nameFile, File optionsFile, File errolFile, Activity activity) {
+        //TODO: Make this great again
+        if(PepePay.godWalletsFile != null) return;
+
         Security.insertProviderAt(new org.spongycastle.jce.provider.BouncyCastleProvider(), 1);
 
         PepePay.ACTIVITY = activity;

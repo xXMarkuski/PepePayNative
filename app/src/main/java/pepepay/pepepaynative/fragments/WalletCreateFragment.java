@@ -59,6 +59,7 @@ public class WalletCreateFragment extends Fragment implements Wallets.WalletsLis
     @Override
     public void privateWalletAdded(Wallet wallet) {
         Log.d(TAG, "clickable");
+        if(getActivity() == null) return;
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {

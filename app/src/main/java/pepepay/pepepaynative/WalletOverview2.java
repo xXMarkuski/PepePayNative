@@ -6,6 +6,9 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -23,8 +26,10 @@ import java.io.File;
 import java.util.Arrays;
 
 import io.fabric.sdk.android.Fabric;
+import pepepay.pepepaynative.activities.qr.QRCreatorActivity;
 import pepepay.pepepaynative.backend.social31.handler.IDeviceConnectionHandler;
 import pepepay.pepepaynative.backend.social31.handler.wifiDirect.WifiDirectConnectionHandler;
+import pepepay.pepepaynative.backend.social31.handler.wifiSalut.SalutConnectionHandler;
 import pepepay.pepepaynative.backend.wallet2.Wallet;
 import pepepay.pepepaynative.backend.wallet2.Wallets;
 import pepepay.pepepaynative.backend.wallet2.transaction.Transaction;
@@ -35,14 +40,10 @@ import pepepay.pepepaynative.utils.Options;
 
 public class WalletOverview2 extends AppCompatActivity implements Wallets.WalletsListener {
 
-    private String TAG = "WalletOverview2";
-
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     private TabLayout tabLayout;
-    private Thread updateThread;
-
-    private Integer lastTab;
+    private HandlerThread connThread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,29 +52,35 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
 
         Fabric.with(this, new Crashlytics());
 
-        if (updateThread == null) {
-            WifiDirectConnectionHandler wifiDirectConnectionHandler = new WifiDirectConnectionHandler(this);
-            new PepePay(Arrays.<IDeviceConnectionHandler>asList(wifiDirectConnectionHandler)).create(new File(this.getFilesDir(), "godWallets"), new File(this.getFilesDir(), "wallets"), new File(this.getFilesDir(), "private"), new File(this.getFilesDir(), "names"), new File(this.getFilesDir(), "options"), new File(this.getFilesDir(), "errols"), this);
+        WifiDirectConnectionHandler wifiDirectConnectionHandler = new WifiDirectConnectionHandler(this);
+        PepePay.create(Arrays.<IDeviceConnectionHandler>asList(/*wifiDirectConnectionHandler, new QRConnectionHandler(wifiDirectConnectionHandler, this), new SalutConnectionHandler(this)*/),
+                new File(this.getFilesDir(), "godWallets"),
+                new File(this.getFilesDir(), "wallets"),
+                new File(this.getFilesDir(), "private"),
+                new File(this.getFilesDir(), "names"),
+                new File(this.getFilesDir(), "options"),
+                new File(this.getFilesDir(), "errols"), this);
 
-            updateThread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    while (!Thread.interrupted()) {
-                        try {
-                            Thread.sleep(20);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        PepePay.CONNECTION_MANAGER.update();
-                    }
-                }
-            });
-            updateThread.start();
+        connThread = new HandlerThread("pepepay.connection");
+        connThread.start();
+        final Handler h = new Handler(connThread.getLooper());
 
-            Wallets.addWalletAddListener(this);
-        }
+        final Runnable[] connup = new Runnable[1];
+        connup[0] = new Runnable() {
+            @Override
+            public void run() {
+                PepePay.CONNECTION_MANAGER.update();
+                h.postDelayed((connup[0]), 100);
+            }
+        };
+
+        h.post(connup[0]);
+        h.post(connup[0]);
+
+
+        Wallets.addWalletAddListener(this);
+
         setContentView(R.layout.activity_wallet_overview2);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -109,6 +116,15 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
             }).setCancelable(false).create();
             greeting[0].show();
         }
+
+        if (savedInstanceState != null) {
+
+        } else {
+            if (mSectionsPagerAdapter.getCount() > 1) {
+                mViewPager.setCurrentItem(1);
+            }
+        }
+
     }
 
     @Override
@@ -139,6 +155,8 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
             }).create();
             greeting[0].show();
             return true;
+        } else if (id == R.id.action_createQR) {
+            startActivity(QRCreatorActivity.class);
         }
 
         return super.onOptionsItemSelected(item);
@@ -186,7 +204,6 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
 
     @Override
     protected void onPause() {
-        lastTab = mViewPager.getCurrentItem();
         super.onPause();
         Wallets.saveAll();
         PepePay.ERROL.saveErrols(PepePay.errolFile);
@@ -198,21 +215,18 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
     protected void onResume() {
         super.onResume();
         PepePay.CONNECTION_MANAGER.onResume();
-        if (lastTab == null && mSectionsPagerAdapter.getCount() > 1) {
-            mViewPager.setCurrentItem(1);
-        } else if (mSectionsPagerAdapter.getCount() > 1){
-            mViewPager.setCurrentItem(lastTab);
-        } else {
-            mViewPager.setCurrentItem(0);
-        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (updateThread != null) {
-            updateThread.interrupt();
-        }
+        Wallets.removeWalletAddListener(this);
+        connThread.quit();
     }
 
     private void refreshTabTitles() {
@@ -237,13 +251,10 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
 
         @Override
         public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
             if (position == 0) {
                 return WalletCreateFragment.newInstance();
             } else {
-                System.out.println(position + "  " + Wallets.getOwnWalletID(position - 1));
-                return WalletInfoFragment.newInstance(Wallets.getOwnWalletID(position - 1));
+                return WalletInfoFragment.newInstance(Wallets.getOwnWallet(position - 1));
             }
         }
 

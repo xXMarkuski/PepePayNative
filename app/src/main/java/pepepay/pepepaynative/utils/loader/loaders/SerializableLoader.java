@@ -6,7 +6,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-import pepepay.pepepaynative.utils.StringUtils;
+import pepepay.pepepaynative.utils.types.StringUtils;
 import pepepay.pepepaynative.utils.loader.Loader;
 
 

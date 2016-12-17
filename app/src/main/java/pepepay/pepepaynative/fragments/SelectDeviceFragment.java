@@ -16,38 +16,38 @@ import java.util.ArrayList;
 import pepepay.pepepaynative.PepePay;
 import pepepay.pepepaynative.R;
 import pepepay.pepepaynative.backend.social31.handler.IDevice;
-import pepepay.pepepaynative.backend.wallet2.Wallet;
 import pepepay.pepepaynative.utils.function.Function;
 import pepepay.pepepaynative.utils.function.Function2;
+import pepepay.pepepaynative.utils.ObjectManager;
 
 public class SelectDeviceFragment extends DialogFragment {
+
+    private static final String CALLBACK = "callback";
+
     private Function<Void, IDevice> callback;
-    private Wallet wallet;
     private Function2<Void, ArrayList<? extends IDevice>, ArrayList<? extends IDevice>> listener;
 
     public SelectDeviceFragment() {
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment SelectDeviceFragment.
-     */
-    public static SelectDeviceFragment newInstance(Wallet wallet, Function<Void, IDevice> callback) {
+    public static SelectDeviceFragment newInstance(Function<Void, IDevice> callback) {
         SelectDeviceFragment fragment = new SelectDeviceFragment();
         Bundle args = new Bundle();
+        args.putInt(CALLBACK, ObjectManager.add(callback));
         fragment.setArguments(args);
-        fragment.setCallback(callback);
-        fragment.setWallet(wallet);
         return fragment;
     }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        if(savedInstanceState != null){
+            callback = ObjectManager.getAndRemove(savedInstanceState.getInt(CALLBACK));
+        } else {
+            callback = ObjectManager.getAndRemove(getArguments().getInt(CALLBACK));
+        }
 
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final ArrayList<IDevice> devices = new ArrayList<>();
 
         final ArrayAdapter<IDevice> adapter = new ArrayAdapter<IDevice>(this.getContext(), android.R.layout.select_dialog_singlechoice, devices) {
@@ -110,11 +110,9 @@ public class SelectDeviceFragment extends DialogFragment {
         PepePay.CONNECTION_MANAGER.removeDeviceChangeListener(listener);
     }
 
-    public void setCallback(Function<Void, IDevice> callback) {
-        this.callback = callback;
-    }
-
-    public void setWallet(Wallet wallet) {
-        this.wallet = wallet;
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt(CALLBACK, ObjectManager.add(callback));
+        super.onSaveInstanceState(outState);
     }
 }

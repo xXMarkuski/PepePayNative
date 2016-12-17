@@ -3,7 +3,7 @@ package pepepay.pepepaynative.utils.loader;
 
 import java.util.HashMap;
 
-import pepepay.pepepaynative.utils.StringUtils;
+import pepepay.pepepaynative.utils.types.StringUtils;
 
 public class LoaderManager implements Loader<Object> {
     private HashMap<String, Loader> loaderMap = new HashMap<>();

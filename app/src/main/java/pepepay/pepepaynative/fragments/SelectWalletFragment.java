@@ -20,28 +20,41 @@ import pepepay.pepepaynative.backend.social31.packages.Parcel;
 import pepepay.pepepaynative.backend.wallet2.Wallet;
 import pepepay.pepepaynative.backend.wallet2.Wallets;
 import pepepay.pepepaynative.utils.function.Function;
-import pepepay.pepepaynative.utils.LongUtils;
-import pepepay.pepepaynative.utils.StringUtils;
+import pepepay.pepepaynative.utils.types.LongUtils;
+import pepepay.pepepaynative.utils.types.StringUtils;
+import pepepay.pepepaynative.utils.ObjectManager;
 
 public class SelectWalletFragment extends DialogFragment {
+    private static final String CONNECTION = "connection";
+    private static final String CALLBACK = "callback";
+
     private Function<Void, Wallet> callback;
     private Connection connection;
 
     public SelectWalletFragment() {
     }
 
+
     public static SelectWalletFragment newInstance(Connection connection, Function<Void, Wallet> callback) {
         SelectWalletFragment fragment = new SelectWalletFragment();
         Bundle args = new Bundle();
+        args.putInt(CONNECTION, ObjectManager.add(connection));
+        args.putInt(CALLBACK, ObjectManager.add(callback));
         fragment.setArguments(args);
-        fragment.setConnection(connection);
-        fragment.setCallback(callback);
         return fragment;
     }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        if(savedInstanceState != null){
+            connection = ObjectManager.getAndRemove(savedInstanceState.getInt(CONNECTION));
+            callback = ObjectManager.getAndRemove(savedInstanceState.getInt(CALLBACK));
+        } else {
+            connection = ObjectManager.getAndRemove(getArguments().getInt(CONNECTION));
+            callback = ObjectManager.getAndRemove(getArguments().getInt(CALLBACK));
+        }
+
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final ArrayList<Wallet> wallets = new ArrayList<>();
         final ArrayAdapter<Wallet> adapter = new ArrayAdapter<Wallet>(this.getContext(), android.R.layout.select_dialog_singlechoice, wallets) {
@@ -156,12 +169,10 @@ public class SelectWalletFragment extends DialogFragment {
         super.onDetach();
     }
 
-    public void setCallback(Function<Void, Wallet> callback) {
-        this.callback = callback;
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt(CONNECTION, ObjectManager.add(connection));
+        outState.putInt(CALLBACK, ObjectManager.add(callback));
+        super.onSaveInstanceState(outState);
     }
-
-    public void setConnection(Connection connection) {
-        this.connection = connection;
-    }
-
 }

@@ -21,38 +21,50 @@ import pepepay.pepepaynative.backend.social31.packages.Parcel;
 import pepepay.pepepaynative.backend.wallet2.Wallet;
 import pepepay.pepepaynative.backend.wallet2.Wallets;
 import pepepay.pepepaynative.backend.wallet2.transaction.Transaction;
+import pepepay.pepepaynative.utils.ObjectManager;
+import pepepay.pepepaynative.utils.types.StringUtils;
 import pepepay.pepepaynative.utils.function.Function;
-import pepepay.pepepaynative.utils.StringUtils;
 
 public class WalletInfoFragment extends Fragment implements Wallets.WalletsListener {
-    private Wallet wallet;
+    private static final String WALLET = "wallet";
+    private static final String FRAGMENTMANAGER = "fragmentmanager";
+
     private LinearLayout transOverview;
     private TextView walletName;
+
+    private Wallet wallet;
+    private int fragmentmanagerid;
 
     public WalletInfoFragment() {
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param id The id of the wallet
-     * @return A new instance of fragment WalletInfoFragment.
-     */
-    public static WalletInfoFragment newInstance(String id) {
+    public static WalletInfoFragment newInstance(Wallet wallet) {
         WalletInfoFragment fragment = new WalletInfoFragment();
         Bundle args = new Bundle();
+        args.putString(WALLET, wallet.getIdentifier());
         fragment.setArguments(args);
-        Wallet wallet = Wallets.getWallet(id);
-        if (wallet == null) throw new RuntimeException("wallet is null");
-        fragment.setWallet(wallet);
         return fragment;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        if (wallet == null) return null;
+        Wallet wallet = null;
+
+        if(savedInstanceState != null){
+            wallet = Wallets.getWallet(savedInstanceState.getString(WALLET));
+            fragmentmanagerid = savedInstanceState.getInt(FRAGMENTMANAGER);
+            ObjectManager.put(fragmentmanagerid, getFragmentManager());
+        } else {
+            wallet = Wallets.getWallet(getArguments().getString(WALLET));
+            fragmentmanagerid = ObjectManager.add(getFragmentManager());
+        }
+
+        this.wallet = wallet;
+
+        final Wallet finalWallet = wallet;
+
+        if (wallet == null) throw new RuntimeException("wallet is null");
 
         View v = inflater.inflate(R.layout.fragment_wallet_info, container, false);
         final FragmentManager fm = WalletInfoFragment.this.getFragmentManager();
@@ -62,71 +74,31 @@ public class WalletInfoFragment extends Fragment implements Wallets.WalletsListe
         walletChangeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                WalletChangeFragment.newInstance(wallet).show(fm, "dialog");
+                WalletChangeFragment.newInstance(finalWallet.getIdentifier()).show(fm, "dialog");
             }
         });
-       /* walletChangeButton.setOnLongClickListener(new View.OnLongClickListener() {
+
+       walletChangeButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                if (Wallets.isGodWallet(wallet)) {
-                    Wallets.removeGodWallet(wallet);
+                if (Wallets.isGodWallet(finalWallet)) {
+                    Wallets.removeGodWallet(finalWallet);
+                    System.out.println("removed God Wallet" + Wallets.getName(finalWallet));
                 } else {
-                    Wallets.addGodWallet(wallet);
+                    Wallets.addGodWallet(finalWallet);
+                    System.out.println("added God Wallet" + Wallets.getName(finalWallet));
                 }
 
                 System.out.println(PepePay.LOADER_MANAGER.save(Wallets.getGodWalletsIDs()));
                 return true;
             }
-        });*/
+        });
+
         final Button sendMoneyButton = (Button) v.findViewById(R.id.sendMoney);
         sendMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SelectDeviceFragment deviceSelector = SelectDeviceFragment.newInstance(wallet, new Function<Void, IDevice>() {
-                    @Override
-                    public Void eval(IDevice iDevice) {
-                        final Connection connection = PepePay.CONNECTION_MANAGER.connect(iDevice);
-                        if (connection.getTargetWalletID() != null) {
-                            if (Wallets.getWallet(connection.getTargetWalletID()) == null) {
-                                connection.send(Parcel.toParcel(StringUtils.multiplex(Connection.getWalletNoTransaction, connection.getTargetWalletID()), Connection.REQ), new Function<Void, String>() {
-                                    @Override
-                                    public Void eval(String s) {
-                                        try {
-                                            Wallets.addWallet((Wallet) PepePay.LOADER_MANAGER.load(s));
-                                            connection.send(Parcel.toParcel(StringUtils.multiplex(Connection.getName, connection.getTargetWalletID()), Connection.REQ), new Function<Void, String>() {
-                                                @Override
-                                                public Void eval(String s) {
-                                                    Wallets.addName(connection.getTargetWalletID(), s);
-                                                    connection.send(Parcel.toParcel(StringUtils.multiplex(Connection.beginTransCheck, wallet.getIdentifier()), Connection.REQ));
-                                                    TransactionFragment transactionFragment = TransactionFragment.newInstance(connection, WalletInfoFragment.this.wallet, wallet);
-                                                    transactionFragment.show(fm, "dialog");
-                                                    return null;
-                                                }
-                                            });
-                                        } catch (Throwable throwable) {
-                                            throwable.printStackTrace();
-                                        }
-                                        return null;
-                                    }
-                                });
-                            }
-                        } else {
-                            SelectWalletFragment walletSelector = SelectWalletFragment.newInstance(connection, new Function<Void, Wallet>() {
-                                @Override
-                                public Void eval(Wallet wallet) {
-                                    if (wallet == null) return null;
-                                    connection.send(Parcel.toParcel(StringUtils.multiplex(Connection.beginTransCheck, wallet.getIdentifier()), Connection.REQ));
-                                    TransactionFragment transactionFragment = TransactionFragment.newInstance(connection, WalletInfoFragment.this.wallet, wallet);
-                                    transactionFragment.show(fm, "dialog");
-                                    return null;
-                                }
-                            });
-                            walletSelector.show(fm, "dialog");
-                        }
-                        return null;
-                    }
-                });
-                deviceSelector.show(fm, "dialog");
+                sendMoney();
             }
         });
 
@@ -134,12 +106,77 @@ public class WalletInfoFragment extends Fragment implements Wallets.WalletsListe
 
         ArrayList<Transaction> transactions = wallet.getTransactionsChronologically();
         for (Transaction transaction : transactions) {
-            transOverview.addView(getView(transaction), 0);
+            transOverview.addView(getTransactionView(transaction, wallet.getIdentifier()), 0);
         }
 
         Wallets.addWalletAddListener(this);
 
         return v;
+    }
+
+    private void sendMoney(){
+        SelectDeviceFragment deviceSelector = SelectDeviceFragment.newInstance(new Function<Void, IDevice>() {
+            @Override
+            public Void eval(IDevice iDevice) {
+                final Connection connection = PepePay.CONNECTION_MANAGER.connect(iDevice);
+                findWallet(connection);
+                return null;
+            }
+        });
+
+        deviceSelector.show((FragmentManager) ObjectManager.get(fragmentmanagerid), "dialog");
+    }
+
+    private void findWallet(final Connection connection){
+        final Wallet finalWallet = wallet;
+        if (connection.getTargetWalletID() != null) {
+            if (Wallets.getWallet(connection.getTargetWalletID()) == null) {
+                connection.send(Parcel.toParcel(StringUtils.multiplex(Connection.getWalletNoTransaction, connection.getTargetWalletID()), Connection.REQ), new Function<Void, String>() {
+                    @Override
+                    public Void eval(String s) {
+                        try {
+                            Wallets.addWallet((Wallet) PepePay.LOADER_MANAGER.load(s));
+                            connection.send(Parcel.toParcel(StringUtils.multiplex(Connection.getName, connection.getTargetWalletID()), Connection.REQ), new Function<Void, String>() {
+                                @Override
+                                public Void eval(String s) {
+                                    Wallets.addName(connection.getTargetWalletID(), s);
+
+                                    connection.send(Parcel.toParcel(StringUtils.multiplex(Connection.beginTransCheck, finalWallet.getIdentifier()), Connection.REQ));
+                                    TransactionFragment transactionFragment = TransactionFragment.newInstance(connection, WalletInfoFragment.this.wallet, finalWallet);
+                                    transactionFragment.show((FragmentManager) ObjectManager.get(fragmentmanagerid), "dialog");
+
+                                    return null;
+                                }
+                            });
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
+                        return null;
+                    }
+                });
+            }
+        } else {
+            SelectWalletFragment walletSelector = SelectWalletFragment.newInstance(connection, new Function<Void, Wallet>() {
+                @Override
+                public Void eval(Wallet wallet) {
+                    if (wallet == null) return null;
+
+                    connection.send(Parcel.toParcel(StringUtils.multiplex(Connection.beginTransCheck, wallet.getIdentifier()), Connection.REQ));
+                    TransactionFragment transactionFragment = TransactionFragment.newInstance(connection, WalletInfoFragment.this.wallet, wallet);
+                    transactionFragment.show((FragmentManager) ObjectManager.get(fragmentmanagerid), "dialog");
+
+                    return null;
+                }
+            });
+            walletSelector.show((FragmentManager) ObjectManager.get(fragmentmanagerid), "dialog");
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString(WALLET, wallet.getIdentifier());
+        outState.putInt(FRAGMENTMANAGER, fragmentmanagerid);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -167,12 +204,13 @@ public class WalletInfoFragment extends Fragment implements Wallets.WalletsListe
 
     @Override
     public void balanceChange(final String walletID, final Transaction newTransaction) {
+
         PepePay.runOnUIThread(new Runnable() {
             @Override
             public void run() {
                 if (walletID.equals(wallet.getIdentifier())) {
                     walletName.setText(Wallets.getName(wallet) + ": " + wallet.getBalance());
-                    transOverview.addView(getView(newTransaction), 0);
+                    transOverview.addView(getTransactionView(newTransaction, walletID), 0);
                 }
             }
         });
@@ -183,29 +221,25 @@ public class WalletInfoFragment extends Fragment implements Wallets.WalletsListe
 
     }
 
-    public void setWallet(Wallet wallet) {
-        this.wallet = wallet;
-    }
-
-    public View getView(final Transaction transaction) {
+    private View getTransactionView(final Transaction transaction, String walletID) {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.transaction_small, null);
         int color = Color.BLACK;
         String textWallet = "";
         String textAmount = "";
-        if (transaction.getReceiver().equals(wallet.getIdentifier())) {
+        if (transaction.getReceiver().equals(walletID)) {
             color = this.getContext().getResources().getColor(android.R.color.holo_green_dark);
             textWallet = Wallets.getName(transaction.getSender());
             textAmount = "+" + transaction.getAmount();
-        } else if (transaction.getSender().equals(wallet.getIdentifier())) {
+        } else if (transaction.getSender().equals(walletID)) {
             color = this.getContext().getResources().getColor(android.R.color.holo_red_dark);
             textWallet = Wallets.getName(transaction.getReceiver());
             textAmount = "-" + transaction.getAmount();
         }
 
-        ((TextView)view.findViewById(R.id.walletName)).setText(textWallet);
+        ((TextView) view.findViewById(R.id.walletName)).setText(textWallet);
 
-        ((TextView)view.findViewById(R.id.amount)).setText(textAmount);
-        ((TextView)view.findViewById(R.id.amount)).setTextColor(color);
+        ((TextView) view.findViewById(R.id.amount)).setText(textAmount);
+        ((TextView) view.findViewById(R.id.amount)).setTextColor(color);
 
         view.findViewById(R.id.cardClickable).setOnClickListener(new View.OnClickListener() {
             @Override

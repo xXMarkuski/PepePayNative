@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 import pepepay.pepepaynative.PepePay;
 import pepepay.pepepaynative.backend.social31.connection.Connection;
-import pepepay.pepepaynative.utils.LongUtils;
+import pepepay.pepepaynative.utils.types.LongUtils;
 
 public class Parcel implements Serializable {
 

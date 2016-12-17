@@ -8,7 +8,7 @@ import java.util.Comparator;
 import pepepay.pepepaynative.PepePay;
 import pepepay.pepepaynative.backend.wallet2.Wallet;
 import pepepay.pepepaynative.backend.wallet2.Wallets;
-import pepepay.pepepaynative.utils.StringUtils;
+import pepepay.pepepaynative.utils.types.StringUtils;
 import pepepay.pepepaynative.utils.encryption.EncryptionUtils;
 
 public class Transaction implements Serializable {

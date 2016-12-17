@@ -20,8 +20,14 @@ import pepepay.pepepaynative.backend.social31.packages.Parcel;
 import pepepay.pepepaynative.backend.wallet2.Wallet;
 import pepepay.pepepaynative.backend.wallet2.Wallets;
 import pepepay.pepepaynative.backend.wallet2.transaction.Transaction;
+import pepepay.pepepaynative.utils.ObjectManager;
 
 public class TransactionFragment extends DialogFragment {
+    private static final String CONNECTION = "connection";
+    private static final String TOWALLET = "towallet";
+    private static final String FROMWALLET = "fromwallet";
+
+
     private Connection connection;
     private Wallet from;
     private Wallet to;
@@ -29,25 +35,31 @@ public class TransactionFragment extends DialogFragment {
     public TransactionFragment() {
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment TransactionFragment.
-     */
     public static TransactionFragment newInstance(Connection connection, Wallet from, Wallet to) {
         TransactionFragment fragment = new TransactionFragment();
         Bundle args = new Bundle();
+        args.putInt(CONNECTION, ObjectManager.add(connection));
+        args.putString(TOWALLET, to.getIdentifier());
+        args.putString(FROMWALLET, from.getIdentifier());
         fragment.setArguments(args);
-        fragment.setConnection(connection);
-        fragment.setFrom(from);
-        fragment.setTo(to);
         return fragment;
     }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Bundle b;
+        if(savedInstanceState != null){
+            b=savedInstanceState;
+        }else {
+            b=getArguments();
+        }
+
+        connection = ObjectManager.getAndRemove(b.getInt(CONNECTION));
+        to = Wallets.getWallet(b.getString(TOWALLET));
+        from = Wallets.getWallet(b.getString(FROMWALLET));
+
+
         View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_transaction, null);
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.createTransaction).setView(view).setIcon(android.R.drawable.ic_menu_info_details);
@@ -139,6 +151,13 @@ public class TransactionFragment extends DialogFragment {
         return dialog;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt(CONNECTION, ObjectManager.add(connection));
+        outState.putString(TOWALLET, to.getIdentifier());
+        outState.putString(FROMWALLET, from.getIdentifier());
+        super.onSaveInstanceState(outState);
+    }
 
     public void setConnection(Connection connection) {
         this.connection = connection;

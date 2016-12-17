@@ -1,4 +1,4 @@
-package pepepay.pepepaynative.utils;
+package pepepay.pepepaynative.utils.types;
 
 import org.spongycastle.util.encoders.Base64;
 

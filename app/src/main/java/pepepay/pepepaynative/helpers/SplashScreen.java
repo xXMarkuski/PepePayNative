@@ -1,4 +1,4 @@
-package pepepay.pepepaynative.utils;
+package pepepay.pepepaynative.helpers;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
