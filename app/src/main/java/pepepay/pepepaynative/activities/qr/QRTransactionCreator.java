@@ -13,7 +13,7 @@ import pepepay.pepepaynative.backend.social31.handler.local.LocalConnectionHandl
 import pepepay.pepepaynative.backend.social31.handler.qrCode.QRCreationHandler;
 import pepepay.pepepaynative.backend.social31.handler.wifiDirect.WifiDirectBackend;
 import pepepay.pepepaynative.backend.wallet2.Wallet;
-import pepepay.pepepaynative.fragments.SelectWalletFragment;
+import pepepay.pepepaynative.fragments.walletoverview.SelectWalletFragment;
 import pepepay.pepepaynative.utils.function.Function;
 import pepepay.pepepaynative.utils.function.Function2;
 

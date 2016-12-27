@@ -22,7 +22,7 @@
     <string name="createWallet">Create Wallet</string>
     <string name="tosGreeting">By using this app you agree with our terms of service</string>
     <string name="showTos">Show terms of service</string>
-    <string name="action_about">About</string>
+    <string name="about">About</string>
     <string name="optional"> (Optional) </string>
     <string name="send_money">Send Money</string>
     <string name="unnamed_wallet">Unnamed Wallet</string>
@@ -38,4 +38,29 @@
     <string name="editWallet">INFO</string>
     <string name="aboutText" translatable="false">Made by TDMzdA== alias Markus Toran, Roman Amblank, Aaron Alef und Benjamin Borrell</string>
     <string name="exitingApp">Exiting app due to finished Transaction</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="pref_read_agb">Read AGB?</string>
+    <string name="pref_read_agb_summ">Did you read the AGB?</string>
+    <string name="pref_general">General Settings</string>
+    <string name="pref_username_summ">Set a name how you will be seen by others</string>
+    <string name="pref_username">Username</string>
+    <string name="lightTheme">Light Theme</string>
+    <string name="darkTheme">Dark Theme</string>
+    <string name="pref_app">App Setting</string>
+    <string name="pref_debug_summ">Enable debug mode</string>
+    <string name="pref_debug">Debug</string>
+    <string name="pref_theme_dialog_title">Set Theme</string>
+    <string name="pref_theme">Theme</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_example">Example action</string>
+    <string name="settings">Settings</string>
 </resources>

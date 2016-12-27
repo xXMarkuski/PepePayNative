@@ -37,12 +37,12 @@
         <activity
             android:name=".backend.social31.handler.qrCode.QRConnectionHandler$QRConnectionHandlerActivity"
             android:screenOrientation="landscape" />
-        <activity android:name=".activities.qr.QRCreatorActivity" />
 
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="d48dc3191c53cf51b261bbf6cb01f4e4256cd2ae" />
 
+        <activity android:name=".MainActivity"></activity>
     </application>
 
 </manifest>

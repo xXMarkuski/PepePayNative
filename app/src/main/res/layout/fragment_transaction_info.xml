@@ -3,10 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="8dp"
-    tools:context="pepepay.pepepaynative.fragments.TransactionInfoFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-
+    tools:context="pepepay.pepepaynative.fragments.walletoverview.TransactionInfoFragment">
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -2,9 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="pepepay.pepepaynative.fragments.TransactionFragment">
-
-    <!-- TODO: Update blank fragment layout -->
+    tools:context="pepepay.pepepaynative.fragments.walletoverview.TransactionFragment">
 
     <ScrollView
         android:layout_width="match_parent"

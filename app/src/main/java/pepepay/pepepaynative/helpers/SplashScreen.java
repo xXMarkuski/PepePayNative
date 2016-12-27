@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import pepepay.pepepaynative.WalletOverview2;
+import pepepay.pepepaynative.MainActivity;
 
 public class SplashScreen extends AppCompatActivity {
 
@@ -12,7 +12,7 @@ public class SplashScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Intent intent = new Intent(this, WalletOverview2.class);
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
     }

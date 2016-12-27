@@ -1,4 +1,4 @@
-package pepepay.pepepaynative.fragments;
+package pepepay.pepepaynative.fragments.walletoverview;
 
 import android.graphics.Color;
 import android.os.Bundle;

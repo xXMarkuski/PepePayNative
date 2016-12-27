@@ -42,11 +42,11 @@ public class QRSelectTypeFragment extends Fragment {
                     container.removeAllViews();
                 }
                 if (i == 0) {
-                    transaction.replace(R.id.qrPlaceholder, QRDeviceCreator.newInstance());
+                    transaction.replace(R.id.container, QRDeviceCreator.newInstance());
                 } else if (i == 1) {
-                    transaction.replace(R.id.qrPlaceholder, QRWalletCreator.newInstance());
+                    transaction.replace(R.id.container, QRWalletCreator.newInstance());
                 } else if (i == 2) {
-                    transaction.replace(R.id.qrPlaceholder, QRTransactionCreator.newInstance());
+                    transaction.replace(R.id.container, QRTransactionCreator.newInstance());
                 }
                 transaction.addToBackStack(null).commit();
             }

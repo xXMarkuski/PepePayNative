@@ -6,9 +6,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.HandlerThread;
-import android.os.Looper;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -20,21 +18,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.crashlytics.android.Crashlytics;
-
-import java.io.File;
-import java.util.Arrays;
-
-import io.fabric.sdk.android.Fabric;
-import pepepay.pepepaynative.activities.qr.QRCreatorActivity;
-import pepepay.pepepaynative.backend.social31.handler.IDeviceConnectionHandler;
-import pepepay.pepepaynative.backend.social31.handler.wifiDirect.WifiDirectConnectionHandler;
-import pepepay.pepepaynative.backend.social31.handler.wifiSalut.SalutConnectionHandler;
 import pepepay.pepepaynative.backend.wallet2.Wallet;
 import pepepay.pepepaynative.backend.wallet2.Wallets;
 import pepepay.pepepaynative.backend.wallet2.transaction.Transaction;
+import pepepay.pepepaynative.fragments.SettingsFragment;
 import pepepay.pepepaynative.fragments.WalletCreateFragment;
-import pepepay.pepepaynative.fragments.WalletInfoFragment;
+import pepepay.pepepaynative.fragments.walletoverview.WalletInfoFragment;
 import pepepay.pepepaynative.utils.FileUtils;
 import pepepay.pepepaynative.utils.Options;
 
@@ -50,10 +39,10 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
         setTheme(R.style.LightTheme_NoActionBar);
         super.onCreate(savedInstanceState);
 
-        Fabric.with(this, new Crashlytics());
+        /*Fabric.with(this, new Crashlytics());
 
         WifiDirectConnectionHandler wifiDirectConnectionHandler = new WifiDirectConnectionHandler(this);
-        PepePay.create(Arrays.<IDeviceConnectionHandler>asList(/*wifiDirectConnectionHandler, new QRConnectionHandler(wifiDirectConnectionHandler, this), new SalutConnectionHandler(this)*/),
+        PepePay.create(Arrays.<IDeviceConnectionHandler>asList(/*wifiDirectConnectionHandler, new QRConnectionHandler(wifiDirectConnectionHandler, this), new SalutConnectionHandler(this)),
                 new File(this.getFilesDir(), "godWallets"),
                 new File(this.getFilesDir(), "wallets"),
                 new File(this.getFilesDir(), "private"),
@@ -75,10 +64,10 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
         };
 
         h.post(connup[0]);
-        h.post(connup[0]);
+        h.post(connup[0]);*/
 
 
-        Wallets.addWalletAddListener(this);
+        //Wallets.addWalletAddListener(this);
 
         setContentView(R.layout.activity_wallet_overview2);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -155,8 +144,10 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
             }).create();
             greeting[0].show();
             return true;
-        } else if (id == R.id.action_createQR) {
+        } /*else if (id == R.id.action_createQR) {
             startActivity(QRCreatorActivity.class);
+        }*/ else if(id == R.id.action_settings){
+            getSupportFragmentManager().beginTransaction().replace(android.R.id.content, SettingsFragment.newInstance()).addToBackStack(null).commit();
         }
 
         return super.onOptionsItemSelected(item);

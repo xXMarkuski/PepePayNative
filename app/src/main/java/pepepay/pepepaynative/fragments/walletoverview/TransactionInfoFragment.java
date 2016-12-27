@@ -1,4 +1,4 @@
-package pepepay.pepepaynative.fragments;
+package pepepay.pepepaynative.fragments.walletoverview;
 
 
 import android.app.AlertDialog;

@@ -1,4 +1,4 @@
-package pepepay.pepepaynative.fragments;
+package pepepay.pepepaynative.fragments.walletoverview;
 
 
 import android.app.AlertDialog;
@@ -11,13 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import pepepay.pepepaynative.R;
-import pepepay.pepepaynative.backend.social31.handler.qrCode.QRCreationHandler;
-import pepepay.pepepaynative.backend.social31.handler.wifiDirect.WifiDirectBackend;
 import pepepay.pepepaynative.backend.wallet2.Wallet;
 import pepepay.pepepaynative.backend.wallet2.Wallets;
 
