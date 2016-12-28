@@ -1,11 +1,18 @@
 package pepepay.pepepaynative;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.IntentCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
+import android.view.TextureView;
 import android.view.View;
+import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
@@ -26,6 +33,7 @@ import pepepay.pepepaynative.backend.wallet2.Wallets;
 import pepepay.pepepaynative.fragments.SettingsFragment;
 import pepepay.pepepaynative.fragments.WalletCreateFragment;
 import pepepay.pepepaynative.fragments.walletoverview.WalletOverview;
+import pepepay.pepepaynative.utils.Options;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,14 +43,17 @@ public class MainActivity extends AppCompatActivity {
     private final PrimaryDrawerItem wallets = new PrimaryDrawerItem().withName("Wallets").withIdentifier(1).withIcon(GoogleMaterial.Icon.gmd_account_balance_wallet);
     private final PrimaryDrawerItem createQR = new PrimaryDrawerItem().withName(R.string.action_createQR).withIdentifier(2).withIcon(GoogleMaterial.Icon.gmd_attach_file);
     private final PrimaryDrawerItem settings = new PrimaryDrawerItem().withName(R.string.settings).withIdentifier(1000).withIcon(GoogleMaterial.Icon.gmd_settings);
-    private final PrimaryDrawerItem about = new PrimaryDrawerItem().withName(R.string.about).withIdentifier(1001);
+    private final PrimaryDrawerItem about = new PrimaryDrawerItem().withName(R.string.about).withIdentifier(1001).withIcon(GoogleMaterial.Icon.gmd_info);
+    private SharedPreferences.OnSharedPreferenceChangeListener listener;
+    private Drawer[] drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(R.style.LightTheme_NoActionBar);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        System.out.println(sharedPref.getAll());
+        setTheme(Options.getTheme(sharedPref.getString(Options.THEME, "light")));
         setContentView(R.layout.activity_main);
-
 
         Fabric.with(this, new Crashlytics());
 
@@ -52,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
                 new File(this.getFilesDir(), "wallets"),
                 new File(this.getFilesDir(), "private"),
                 new File(this.getFilesDir(), "names"),
-                new File(this.getFilesDir(), "options"),
                 new File(this.getFilesDir(), "errols"), this);
 
         connThread = new HandlerThread("pepepay.connection");
@@ -71,18 +81,40 @@ public class MainActivity extends AppCompatActivity {
         h.post(connup[0]);
         h.post(connup[0]);
 
+        listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+            @Override
+            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                if (key.equals(Options.THEME)) {
+                    finish();
+                    final Intent intent = getIntent();
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                }
+            }
+        };
+        sharedPref.registerOnSharedPreferenceChangeListener(listener);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Drawer s = new DrawerBuilder()
+        drawer = new Drawer[1];
+
+        drawer[0] = new DrawerBuilder()
                 .withActivity(this)
                 .withTranslucentStatusBar(true)
                 .withToolbar(toolbar)
                 .withActionBarDrawerToggle(true)
                 .withActionBarDrawerToggleAnimated(true)
+                .withHasStableIds(true)
+                .withSavedInstance(savedInstanceState)
                 .withCloseOnClick(true)
+                .withFireOnInitialOnClick(true)
+                .withGenerateMiniDrawer(true)
+                .withSelectedItem(wallets.getIdentifier())
                 .addDrawerItems(
+                        new PrimaryDrawerItem().withName("Simple Pay").withIcon(GoogleMaterial.Icon.gmd_account_balance).withEnabled(false).withDisabledIconColorRes(R.color.primary_dark),
+                        new DividerDrawerItem(),
                         createWallet, wallets,
                         new DividerDrawerItem(),
                         createQR,
@@ -91,29 +123,30 @@ public class MainActivity extends AppCompatActivity {
                 ).withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                        if(drawerItem == null) return true;
+                        Fragment nextFragment = null;
                         if (drawerItem.equals(createWallet.getIdentifier())) {
-                            getSupportFragmentManager().beginTransaction().replace(R.id.container, WalletCreateFragment.newInstance()).commit();
-                            return true;
+                            nextFragment = WalletCreateFragment.newInstance();
                         } else if (drawerItem.equals(wallets.getIdentifier())) {
-                            getSupportFragmentManager().beginTransaction().replace(R.id.container, WalletOverview.newInstance()).commit();
-                            return true;
+                            nextFragment = WalletOverview.newInstance();
                         } else if (drawerItem.equals(createQR.getIdentifier())) {
-                            getSupportFragmentManager().beginTransaction().replace(R.id.container, QRSelectTypeFragment.newInstance()).commit();
-                            return true;
-                        }else if (drawerItem.equals(settings.getIdentifier())) {
-                            getSupportFragmentManager().beginTransaction().replace(R.id.container, SettingsFragment.newInstance()).commit();
-                            return true;
+                            nextFragment = QRSelectTypeFragment.newInstance();
+                        } else if (drawerItem.equals(settings.getIdentifier())) {
+                            nextFragment = SettingsFragment.newInstance();
                         } else if (drawerItem.equals(about.getIdentifier())) {
-                            //getSupportFragmentManager().beginTransaction().replace(R.id.container, SettingsFragment.newInstance()).commit();
-                            return true;
                         }
-                        return false;
+
+                        if (nextFragment != null) {
+                            getSupportFragmentManager().beginTransaction().replace(R.id.container, nextFragment).commit();
+                            if (drawer[0] != null) drawer[0].closeDrawer();
+                        }
+                        return true;
                     }
                 })
                 .build();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        s.getActionBarDrawerToggle().setDrawerIndicatorEnabled(true);
+        drawer[0].getActionBarDrawerToggle().setDrawerIndicatorEnabled(true);
     }
 
     @Override
@@ -121,7 +154,6 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         Wallets.saveAll();
         PepePay.ERROL.saveErrols(PepePay.errolFile);
-        PepePay.OPTIONS.save(PepePay.optionsFile);
         PepePay.CONNECTION_MANAGER.onPause();
     }
 
@@ -135,5 +167,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         connThread.quit();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        drawer[0].saveInstanceState(outState);
+        super.onSaveInstanceState(outState);
     }
 }

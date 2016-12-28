@@ -33,10 +33,7 @@ public class PepePay {
     public static File walletFile;
     public static File privateFile;
     public static File nameFile;
-    public static File optionsFile;
     public static File errolFile;
-
-    public static Options OPTIONS;
 
     public static ConnectionManager CONNECTION_MANAGER;
     public static Activity ACTIVITY;
@@ -46,7 +43,7 @@ public class PepePay {
         ACTIVITY.runOnUiThread(runnable);
     }
 
-    public static void create(List<IDeviceConnectionHandler> handlers, File godWalletsFile, File walletFile, File privateFile, File nameFile, File optionsFile, File errolFile, Activity activity) {
+    public static void create(List<IDeviceConnectionHandler> handlers, File godWalletsFile, File walletFile, File privateFile, File nameFile, File errolFile, Activity activity) {
         //TODO: Make this great again
         if(PepePay.godWalletsFile != null) return;
 
@@ -65,7 +62,6 @@ public class PepePay {
         PepePay.walletFile = walletFile;
         PepePay.privateFile = privateFile;
         PepePay.nameFile = nameFile;
-        PepePay.optionsFile = optionsFile;
         PepePay.errolFile = errolFile;
 
         ERROL = new Errol();
@@ -87,8 +83,6 @@ public class PepePay {
         if (nameFile.exists()) {
             Wallets.loadNames(nameFile);
         }
-
-        OPTIONS = Options.load(optionsFile);
     }
 
 }

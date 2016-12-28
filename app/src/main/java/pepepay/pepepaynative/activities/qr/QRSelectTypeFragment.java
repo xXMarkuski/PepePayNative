@@ -29,7 +29,7 @@ public class QRSelectTypeFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_qr_select_type, container);
+        View view = inflater.inflate(R.layout.fragment_qr_select_type, container, false);
         ListView selector = (ListView) view.findViewById(R.id.qrTypeSelector);
         ArrayList<String> types = new ArrayList<String>(Arrays.asList(getString(R.string.createDeviceQR), getString(R.string.createWalletQR), getString(R.string.createTransactionQR)));
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.select_dialog_item, types);
@@ -37,7 +37,7 @@ public class QRSelectTypeFragment extends Fragment {
         selector.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                 if (container != null) {
                     container.removeAllViews();
                 }
@@ -52,6 +52,6 @@ public class QRSelectTypeFragment extends Fragment {
             }
         });
 
-        return super.onCreateView(inflater, container, savedInstanceState);
+        return view;
     }
 }

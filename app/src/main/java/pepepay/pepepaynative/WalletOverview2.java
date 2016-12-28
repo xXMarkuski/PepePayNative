@@ -81,7 +81,9 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
-        if (!PepePay.OPTIONS.get(Options.STANDARD_FORM_CONTRACT, false)) {
+
+        //TODO:implement this in the new stuff
+        /*if (!PepePay.OPTIONS.get(Options.STANDARD_FORM_CONTRACT, false)) {
             final AlertDialog.Builder builder = new AlertDialog.Builder(this);
             final Dialog[] greeting = new Dialog[]{null};
             greeting[0] = builder.setMessage(R.string.tosGreeting).setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
@@ -104,7 +106,7 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
                 }
             }).setCancelable(false).create();
             greeting[0].show();
-        }
+        }*/
 
         if (savedInstanceState != null) {
 
@@ -134,12 +136,12 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     final AlertDialog.Builder builder = new AlertDialog.Builder(WalletOverview2.this);
-                    builder.setMessage(FileUtils.readAsset(Options.STANDARD_FORM_CONTRACT)).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    /*builder.setMessage(FileUtils.readAsset(Options.STANDARD_FORM_CONTRACT)).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             greeting[0].show();
                         }
-                    }).create().show();
+                    }).create().show();*/
                 }
             }).create();
             greeting[0].show();
@@ -198,7 +200,6 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
         super.onPause();
         Wallets.saveAll();
         PepePay.ERROL.saveErrols(PepePay.errolFile);
-        PepePay.OPTIONS.save(PepePay.optionsFile);
         PepePay.CONNECTION_MANAGER.onPause();
     }
 
