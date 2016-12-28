@@ -33,6 +33,8 @@ public class SalutConnectionHandler implements IDeviceConnectionHandler<SalutCon
 
     private final Activity activity;
     private ConnectionManager connManager;
+    private Thread scanThread;
+    public Boolean discovering = false;
 
     private ArrayList<WifiSalutDevice> availableDevices = new ArrayList<>();
 
@@ -68,48 +70,55 @@ public class SalutConnectionHandler implements IDeviceConnectionHandler<SalutCon
             }
         });
 
-        while(true) {
-            if(!network.isDiscovering) {
+        scanThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
                 discoverServices();
             }
-        }
+        });
+        discovering = true;
+        scanThread.start();
     }
 
     private void discoverServices(){
-        final ArrayList<WifiSalutDevice> oldDevices = new ArrayList<>(availableDevices);
-        final ArrayList<WifiSalutDevice> newDevices = new ArrayList<>();
-        final ArrayList<WifiSalutDevice> goneDevices = new ArrayList<>();
+        while(true) {
+            if (!network.isDiscovering && discovering) {
+                final ArrayList<WifiSalutDevice> oldDevices = new ArrayList<>(availableDevices);
+                final ArrayList<WifiSalutDevice> newDevices = new ArrayList<>();
+                final ArrayList<WifiSalutDevice> goneDevices = new ArrayList<>();
 
-        availableDevices.clear();
-        network.discoverWithTimeout(new SalutCallback() {
-            @Override
-            public void call() {
-                for(SalutDevice dev : network.foundDevices) {
-                    WifiSalutDevice device = new WifiSalutDevice(dev);
-                    availableDevices.add(device);
-                    Boolean isNew = true;
-                    for(WifiSalutDevice oldDev : oldDevices){
-                        if(device.equals(oldDev)){
-                            isNew = false;
+                availableDevices.clear();
+                network.discoverWithTimeout(new SalutCallback() {
+                    @Override
+                    public void call() {
+                        for (SalutDevice dev : network.foundDevices) {
+                            WifiSalutDevice device = new WifiSalutDevice(dev);
+                            availableDevices.add(device);
+                            Boolean isNew = true;
+                            for (WifiSalutDevice oldDev : oldDevices) {
+                                if (device.equals(oldDev)) {
+                                    isNew = false;
+                                }
+                            }
+                            if (isNew) {
+                                newDevices.add(device);
+                            }
                         }
+                        for (WifiSalutDevice dev : oldDevices) {
+                            if (!availableDevices.contains(dev)) {
+                                goneDevices.add(dev);
+                            }
+                        }
+                        connManager.devicesChanged(newDevices, goneDevices);
                     }
-                    if(isNew){
-                        newDevices.add(device);
+                }, new SalutCallback() {
+                    @Override
+                    public void call() {
+                        connManager.devicesChanged(newDevices, oldDevices);
                     }
-                }
-                for(WifiSalutDevice dev : oldDevices) {
-                    if(!availableDevices.contains(dev)) {
-                        goneDevices.add(dev);
-                    }
-                }
-                connManager.devicesChanged(newDevices, goneDevices);
+                }, REFRESH_TIME);
             }
-        }, new SalutCallback() {
-            @Override
-            public void call() {
-                connManager.devicesChanged(newDevices, oldDevices);
-            }
-        }, REFRESH_TIME);
+        }
     }
 
     @Override
@@ -119,7 +128,6 @@ public class SalutConnectionHandler implements IDeviceConnectionHandler<SalutCon
 
     @Override
     public void onPause() {
-
     }
 
     @Override
