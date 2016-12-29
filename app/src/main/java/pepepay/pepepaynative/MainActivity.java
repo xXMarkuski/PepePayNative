@@ -10,6 +10,7 @@ import android.support.v4.content.IntentCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
+import android.util.TypedValue;
 import android.view.TextureView;
 import android.view.View;
 import android.widget.TextView;
@@ -30,6 +31,7 @@ import pepepay.pepepaynative.activities.qr.QRSelectTypeFragment;
 import pepepay.pepepaynative.backend.social31.handler.IDeviceConnectionHandler;
 import pepepay.pepepaynative.backend.social31.handler.wifiDirect.WifiDirectConnectionHandler;
 import pepepay.pepepaynative.backend.wallet2.Wallets;
+import pepepay.pepepaynative.fragments.AboutFragment;
 import pepepay.pepepaynative.fragments.SettingsFragment;
 import pepepay.pepepaynative.fragments.WalletCreateFragment;
 import pepepay.pepepaynative.fragments.walletoverview.WalletOverview;
@@ -98,6 +100,9 @@ public class MainActivity extends AppCompatActivity {
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        TypedValue enabledTextColor = new TypedValue();
+        getTheme().resolveAttribute(R.attr.material_drawer_primary_text, enabledTextColor, true);
+
         drawer = new Drawer[1];
 
         drawer[0] = new DrawerBuilder()
@@ -113,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
                 .withGenerateMiniDrawer(true)
                 .withSelectedItem(wallets.getIdentifier())
                 .addDrawerItems(
-                        new PrimaryDrawerItem().withName("Simple Pay").withIcon(GoogleMaterial.Icon.gmd_account_balance).withEnabled(false).withDisabledIconColorRes(R.color.primary_dark),
+                        new PrimaryDrawerItem().withName("Simple Pay").withIcon(R.mipmap.ic_launcher).withEnabled(false).withDisabledTextColor(enabledTextColor.data),
                         new DividerDrawerItem(),
                         createWallet, wallets,
                         new DividerDrawerItem(),
@@ -134,10 +139,11 @@ public class MainActivity extends AppCompatActivity {
                         } else if (drawerItem.equals(settings.getIdentifier())) {
                             nextFragment = SettingsFragment.newInstance();
                         } else if (drawerItem.equals(about.getIdentifier())) {
+                            nextFragment = AboutFragment.newInstance();
                         }
 
                         if (nextFragment != null) {
-                            getSupportFragmentManager().beginTransaction().replace(R.id.container, nextFragment).commit();
+                            getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.container, nextFragment).commit();
                             if (drawer[0] != null) drawer[0].closeDrawer();
                         }
                         return true;

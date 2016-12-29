@@ -70,7 +70,11 @@ public class WalletOverview extends Fragment implements Wallets.WalletsListener 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ((ViewGroup) tabLayout.getParent()).removeView(tabLayout);
+        if(tabLayout != null){
+            if(tabLayout.getParent() != null){
+                ((ViewGroup) tabLayout.getParent()).removeView(tabLayout);
+            }
+        }
     }
 
     @Override

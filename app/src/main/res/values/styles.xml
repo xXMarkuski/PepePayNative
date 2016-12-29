@@ -5,6 +5,9 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:theme">@style/LightTheme</item>
+        <item name="titleTextColor">@color/material_drawer_dark_primary_text</item>
+        <item name="titleTextColorSecondary">@color/material_drawer_dark_secondary_text</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
 
         <item name="material_drawer_background">@color/material_drawer_background</item>
         <item name="material_drawer_primary_text">@color/material_drawer_primary_text</item>
@@ -16,6 +19,11 @@
         <item name="material_drawer_selected_text">@color/material_drawer_selected_text</item>
         <item name="material_drawer_header_selection_text">@color/material_drawer_header_selection_text</item>
 
+    </style>
+
+    <style name="DrawerArrowStyle" parent="@style/Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">true</item>
+        <item name="color">@color/material_drawer_dark_secondary_text</item>
     </style>
 
     <style name="LightTheme.NoActionBar" parent="LightTheme">
@@ -34,6 +42,8 @@
     <style name="DarkTheme" parent="PreferenceFixTheme">
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:theme">@style/DarkTheme</item>
+        <item name="titleTextColor">@color/material_drawer_dark_primary_text</item>
+        <item name="titleTextColorSecondary">@color/material_drawer_dark_secondary_text</item>
 
         <item name="material_drawer_background">@color/material_drawer_dark_background</item>
         <item name="material_drawer_primary_text">@color/material_drawer_dark_primary_text</item>

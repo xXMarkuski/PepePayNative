@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <attr name="theme" format="reference"/>
+    <attr name="titleTextColorSecondary" format="color"/>
+    <attr name="titleTextColor" format="color"/>
 </resources>

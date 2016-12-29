@@ -41,9 +41,10 @@ dependencies {
         transitive = true
     }
 
-    compile 'com.mikepenz:google-material-typeface:2.2.0.3.original@aar'  //Google Material Icons
+    //Google Material Icons
 
 
+    compile 'com.mikepenz:google-material-typeface:2.2.0.3.original@aar'
     compile 'com.google.guava:guava:20.0'
     compile 'com.android.support:appcompat-v7:25.1.0'
     compile 'com.android.support:design:25.1.0'

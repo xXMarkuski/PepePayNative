@@ -38,8 +38,6 @@
     <string name="editWallet">INFO</string>
     <string name="aboutText" translatable="false">Made by TDMzdA== alias Markus Toran, Roman Amblank, Aaron Alef und Benjamin Borrell</string>
     <string name="exitingApp">Exiting app due to finished Transaction</string>
-    <string name="action_settings">Settings</string>
-
     <string name="pref_read_agb">Read AGB?</string>
     <string name="pref_read_agb_summ">Did you read the AGB?</string>
     <string name="pref_general">General Settings</string>
@@ -53,14 +51,8 @@
     <string name="pref_theme_dialog_title">Set Theme</string>
     <string name="pref_theme">Theme</string>
     <string name="title_activity_main">MainActivity</string>
-
-    <string name="title_section1">Section 1</string>
-    <string name="title_section2">Section 2</string>
-    <string name="title_section3">Section 3</string>
-
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
-    <string name="action_example">Example action</string>
     <string name="settings">Settings</string>
+
 </resources>

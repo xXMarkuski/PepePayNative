@@ -12,7 +12,9 @@
         android:layout_height="match_parent"
         android:layout_gravity="center_vertical|center_horizontal"
         app:tabGravity="center"
-        app:tabMode="scrollable" />
+        app:tabMode="scrollable"
+        app:tabSelectedTextColor="?attr/titleTextColor"
+        app:tabTextColor="?attr/titleTextColorSecondary"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/wallet_container"

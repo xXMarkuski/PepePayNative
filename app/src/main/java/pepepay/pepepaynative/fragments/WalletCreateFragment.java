@@ -1,6 +1,7 @@
 package pepepay.pepepaynative.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +16,10 @@ import pepepay.pepepaynative.backend.wallet2.Wallets;
 import pepepay.pepepaynative.backend.wallet2.transaction.Transaction;
 
 public class WalletCreateFragment extends Fragment implements Wallets.WalletsListener {
+
+    private static final String BUNDLE_NAME = "name";
+    private static final String BUNDLE_PIN = "pin";
+    private static final String BUNDLE_BUTTON_STATE = "buttonstate";
 
     private  String TAG = "WalletCreateFragment";
 
@@ -44,7 +49,7 @@ public class WalletCreateFragment extends Fragment implements Wallets.WalletsLis
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Wallets.generateAndAddWallet(11, nameSelector.getText() + "", pinSelector.getText() + "", WalletCreateFragment.this);
+                Wallets.generateAndAddWallet(12, nameSelector.getText() + "", pinSelector.getText() + "", WalletCreateFragment.this);
                 nameSelector.setText("");
                 pinSelector.setText("");
                 Log.d(TAG, "unclickable");
@@ -52,6 +57,11 @@ public class WalletCreateFragment extends Fragment implements Wallets.WalletsLis
             }
         });
 
+        if(savedInstanceState != null){
+            nameSelector.setText(savedInstanceState.getString(BUNDLE_NAME));
+            pinSelector.setText(savedInstanceState.getString(BUNDLE_PIN));
+            okButton.setEnabled(savedInstanceState.getBoolean(BUNDLE_BUTTON_STATE));
+        }
 
         return view;
     }
@@ -66,6 +76,14 @@ public class WalletCreateFragment extends Fragment implements Wallets.WalletsLis
                 okButton.setEnabled(true);
             }
         });
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString(BUNDLE_NAME, nameSelector.getText() + "");
+        outState.putString(BUNDLE_PIN, pinSelector.getText() + "");
+        outState.putBoolean(BUNDLE_BUTTON_STATE, okButton.isEnabled());
+        super.onSaveInstanceState(outState);
     }
 
     @Override

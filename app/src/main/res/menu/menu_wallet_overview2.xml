@@ -13,7 +13,7 @@
         android:title="@string/action_createQR"
         app:showAsAction="never" />
     <item
-        android:title="@string/action_settings"
+        android:title="@string/settings"
         android:orderInCategory="101"
         android:icon="@android:drawable/ic_menu_edit"
         android:id="@+id/action_settings" />
