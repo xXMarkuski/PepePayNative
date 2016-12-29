@@ -4,6 +4,7 @@ package pepepay.pepepaynative.backend.social31.connection;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -202,8 +203,15 @@ public class Connection implements ReceiveHandler {
 
         if (data.equals(Connection.requestWalletIDs)) {
             Log.d(TAG, Connection.requestWalletIDs);
-            Parcel answer = parcel.getAnswer(Wallets.getOwnWalletIds());
-            connection.send(answer);
+
+            if (Wallets.getDefaultWallet() != null) {
+                Parcel answer = parcel.getAnswer(new ArrayList<>(Arrays.asList(Wallets.getDefaultWallet().getIdentifier())));
+                connection.send(answer);
+            } else {
+                Parcel answer = parcel.getAnswer(Wallets.getOwnWalletIds());
+                connection.send(answer);
+            }
+
         } else if (data.equals(Connection.getNames)) {
             Log.d(TAG, Connection.getNames);
             connection.send(parcel.getAnswer(Wallets.getNames(Wallets.getOwnWallets())));

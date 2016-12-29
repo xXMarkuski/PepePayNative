@@ -68,10 +68,12 @@ public class MainActivity extends AppCompatActivity {
                 new File(this.getFilesDir(), "names"),
                 new File(this.getFilesDir(), "errols"), this);
 
+        String defWalletId = sharedPref.getString(Options.DEFAULT_WALLET, "");
+        Wallets.setDefaultWallet(defWalletId);
+
         connThread = new HandlerThread("pepepay.connection");
         connThread.start();
         final Handler h = new Handler(connThread.getLooper());
-
         final Runnable[] connup = new Runnable[1];
         connup[0] = new Runnable() {
             @Override
@@ -80,7 +82,6 @@ public class MainActivity extends AppCompatActivity {
                 h.postDelayed((connup[0]), 100);
             }
         };
-
         h.post(connup[0]);
         h.post(connup[0]);
 
@@ -93,6 +94,9 @@ public class MainActivity extends AppCompatActivity {
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                } else if (key.equals(Options.DEFAULT_WALLET)) {
+                    String defWalletId = sharedPreferences.getString(Options.DEFAULT_WALLET, "");
+                    Wallets.setDefaultWallet(defWalletId);
                 }
             }
         };

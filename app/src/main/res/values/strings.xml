@@ -54,5 +54,8 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="settings">Settings</string>
+    <string name="pref_usability">Usability Settings</string>
+    <string name="pref_default_wallet_summ">Select a default Wallet to get Money send on</string>
+    <string name="pref_default_wallet">Default wallet</string>
 
 </resources>

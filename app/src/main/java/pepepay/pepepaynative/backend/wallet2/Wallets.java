@@ -29,6 +29,9 @@ public class Wallets {
     //WalletId to Simple
     private static HashMap<String, Integer> simpleMap = new HashMap<>();
 
+    //The defaultWallet
+    private static Wallet defaultWallet;
+
     public static void generateAndAddWallet(final int keysize, final String name, final String pin, final WalletsListener listener) {
         for (WalletsListener walletAddListener : walletsListeners) {
             walletAddListener.privateWalletGeneratingBegin();
@@ -123,6 +126,14 @@ public class Wallets {
     public static ArrayList<String> getNames(ArrayList<Wallet> wallets) {
         ArrayList<String> result = new ArrayList<String>(wallets.size());
         for (Wallet wallet : wallets) {
+            result.add(getName(wallet));
+        }
+        return result;
+    }
+
+    public static ArrayList<String> getNamesFromID(ArrayList<String> walletIDs) {
+        ArrayList<String> result = new ArrayList<String>(walletIDs.size());
+        for (String wallet : walletIDs) {
             result.add(getName(wallet));
         }
         return result;
@@ -392,6 +403,14 @@ public class Wallets {
         for (WalletsListener walletsListener : walletsListeners) {
             walletsListener.balanceChange(walletID, newTransaction);
         }
+    }
+
+    public static Wallet getDefaultWallet() {
+        return defaultWallet;
+    }
+
+    public static void setDefaultWallet(String defaultWallet) {
+        Wallets.defaultWallet = getWallet(defaultWallet);
     }
 
     public interface WalletsListener {

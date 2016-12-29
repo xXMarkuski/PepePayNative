@@ -19,10 +19,10 @@ import pepepay.pepepaynative.backend.social31.connection.Connection;
 import pepepay.pepepaynative.backend.social31.packages.Parcel;
 import pepepay.pepepaynative.backend.wallet2.Wallet;
 import pepepay.pepepaynative.backend.wallet2.Wallets;
+import pepepay.pepepaynative.utils.ObjectManager;
 import pepepay.pepepaynative.utils.function.Function;
 import pepepay.pepepaynative.utils.types.LongUtils;
 import pepepay.pepepaynative.utils.types.StringUtils;
-import pepepay.pepepaynative.utils.ObjectManager;
 
 public class SelectWalletFragment extends DialogFragment {
     private static final String CONNECTION = "connection";
@@ -88,33 +88,22 @@ public class SelectWalletFragment extends DialogFragment {
                 Object loaded = PepePay.LOADER_MANAGER.load(s);
                 if (loaded instanceof ArrayList) {
                     ArrayList<String> array = (ArrayList<String>) loaded;
-                    for (String walletID : array) {
-                        final Wallet wallet = Wallets.getWallet(walletID);
-                        if (wallet == null) {
-                            Parcel walletParcel = new Parcel(StringUtils.multiplex(Connection.getWalletNoTransaction, walletID), Connection.REQ, LongUtils.nextLong(Long.MAX_VALUE));
-                            connection.send(walletParcel, new Function<Void, String>() {
+                    if (array.size() == 1) {
+                        handleWallet(array.get(0), new Function<Void, Wallet>() {
+                            @Override
+                            public Void eval(Wallet wallet) {
+                                callback.eval(wallet);
+                                SelectWalletFragment.this.getDialog().cancel();
+                                return null;
+                            }
+                        });
+                    } else {
+                        for (String walletID : array) {
+                            handleWallet(walletID, new Function<Void, Wallet>() {
                                 @Override
-                                public Void eval(String s) {
-                                    Object o = PepePay.LOADER_MANAGER.load(s);
-                                    if (o instanceof Wallet) {
-                                        final Wallet wallet = (Wallet) o;
-                                        Wallets.addWallet(wallet);
-                                        PepePay.runOnUIThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                Wallets.addWallet(wallet);
-                                                handleWallet(wallet);
-                                            }
-                                        });
-                                    }
+                                public Void eval(Wallet wallet) {
+                                    handleWalletFragmentUi(wallet);
                                     return null;
-                                }
-                            });
-                        } else {
-                            PepePay.runOnUIThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    handleWallet(wallet);
                                 }
                             });
                         }
@@ -123,7 +112,39 @@ public class SelectWalletFragment extends DialogFragment {
                 return null;
             }
 
-            private void handleWallet(final Wallet wallet) {
+            private void handleWallet(String walletID, final Function<Void, Wallet> callback) {
+                final Wallet wallet = Wallets.getWallet(walletID);
+                if (wallet == null) {
+                    Parcel walletParcel = new Parcel(StringUtils.multiplex(Connection.getWalletNoTransaction, walletID), Connection.REQ, LongUtils.nextLong(Long.MAX_VALUE));
+                    connection.send(walletParcel, new Function<Void, String>() {
+                        @Override
+                        public Void eval(String s) {
+                            Object o = PepePay.LOADER_MANAGER.load(s);
+                            if (o instanceof Wallet) {
+                                final Wallet wallet = (Wallet) o;
+                                Wallets.addWallet(wallet);
+                                PepePay.runOnUIThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Wallets.addWallet(wallet);
+                                        callback.eval(wallet);
+                                    }
+                                });
+                            }
+                            return null;
+                        }
+                    });
+                } else {
+                    PepePay.runOnUIThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            callback.eval(wallet);
+                        }
+                    });
+                }
+            }
+
+            private void handleWalletFragmentUi(final Wallet wallet) {
                 wallets.add(wallet);
                 adapter.notifyDataSetChanged();
                 if (!Wallets.hasName(wallet)) {
