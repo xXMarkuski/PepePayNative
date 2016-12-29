@@ -2,6 +2,8 @@ package pepepay.pepepaynative.backend.social31.handler.wifiSalut;
 
 import android.app.Activity;
 import android.os.Build;
+import android.os.Handler;
+import android.os.HandlerThread;
 
 import com.peak.salut.Callbacks.SalutCallback;
 import com.peak.salut.Callbacks.SalutDataCallback;
@@ -13,31 +15,29 @@ import com.peak.salut.SalutServiceData;
 
 import java.util.ArrayList;
 
+import pepepay.pepepaynative.PepePay;
 import pepepay.pepepaynative.backend.social31.ConnectionManager;
 import pepepay.pepepaynative.backend.social31.handler.IDeviceConnectionHandler;
 import pepepay.pepepaynative.utils.function.Function;
 
 
-
-public class SalutConnectionHandler implements IDeviceConnectionHandler<SalutConnectionHandler, WifiSalutDevice>, SalutDataCallback
-{
+public class SalutConnectionHandler implements IDeviceConnectionHandler<SalutConnectionHandler, WifiSalutDevice>, SalutDataCallback {
 
     public static final String TAG = "salutconnectionhandler";
 
-    public static final String SERVICE_NAME = "pepepay";
-    public static final int REFRESH_TIME = 5;
+    private static final String SERVICE_NAME = "pepepay";
+    private static final int REFRESH_TIME = 5;
 
-    public SalutDataReceiver dataReceiver;
-    public SalutServiceData serviceData;
-    public Salut network;
+    private SalutDataReceiver dataReceiver;
+    private SalutServiceData serviceData;
+    private Salut network;
 
     private final Activity activity;
     private ConnectionManager connManager;
-    private Thread scanThread;
-    public Boolean discovering = false;
+    private HandlerThread scanThread;
+    private boolean discovering = false;
 
     private ArrayList<WifiSalutDevice> availableDevices = new ArrayList<>();
-
 
 
     public SalutConnectionHandler(Activity activity) {
@@ -70,60 +70,67 @@ public class SalutConnectionHandler implements IDeviceConnectionHandler<SalutCon
             }
         });
 
-        scanThread = new Thread(new Runnable() {
+        scanThread = new HandlerThread("pepepay.wifiscanthread");
+        scanThread.start();
+        final Handler h = new Handler(scanThread.getLooper());
+
+        final Runnable[] connup = new Runnable[1];
+        connup[0] = new Runnable() {
             @Override
             public void run() {
                 discoverServices();
+                h.postDelayed((connup[0]), 100);
             }
-        });
+        };
+
+        h.post(connup[0]);
+        h.post(connup[0]);
+
         discovering = true;
         scanThread.start();
     }
 
-    private void discoverServices(){
-        while(true) {
-            if (!network.isDiscovering && discovering) {
-                final ArrayList<WifiSalutDevice> oldDevices = new ArrayList<>(availableDevices);
-                final ArrayList<WifiSalutDevice> newDevices = new ArrayList<>();
-                final ArrayList<WifiSalutDevice> goneDevices = new ArrayList<>();
+    private void discoverServices() {
+        if (!network.isDiscovering && discovering) {
+            final ArrayList<WifiSalutDevice> oldDevices = new ArrayList<>(availableDevices);
+            final ArrayList<WifiSalutDevice> newDevices = new ArrayList<>();
+            final ArrayList<WifiSalutDevice> goneDevices = new ArrayList<>();
 
-                availableDevices.clear();
-                network.discoverWithTimeout(new SalutCallback() {
-                    @Override
-                    public void call() {
-                        for (SalutDevice dev : network.foundDevices) {
-                            WifiSalutDevice device = new WifiSalutDevice(dev);
-                            availableDevices.add(device);
-                            Boolean isNew = true;
-                            for (WifiSalutDevice oldDev : oldDevices) {
-                                if (device.equals(oldDev)) {
-                                    isNew = false;
-                                }
-                            }
-                            if (isNew) {
-                                newDevices.add(device);
+            availableDevices.clear();
+            network.discoverWithTimeout(new SalutCallback() {
+                @Override
+                public void call() {
+                    for (SalutDevice dev : network.foundDevices) {
+                        WifiSalutDevice device = new WifiSalutDevice(dev);
+                        availableDevices.add(device);
+                        Boolean isNew = true;
+                        for (WifiSalutDevice oldDev : oldDevices) {
+                            if (device.equals(oldDev)) {
+                                isNew = false;
                             }
                         }
-                        for (WifiSalutDevice dev : oldDevices) {
-                            if (!availableDevices.contains(dev)) {
-                                goneDevices.add(dev);
-                            }
+                        if (isNew) {
+                            newDevices.add(device);
                         }
-                        connManager.devicesChanged(newDevices, goneDevices);
                     }
-                }, new SalutCallback() {
-                    @Override
-                    public void call() {
-                        connManager.devicesChanged(newDevices, oldDevices);
+                    for (WifiSalutDevice dev : oldDevices) {
+                        if (!availableDevices.contains(dev)) {
+                            goneDevices.add(dev);
+                        }
                     }
-                }, REFRESH_TIME);
-            }
+                    connManager.devicesChanged(newDevices, goneDevices);
+                }
+            }, new SalutCallback() {
+                @Override
+                public void call() {
+                    connManager.devicesChanged(newDevices, oldDevices);
+                }
+            }, REFRESH_TIME);
         }
     }
 
     @Override
     public void onResume() {
-
     }
 
     @Override
@@ -159,7 +166,6 @@ public class SalutConnectionHandler implements IDeviceConnectionHandler<SalutCon
     public void requestAvailableDevices(final Function callback) {
 
     }
-
 
     @Override
     public void onDataReceived(Object o) {
