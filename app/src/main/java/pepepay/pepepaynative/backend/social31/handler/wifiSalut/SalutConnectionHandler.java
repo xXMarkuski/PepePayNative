@@ -15,7 +15,6 @@ import com.peak.salut.SalutServiceData;
 
 import java.util.ArrayList;
 
-import pepepay.pepepaynative.PepePay;
 import pepepay.pepepaynative.backend.social31.ConnectionManager;
 import pepepay.pepepaynative.backend.social31.handler.IDeviceConnectionHandler;
 import pepepay.pepepaynative.utils.function.Function;
@@ -27,12 +26,10 @@ public class SalutConnectionHandler implements IDeviceConnectionHandler<SalutCon
 
     private static final String SERVICE_NAME = "pepepay";
     private static final int REFRESH_TIME = 5;
-
+    private final Activity activity;
     private SalutDataReceiver dataReceiver;
     private SalutServiceData serviceData;
     private Salut network;
-
-    private final Activity activity;
     private ConnectionManager connManager;
     private HandlerThread scanThread;
     private boolean discovering = false;
@@ -87,7 +84,6 @@ public class SalutConnectionHandler implements IDeviceConnectionHandler<SalutCon
         h.post(connup[0]);
 
         discovering = true;
-        scanThread.start();
     }
 
     private void discoverServices() {
@@ -138,6 +134,11 @@ public class SalutConnectionHandler implements IDeviceConnectionHandler<SalutCon
     }
 
     @Override
+    public void requestAvailableDevices(Function<Void, ArrayList<WifiSalutDevice>> callback) {
+        callback.eval(availableDevices);
+    }
+
+    @Override
     public void connect(WifiSalutDevice target) {
 
     }
@@ -159,12 +160,7 @@ public class SalutConnectionHandler implements IDeviceConnectionHandler<SalutCon
 
     @Override
     public Class getIDeviceType() {
-        return null;
-    }
-
-    @Override
-    public void requestAvailableDevices(final Function callback) {
-
+        return WifiSalutDevice.class;
     }
 
     @Override

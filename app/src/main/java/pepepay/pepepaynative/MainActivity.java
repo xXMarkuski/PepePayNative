@@ -1,5 +1,7 @@
 package pepepay.pepepaynative;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -7,13 +9,12 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.IntentCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
-import android.view.TextureView;
 import android.view.View;
-import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
@@ -29,38 +30,38 @@ import java.util.Arrays;
 import io.fabric.sdk.android.Fabric;
 import pepepay.pepepaynative.activities.qr.QRSelectTypeFragment;
 import pepepay.pepepaynative.backend.social31.handler.IDeviceConnectionHandler;
-import pepepay.pepepaynative.backend.social31.handler.wifiDirect.WifiDirectConnectionHandler;
+import pepepay.pepepaynative.backend.social31.handler.wifiSalut.SalutConnectionHandler;
 import pepepay.pepepaynative.backend.wallet2.Wallets;
 import pepepay.pepepaynative.fragments.AboutFragment;
 import pepepay.pepepaynative.fragments.SettingsFragment;
 import pepepay.pepepaynative.fragments.WalletCreateFragment;
 import pepepay.pepepaynative.fragments.walletoverview.WalletOverview;
+import pepepay.pepepaynative.utils.FileUtils;
 import pepepay.pepepaynative.utils.Options;
 
 public class MainActivity extends AppCompatActivity {
-
-    private HandlerThread connThread;
 
     private final PrimaryDrawerItem createWallet = new PrimaryDrawerItem().withName(R.string.createWallet).withIdentifier(0).withIcon(GoogleMaterial.Icon.gmd_add_box);
     private final PrimaryDrawerItem wallets = new PrimaryDrawerItem().withName("Wallets").withIdentifier(1).withIcon(GoogleMaterial.Icon.gmd_account_balance_wallet);
     private final PrimaryDrawerItem createQR = new PrimaryDrawerItem().withName(R.string.action_createQR).withIdentifier(2).withIcon(GoogleMaterial.Icon.gmd_attach_file);
     private final PrimaryDrawerItem settings = new PrimaryDrawerItem().withName(R.string.settings).withIdentifier(1000).withIcon(GoogleMaterial.Icon.gmd_settings);
     private final PrimaryDrawerItem about = new PrimaryDrawerItem().withName(R.string.about).withIdentifier(1001).withIcon(GoogleMaterial.Icon.gmd_info);
+    private HandlerThread connThread;
     private SharedPreferences.OnSharedPreferenceChangeListener listener;
     private Drawer[] drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         System.out.println(sharedPref.getAll());
         setTheme(Options.getTheme(sharedPref.getString(Options.THEME, "light")));
         setContentView(R.layout.activity_main);
 
         Fabric.with(this, new Crashlytics());
 
-        WifiDirectConnectionHandler wifiDirectConnectionHandler = new WifiDirectConnectionHandler(this);
-        PepePay.create(Arrays.<IDeviceConnectionHandler>asList(/*wifiDirectConnectionHandler, new QRConnectionHandler(wifiDirectConnectionHandler, this), new SalutConnectionHandler(this)*/),
+        //WifiDirectConnectionHandler wifiDirectConnectionHandler = new WifiDirectConnectionHandler(this);
+        PepePay.create(Arrays.<IDeviceConnectionHandler>asList(/*wifiDirectConnectionHandler, new QRConnectionHandler(wifiDirectConnectionHandler, this),*/ new SalutConnectionHandler(this)),
                 new File(this.getFilesDir(), "godWallets"),
                 new File(this.getFilesDir(), "wallets"),
                 new File(this.getFilesDir(), "private"),
@@ -96,6 +97,30 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         sharedPref.registerOnSharedPreferenceChangeListener(listener);
+
+        if (!sharedPref.getBoolean(Options.READ_AGB, false)) {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            final Dialog[] greeting = new Dialog[]{null};
+            greeting[0] = builder.setMessage(R.string.tosGreeting).setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    sharedPref.edit().putBoolean(Options.READ_AGB, true).apply();
+                    //TODO:Implement username entering at first launch
+                }
+            }).setNeutralButton(R.string.showTos, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    builder.setMessage(FileUtils.readAsset(Options.READ_AGB)).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            greeting[0].show();
+                        }
+                    }).setCancelable(false).create().show();
+                }
+            }).setCancelable(false).create();
+            greeting[0].show();
+        }
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -143,7 +168,8 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         if (nextFragment != null) {
-                            getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.container, nextFragment).commit();
+                            //TODO:Fix add to back stack
+                            getSupportFragmentManager().beginTransaction()/*.addToBackStack(null)*/.replace(R.id.container, nextFragment).commit();
                             if (drawer[0] != null) drawer[0].closeDrawer();
                         }
                         return true;
@@ -161,18 +187,19 @@ public class MainActivity extends AppCompatActivity {
         Wallets.saveAll();
         PepePay.ERROL.saveErrols(PepePay.errolFile);
         PepePay.CONNECTION_MANAGER.onPause();
+        connThread.quit();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         PepePay.CONNECTION_MANAGER.onResume();
+        connThread.start();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        connThread.quit();
     }
 
     @Override

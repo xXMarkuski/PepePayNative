@@ -24,8 +24,6 @@ import pepepay.pepepaynative.backend.wallet2.transaction.Transaction;
 import pepepay.pepepaynative.fragments.SettingsFragment;
 import pepepay.pepepaynative.fragments.WalletCreateFragment;
 import pepepay.pepepaynative.fragments.walletoverview.WalletInfoFragment;
-import pepepay.pepepaynative.utils.FileUtils;
-import pepepay.pepepaynative.utils.Options;
 
 public class WalletOverview2 extends AppCompatActivity implements Wallets.WalletsListener {
 
@@ -82,7 +80,6 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
         tabLayout.setupWithViewPager(mViewPager);
 
 
-        //TODO:implement this in the new stuff
         /*if (!PepePay.OPTIONS.get(Options.STANDARD_FORM_CONTRACT, false)) {
             final AlertDialog.Builder builder = new AlertDialog.Builder(this);
             final Dialog[] greeting = new Dialog[]{null};
