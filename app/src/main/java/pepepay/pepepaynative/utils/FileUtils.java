@@ -1,5 +1,7 @@
 package pepepay.pepepaynative.utils;
 
+import android.content.Context;
+
 import com.google.common.base.Charsets;
 import com.google.common.io.CharStreams;
 import com.google.common.io.Files;
@@ -7,8 +9,6 @@ import com.google.common.io.Files;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
-import pepepay.pepepaynative.PepePay;
 
 public class FileUtils {
 
@@ -34,10 +34,10 @@ public class FileUtils {
         return content;
     }
 
-    public static String readAsset(String path) {
+    public static String readAsset(String path, Context context) {
         InputStreamReader streamReader = null;
         try {
-            streamReader = new InputStreamReader(PepePay.ACTIVITY.getResources().getAssets().open(path), Charsets.UTF_8);
+            streamReader = new InputStreamReader(context.getResources().getAssets().open(path), Charsets.UTF_8);
             return CharStreams.toString(streamReader);
         } catch (IOException e) {
             e.printStackTrace();
@@ -55,11 +55,11 @@ public class FileUtils {
         return new File(file, subpath);
     }
 
-    public static String read(String path) {
-        return read(getFile(path));
+    public static String read(String path, Context context) {
+        return read(getFile(path, context));
     }
 
-    public static File getFile(String path){
-        return new File(PepePay.ACTIVITY.getFilesDir(), path);
+    public static File getFile(String path, Context context) {
+        return new File(context.getFilesDir(), path);
     }
 }

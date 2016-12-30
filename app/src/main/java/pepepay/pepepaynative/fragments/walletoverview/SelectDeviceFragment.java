@@ -16,9 +16,9 @@ import java.util.ArrayList;
 import pepepay.pepepaynative.PepePay;
 import pepepay.pepepaynative.R;
 import pepepay.pepepaynative.backend.social31.handler.IDevice;
+import pepepay.pepepaynative.utils.ObjectManager;
 import pepepay.pepepaynative.utils.function.Function;
 import pepepay.pepepaynative.utils.function.Function2;
-import pepepay.pepepaynative.utils.ObjectManager;
 
 public class SelectDeviceFragment extends DialogFragment {
 
@@ -78,7 +78,7 @@ public class SelectDeviceFragment extends DialogFragment {
             public Void eval(ArrayList<? extends IDevice> iDevices, ArrayList<? extends IDevice> iDevices2) {
                 devices.addAll(iDevices);
                 devices.removeAll(iDevices2);
-                PepePay.runOnUIThread(new Runnable() {
+                getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         adapter.notifyDataSetChanged();

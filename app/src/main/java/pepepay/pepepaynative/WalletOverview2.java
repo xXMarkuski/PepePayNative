@@ -195,8 +195,8 @@ public class WalletOverview2 extends AppCompatActivity implements Wallets.Wallet
     @Override
     protected void onPause() {
         super.onPause();
-        Wallets.saveAll();
-        PepePay.ERROL.saveErrols(PepePay.errolFile);
+        //Wallets.saveAll();
+        //PepePay.ERROL.saveErrols(PepePay.errolFile);
         PepePay.CONNECTION_MANAGER.onPause();
     }
 

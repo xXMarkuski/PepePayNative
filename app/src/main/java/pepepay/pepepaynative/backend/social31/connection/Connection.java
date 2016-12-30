@@ -338,8 +338,8 @@ public class Connection implements ReceiveHandler {
     }
 
     public void disconnect(boolean sendNotify) {
-        if(sendNotify)
-        send(Parcel.toParcel(Connection.disconnect, Connection.REQ));
+        if (sendNotify)
+            send(Parcel.toParcel(Connection.disconnect, Connection.REQ));
 
         System.out.println("disconect");
         manager.disconnect(target);

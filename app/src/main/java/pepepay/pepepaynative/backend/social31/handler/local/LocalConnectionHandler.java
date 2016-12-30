@@ -24,7 +24,6 @@ public class LocalConnectionHandler implements IDeviceConnectionHandler<LocalCon
 
     @Override
     public void init(ConnectionManager manager) {
-        device = new LocalDevice(manager);
     }
 
     @Override

@@ -53,7 +53,6 @@ public class Wallets {
                 if (listener != null) {
                     listener.privateWalletAdded(wallet);
                 }
-                saveAll();
             }
         }).start();
     }
@@ -242,7 +241,6 @@ public class Wallets {
 
     public static void addGodWallet(String walletID) {
         godWallets.add(walletID);
-        saveGodWallets(PepePay.godWalletsFile);
     }
 
     public static boolean hasName(String walletID) {
@@ -299,8 +297,8 @@ public class Wallets {
         }
     }
 
-    public static void saveWallet(Wallet wallet) {
-        FileUtils.write(FileUtils.child(PepePay.walletFile, Wallets.getSimple(wallet) + ""), PepePay.LOADER_MANAGER.save(wallet));
+    public static void saveWallet(Wallet wallet, File walletFile) {
+        FileUtils.write(FileUtils.child(walletFile, Wallets.getSimple(wallet) + ""), PepePay.LOADER_MANAGER.save(wallet));
     }
 
     public static int getSimple(String walletID) {
@@ -346,13 +344,6 @@ public class Wallets {
                 }
             }
         }).start();
-    }
-
-    public static void saveAll() {
-        Wallets.saveWallets(PepePay.walletFile);
-        Wallets.savePrivateKeys(PepePay.privateFile);
-        Wallets.saveNames(PepePay.nameFile);
-        Wallets.saveGodWallets(PepePay.godWalletsFile);
     }
 
     public static void saveGodWallets(File file) {

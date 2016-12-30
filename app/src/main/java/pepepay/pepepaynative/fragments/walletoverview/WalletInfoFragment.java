@@ -22,8 +22,8 @@ import pepepay.pepepaynative.backend.wallet2.Wallet;
 import pepepay.pepepaynative.backend.wallet2.Wallets;
 import pepepay.pepepaynative.backend.wallet2.transaction.Transaction;
 import pepepay.pepepaynative.utils.ObjectManager;
-import pepepay.pepepaynative.utils.types.StringUtils;
 import pepepay.pepepaynative.utils.function.Function;
+import pepepay.pepepaynative.utils.types.StringUtils;
 
 public class WalletInfoFragment extends Fragment implements Wallets.WalletsListener {
     private static final String WALLET = "wallet";
@@ -205,7 +205,7 @@ public class WalletInfoFragment extends Fragment implements Wallets.WalletsListe
     @Override
     public void balanceChange(final String walletID, final Transaction newTransaction) {
 
-        PepePay.runOnUIThread(new Runnable() {
+        getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 if (walletID.equals(wallet.getIdentifier())) {

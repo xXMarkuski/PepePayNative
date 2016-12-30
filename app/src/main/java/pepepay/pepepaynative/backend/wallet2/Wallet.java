@@ -7,11 +7,11 @@ import java.util.Collections;
 
 import pepepay.pepepaynative.PepePay;
 import pepepay.pepepaynative.backend.wallet2.transaction.Transaction;
-import pepepay.pepepaynative.utils.function.Function2;
-import pepepay.pepepaynative.utils.types.StringUtils;
 import pepepay.pepepaynative.utils.encryption.EncryptionUtils;
+import pepepay.pepepaynative.utils.function.Function2;
 import pepepay.pepepaynative.utils.loader.Loader;
 import pepepay.pepepaynative.utils.loader.LoaderManager;
+import pepepay.pepepaynative.utils.types.StringUtils;
 
 public class Wallet {
     private final PublicKey publicKey;
@@ -62,7 +62,6 @@ public class Wallet {
             }
         }
         transactionChanged = true;
-        Wallets.saveWallet(this);
     }
 
     public void addTransactions(final ArrayList<Transaction> transactions) {

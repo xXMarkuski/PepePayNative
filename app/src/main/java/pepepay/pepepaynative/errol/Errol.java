@@ -1,13 +1,9 @@
 package pepepay.pepepaynative.errol;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-
 import java.io.File;
 import java.util.ArrayList;
 
 import pepepay.pepepaynative.PepePay;
-import pepepay.pepepaynative.R;
 import pepepay.pepepaynative.utils.FileUtils;
 
 public class Errol {
@@ -35,7 +31,8 @@ public class Errol {
     }
 
     public void errol(String s) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(PepePay.ACTIVITY);
+        //TODO: Rework Errol handeling, maybe add fragment
+        /*final AlertDialog.Builder builder = new AlertDialog.Builder(PepePay.ACTIVITY);
         builder.setIcon(android.R.drawable.stat_notify_error).setTitle(R.string.errorOccurred).setMessage(s).setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -52,7 +49,7 @@ public class Errol {
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
-        errols.add(s);
+        errols.add(s);*/
     }
 
 

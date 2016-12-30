@@ -1,7 +1,5 @@
 package pepepay.pepepaynative.backend.social31;
 
-import com.crashlytics.android.answers.Answers;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -146,18 +144,18 @@ public class ConnectionManager {
     }
 
     public void onResume() {
-        for (IDeviceConnectionHandler handler : handlersToInit) {
+        for (IDeviceConnectionHandler handler : handlers) {
             handler.onResume();
         }
     }
 
     public void onPause() {
-        for (IDeviceConnectionHandler handler : handlersToInit) {
+        for (IDeviceConnectionHandler handler : handlers) {
             handler.onPause();
         }
     }
 
-    public void disconnect(IDevice device) {
+    public void disconnect(IDevice<?> device) {
         activeConnections.remove(device);
 
         for (IDeviceConnectionHandler handler : handlers) {

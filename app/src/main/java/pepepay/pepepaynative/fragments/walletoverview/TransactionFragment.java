@@ -114,6 +114,7 @@ public class TransactionFragment extends DialogFragment {
                                 }
                             }).start();
                             dialog.dismiss();
+                            connection.disconnect();
                         } else {
                             error.setText(R.string.wrongPassword);
                         }

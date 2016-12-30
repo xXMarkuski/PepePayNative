@@ -80,6 +80,8 @@ public class SelectWalletFragment extends DialogFragment {
             }
         });
 
+        System.out.println(connection.getClass());
+
 
         final Parcel parcel = new Parcel(Connection.requestWalletIDs, Connection.REQ, LongUtils.nextLong(Long.MAX_VALUE));
         connection.send(parcel, new Function<Void, String>() {
@@ -123,7 +125,7 @@ public class SelectWalletFragment extends DialogFragment {
                             if (o instanceof Wallet) {
                                 final Wallet wallet = (Wallet) o;
                                 Wallets.addWallet(wallet);
-                                PepePay.runOnUIThread(new Runnable() {
+                                getActivity().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
                                         Wallets.addWallet(wallet);
@@ -135,7 +137,7 @@ public class SelectWalletFragment extends DialogFragment {
                         }
                     });
                 } else {
-                    PepePay.runOnUIThread(new Runnable() {
+                    getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             callback.eval(wallet);
@@ -151,7 +153,7 @@ public class SelectWalletFragment extends DialogFragment {
                     connection.send(Parcel.toParcel(StringUtils.multiplex(Connection.getName, wallet.getIdentifier()), Connection.REQ), new Function<Void, String>() {
                         @Override
                         public Void eval(String s) {
-                            PepePay.runOnUIThread(new Runnable() {
+                            getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     adapter.notifyDataSetChanged();

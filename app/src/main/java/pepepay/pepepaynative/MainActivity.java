@@ -46,44 +46,57 @@ public class MainActivity extends AppCompatActivity {
     private final PrimaryDrawerItem createQR = new PrimaryDrawerItem().withName(R.string.action_createQR).withIdentifier(2).withIcon(GoogleMaterial.Icon.gmd_attach_file);
     private final PrimaryDrawerItem settings = new PrimaryDrawerItem().withName(R.string.settings).withIdentifier(1000).withIcon(GoogleMaterial.Icon.gmd_settings);
     private final PrimaryDrawerItem about = new PrimaryDrawerItem().withName(R.string.about).withIdentifier(1001).withIcon(GoogleMaterial.Icon.gmd_info);
-    private HandlerThread connThread;
     private SharedPreferences.OnSharedPreferenceChangeListener listener;
     private Drawer[] drawer;
+
+    private RetainedFragment dataFragment;
+    private SharedPreferences sharedPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         System.out.println(sharedPref.getAll());
         setTheme(Options.getTheme(sharedPref.getString(Options.THEME, "light")));
         setContentView(R.layout.activity_main);
 
-        Fabric.with(this, new Crashlytics());
+        dataFragment = (RetainedFragment) getSupportFragmentManager().findFragmentByTag("data");
+        // create the fragment and data the first time
+        if (dataFragment == null) {
+            Fabric.with(this, new Crashlytics());
 
-        //WifiDirectConnectionHandler wifiDirectConnectionHandler = new WifiDirectConnectionHandler(this);
-        PepePay.create(Arrays.<IDeviceConnectionHandler>asList(/*wifiDirectConnectionHandler, new QRConnectionHandler(wifiDirectConnectionHandler, this),*/ new SalutConnectionHandler(this)),
-                new File(this.getFilesDir(), "godWallets"),
-                new File(this.getFilesDir(), "wallets"),
-                new File(this.getFilesDir(), "private"),
-                new File(this.getFilesDir(), "names"),
-                new File(this.getFilesDir(), "errols"), this);
+            // add the fragment
+            dataFragment = new RetainedFragment();
+            getSupportFragmentManager().beginTransaction().add(dataFragment, "data").commit();
+
+            HandlerThread connThread = new HandlerThread("pepepay.connection");
+            connThread.start();
+            final Handler h = new Handler(connThread.getLooper());
+            final Runnable[] connup = new Runnable[1];
+            connup[0] = new Runnable() {
+                @Override
+                public void run() {
+                    PepePay.CONNECTION_MANAGER.update();
+                    h.postDelayed((connup[0]), 100);
+                }
+            };
+            h.post(connup[0]);
+            h.post(connup[0]);
+            dataFragment.setConnThread(connThread);
+
+            PepePay pepePay = new PepePay();
+            //WifiDirectConnectionHandler wifiDirectConnectionHandler = new WifiDirectConnectionHandler(this);
+            pepePay.create(Arrays.<IDeviceConnectionHandler>asList(/*wifiDirectConnectionHandler, new QRConnectionHandler(wifiDirectConnectionHandler, this),*/ new SalutConnectionHandler(this)),
+                    new File(this.getFilesDir(), "godWallets"),
+                    new File(this.getFilesDir(), "wallets"),
+                    new File(this.getFilesDir(), "private"),
+                    new File(this.getFilesDir(), "names"),
+                    new File(this.getFilesDir(), "errols"));
+            dataFragment.setPepePay(pepePay);
+        }
 
         String defWalletId = sharedPref.getString(Options.DEFAULT_WALLET, "");
         Wallets.setDefaultWallet(defWalletId);
-
-        connThread = new HandlerThread("pepepay.connection");
-        connThread.start();
-        final Handler h = new Handler(connThread.getLooper());
-        final Runnable[] connup = new Runnable[1];
-        connup[0] = new Runnable() {
-            @Override
-            public void run() {
-                PepePay.CONNECTION_MANAGER.update();
-                h.postDelayed((connup[0]), 100);
-            }
-        };
-        h.post(connup[0]);
-        h.post(connup[0]);
 
         listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
             @Override
@@ -115,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                    builder.setMessage(FileUtils.readAsset(Options.READ_AGB)).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    builder.setMessage(FileUtils.readAsset(Options.READ_AGB, MainActivity.this)).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             greeting[0].show();
@@ -188,27 +201,66 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        Wallets.saveAll();
-        PepePay.ERROL.saveErrols(PepePay.errolFile);
+        PepePay.ERROL.saveErrols(dataFragment.getPepePay().errolFile);
+        saveAll();
         PepePay.CONNECTION_MANAGER.onPause();
-        connThread.quit();
+    }
+
+    private void saveAll() {
+        Wallets.saveNames(dataFragment.getPepePay().nameFile);
+        Wallets.savePrivateKeys(dataFragment.getPepePay().privateFile);
+        Wallets.saveWallets(dataFragment.getPepePay().walletFile);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         PepePay.CONNECTION_MANAGER.onResume();
-        connThread.start();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        sharedPref.unregisterOnSharedPreferenceChangeListener(listener);
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         drawer[0].saveInstanceState(outState);
         super.onSaveInstanceState(outState);
+    }
+
+    public static class RetainedFragment extends Fragment {
+
+        private HandlerThread connThread;
+        private PepePay pepePay;
+
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            // retain this fragment
+            setRetainInstance(true);
+        }
+
+        @Override
+        public void onDestroy() {
+            super.onDestroy();
+            connThread.quit();
+        }
+
+        public HandlerThread getConnThread() {
+            return connThread;
+        }
+
+        public void setConnThread(HandlerThread connThread) {
+            this.connThread = connThread;
+        }
+
+        public PepePay getPepePay() {
+            return pepePay;
+        }
+
+        public void setPepePay(PepePay pepePay) {
+            this.pepePay = pepePay;
+        }
     }
 }

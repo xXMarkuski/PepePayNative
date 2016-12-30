@@ -1,8 +1,6 @@
 package pepepay.pepepaynative;
 
 
-import android.app.Activity;
-
 import java.io.File;
 import java.security.Security;
 import java.util.List;
@@ -14,7 +12,6 @@ import pepepay.pepepaynative.backend.wallet2.Wallet;
 import pepepay.pepepaynative.backend.wallet2.Wallets;
 import pepepay.pepepaynative.errol.Errol;
 import pepepay.pepepaynative.utils.FileUtils;
-import pepepay.pepepaynative.utils.Options;
 import pepepay.pepepaynative.utils.loader.LoaderManager;
 import pepepay.pepepaynative.utils.loader.loaders.SerializableLoader;
 
@@ -28,48 +25,42 @@ public class PepePay {
     public static final LoaderManager LOADER_MANAGER = new LoaderManager();
 
     public static String castle = "SC";
+    public static ConnectionManager CONNECTION_MANAGER = new ConnectionManager();
+    public static Errol ERROL = new Errol();
 
-    public static File godWalletsFile;
-    public static File walletFile;
-    public static File privateFile;
-    public static File nameFile;
-    public static File errolFile;
-
-    public static ConnectionManager CONNECTION_MANAGER;
-    public static Activity ACTIVITY;
-    public static Errol ERROL;
-
-    public static void runOnUIThread(Runnable runnable) {
-        ACTIVITY.runOnUiThread(runnable);
-    }
-
-    public static void create(List<IDeviceConnectionHandler> handlers, File godWalletsFile, File walletFile, File privateFile, File nameFile, File errolFile, Activity activity) {
-        //TODO: Make this great again
-        if(PepePay.godWalletsFile != null) return;
-
+    static {
         Security.insertProviderAt(new org.spongycastle.jce.provider.BouncyCastleProvider(), 1);
-
-        PepePay.ACTIVITY = activity;
-
-        CONNECTION_MANAGER = new ConnectionManager();
-        CONNECTION_MANAGER.addConnectionHandlers(handlers);
         CONNECTION_MANAGER.addConnectionHandler(new LocalConnectionHandler());
 
         LOADER_MANAGER.registerLoader(new SerializableLoader());
         LOADER_MANAGER.registerLoader(new Wallet.WalletLoader());
+    }
 
-        PepePay.godWalletsFile = godWalletsFile;
-        PepePay.walletFile = walletFile;
-        PepePay.privateFile = privateFile;
-        PepePay.nameFile = nameFile;
-        PepePay.errolFile = errolFile;
+    public File godWalletsFile;
+    public File walletFile;
+    public File privateFile;
+    public File nameFile;
+    public File errolFile;
 
-        ERROL = new Errol();
+    public void create(List<IDeviceConnectionHandler> handlers, File godWalletsFile, File walletFile, File privateFile, File nameFile, File errolFile) {
+        //TODO: Make this great again
+        if (this.godWalletsFile != null) return;
+
+        System.out.println("if you see this message more than once, shit hit the floor");
+
+        CONNECTION_MANAGER.addConnectionHandlers(handlers);
+
+        this.godWalletsFile = godWalletsFile;
+        this.walletFile = walletFile;
+        this.privateFile = privateFile;
+        this.nameFile = nameFile;
+        this.errolFile = errolFile;
+
         if (errolFile.exists()) {
             ERROL.loadErrols(errolFile);
         }
 
-        Wallets.loadGodWallets(FileUtils.readAsset("godWallets"));
+        Wallets.loadGodWallets(FileUtils.read(godWalletsFile));
 
         /*if (godWalletsFile.exists()) {
             Wallets.loadGodWallets(godWalletsFile);
