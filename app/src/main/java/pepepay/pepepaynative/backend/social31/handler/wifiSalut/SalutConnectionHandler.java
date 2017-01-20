@@ -150,7 +150,12 @@ public class SalutConnectionHandler implements IDeviceConnectionHandler<SalutCon
 
     @Override
     public void send(WifiSalutDevice target, String data) {
+        network.sendToDevice(target.getSalutDevice(), data, new SalutCallback() {
+            @Override
+            public void call() {
 
+            }
+        });
     }
 
     @Override

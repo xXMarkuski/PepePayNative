@@ -17,13 +17,13 @@ public class Wallet {
     private final PublicKey publicKey;
     private final ArrayList<Transaction> receivedTransactions;
     private final ArrayList<Transaction> sendTransactions;
-    private final ArrayList<Function2<Void, Wallet, Transaction>> transactionListeners;
-    private final String identifier;
-    private float balance;
-    private boolean transactionChanged = true;
 
-    private ArrayList<Transaction> scheduledTransactions;
-    private ArrayList<Transaction> transactionsChron;
+    private transient final String identifier;
+    private transient final ArrayList<Function2<Void, Wallet, Transaction>> transactionListeners;
+    private transient float balance;
+    private transient boolean transactionChanged = true;
+    private transient ArrayList<Transaction> scheduledTransactions;
+    private transient ArrayList<Transaction> transactionsChron;
 
     public Wallet(PublicKey publicKey, ArrayList<Transaction> transactions) {
         this.publicKey = publicKey;

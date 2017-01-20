@@ -17,6 +17,7 @@ import android.util.TypedValue;
 import android.view.View;
 
 import com.crashlytics.android.Crashlytics;
+import com.mikepenz.aboutlibraries.LibsBuilder;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
@@ -32,7 +33,6 @@ import pepepay.pepepaynative.activities.qr.QRSelectTypeFragment;
 import pepepay.pepepaynative.backend.social31.handler.IDeviceConnectionHandler;
 import pepepay.pepepaynative.backend.social31.handler.wifiSalut.SalutConnectionHandler;
 import pepepay.pepepaynative.backend.wallet2.Wallets;
-import pepepay.pepepaynative.fragments.AboutFragment;
 import pepepay.pepepaynative.fragments.SettingsFragment;
 import pepepay.pepepaynative.fragments.WalletCreateFragment;
 import pepepay.pepepaynative.fragments.walletoverview.WalletOverview;
@@ -181,7 +181,20 @@ public class MainActivity extends AppCompatActivity {
                         } else if (drawerItem.equals(settings.getIdentifier())) {
                             nextFragment = SettingsFragment.newInstance();
                         } else if (drawerItem.equals(about.getIdentifier())) {
-                            nextFragment = AboutFragment.newInstance();
+                            nextFragment = new LibsBuilder()
+                                    .withAutoDetect(true)
+                                    .withAboutAppName("SimplePay")
+                                    .withAboutIconShown(true)
+                                    .withAboutSpecial1("asdasd")
+                                    .withAboutSpecial1Description("asdaaaaaaaaa")
+                                    .withAboutVersionShownCode(true)
+                                    .withAboutVersionShownName(true)
+                                    .withLicenseDialog(true)
+                                    .withLicenseShown(true)
+                                    .withAboutVersionShown(true)
+                                    .withSortEnabled(true)
+                                    .withFields(R.string.class.getFields())
+                                    .supportFragment();
                         }
 
                         if (nextFragment != null) {
